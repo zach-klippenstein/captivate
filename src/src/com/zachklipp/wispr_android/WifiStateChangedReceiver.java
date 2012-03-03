@@ -1,19 +1,5 @@
 package com.zachklipp.wispr_android;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.regex.Pattern;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.net.http.AndroidHttpClient;
 import android.net.wifi.*;
 import android.util.Log;
 
@@ -83,10 +68,10 @@ public class WifiStateChangedReceiver extends BroadcastReceiver
     Intent showPortalIntent = getShowPortalIntent(context, portalUri);
     PendingIntent contentIntent = PendingIntent.getActivity(context, 0, showPortalIntent, 0);
     
-    Notification notification = new Notification(R.drawable.ic_launcher, "Hotspot detected", System.currentTimeMillis());
+    Notification notification = new Notification(R.drawable.ic_launcher, context.getString(R.string.ticker_text), System.currentTimeMillis());
     notification.flags |= Notification.FLAG_AUTO_CANCEL;
     
-    notification.setLatestEventInfo(context, "Hotspot detected", "You need to login.", contentIntent);
+    notification.setLatestEventInfo(context, context.getString(R.string.notification_title), context.getString(R.string.notification_text), contentIntent);
 
     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     notificationManager.notify(CONNECTED_NOTIFICATION_ID, notification);

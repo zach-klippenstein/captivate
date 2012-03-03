@@ -1,12 +1,14 @@
 package com.zachklipp.wispr_android;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 
-public class ConnectivityChangedActivity extends Activity {
+public class WisprPreferencesActivity extends PreferenceActivity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        addPreferencesFromResource(R.layout.preferences);
     }
 }
