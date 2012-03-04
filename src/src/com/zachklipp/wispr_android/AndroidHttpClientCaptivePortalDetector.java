@@ -1,5 +1,4 @@
 package com.zachklipp.wispr_android;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,49 +11,26 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-// See http://erratasec.blogspot.com/2010/09/apples-secret-wispr-request.html
-public class Wispr
+public abstract class AndroidHttpClientCaptivePortalDetector extends CaptivePortalDetector
 {
   private static final String LOG_TAG = "wispr-android";
   private static final String USER_AGENT = "CaptiveNetworkSupport/1.0 wispr";
   
-  // Set by checkForCaptivePortal().
-  private Uri portalUri = null;
-  private WisprDetector detector;
-  
-  public static Wispr checkForCaptivePortal()
-  {
-    Wispr wispr = new Wispr(new AppleWisprDetector());
-    wispr.checkForPortalUsingAndroidHttpClient();
-    
-    return wispr;
-  }
-  
-  private Wispr(WisprDetector detector)
-  {
-    this.detector = detector;
-  }
-  
-  public boolean isOnCaptivePortal()
-  {
-    return (portalUri != null);
-  }
-  
-  public Uri getPortalUri()
-  {
-    return portalUri;
-  }
+  protected abstract String getDetectUri();
+  protected abstract boolean doesResponseIndicatePortal(HttpResponse response);
 
   // If behind a captive portal, set portalUri to the portal
   // login page, else set it to null.
-  private void checkForPortalUsingAndroidHttpClient()
+  @Override
+  public void checkForCaptivePortal(Context context)
   {
     //AndroidHttpClient client = AndroidHttpClient.newInstance(USER_AGENT);
     HttpClient client = new DefaultHttpClient();
-    HttpUriRequest request = new HttpGet(detector.getDetectUri());
+    HttpUriRequest request = new HttpGet(getDetectUri());
     request.setHeader("User-Agent", USER_AGENT);
     
     HttpResponse response = executeRequestOrThrow(client, request);
@@ -63,11 +39,12 @@ public class Wispr
         response.getEntity().getContentLength(),
         response.getStatusLine()));
     
-    if (detector.doesResponseIndicatePortal(response))
+    if (doesResponseIndicatePortal(response))
     {
-      portalUri = Uri.parse(detector.getDetectUri());
+      reportCaptivePortal(context, new CaptivePortal(Uri.parse(getDetectUri())));
     }
   }
+  
   private HttpResponse executeRequestOrThrow(HttpClient client, HttpUriRequest request)
   {
     try
@@ -81,23 +58,17 @@ public class Wispr
   }
 }
 
-interface WisprDetector
-{
-  public String getDetectUri();
-  public boolean doesResponseIndicatePortal(HttpResponse response);
-}
-
-class AppleWisprDetector implements WisprDetector
+class AppleCaptivePortalDetector extends AndroidHttpClientCaptivePortalDetector
 {
   private static final String DETECT_URI = "http://www.apple.com/library/test/success.html";
   private static final Pattern SUCCESS_PATTERN = Pattern.compile("^\\s*Success\\s*$");
   
-  public String getDetectUri()
+  protected String getDetectUri()
   {
     return DETECT_URI;
   }
   
-  public boolean doesResponseIndicatePortal(HttpResponse response)
+  protected boolean doesResponseIndicatePortal(HttpResponse response)
   {
     return !doesEntityMatch(response.getEntity(), SUCCESS_PATTERN);
   }

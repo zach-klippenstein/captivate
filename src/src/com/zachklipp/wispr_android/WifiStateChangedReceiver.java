@@ -1,37 +1,69 @@
 package com.zachklipp.wispr_android;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.net.wifi.*;
 import android.util.Log;
 
 public class WifiStateChangedReceiver extends BroadcastReceiver
 {
-  private static final int CONNECTED_NOTIFICATION_ID = 1;
   private static final String LOG_TAG = "wispr-android";
+  
+  private Context mContext;
+  private CaptivePortalDetector mDetector = CaptivePortalDetector.createDetector();
+  private CaptivePortalHandler mPortalHandler = new NotificationCaptivePortalHandler();
+  
+  public WifiStateChangedReceiver()
+  {
+    super();
+    
+    initialize();
+  }
+  
+  public WifiStateChangedReceiver(CaptivePortalDetector portalDetector)
+  {
+    super();
+    
+    mDetector = portalDetector;
+    
+    initialize();
+  }
+  
+  public WifiStateChangedReceiver(CaptivePortalDetector portalDetector, CaptivePortalHandler portalHandler)
+  {
+    super();
+    
+    mDetector = portalDetector;
+    mPortalHandler = portalHandler;
+    
+    initialize();
+  }
+  
+  private void initialize()
+  {
+    mDetector.addCaptivePortalHandler(mPortalHandler);
+  }
 
   @Override
   public void onReceive(Context context, Intent intent)
   {
     if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION))
     {
-      onNetworkStateChanged(context, intent);
+      mContext = context;
+      onNetworkStateChanged(intent);
     }
   }
 
-  private void onNetworkStateChanged(Context context, Intent intent)
+  private void onNetworkStateChanged(Intent intent)
   {
     NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-    SupplicantState wifiState = intent.getParcelableExtra(WifiManager.EXTRA_NEW_STATE);
     
     try
     {
+      SupplicantState wifiState = intent.getParcelableExtra(WifiManager.EXTRA_NEW_STATE);
+      
       Log.d(LOG_TAG, "NEW_STATE:" + wifiState);
       Log.d(LOG_TAG, "PREVIOUS_STATE: " + intent.getParcelableExtra(WifiManager.EXTRA_PREVIOUS_WIFI_STATE));
       Log.d(LOG_TAG, "SUPPLICANT_CONNECTED: " + intent.getParcelableExtra(WifiManager.EXTRA_SUPPLICANT_CONNECTED));
@@ -45,44 +77,15 @@ public class WifiStateChangedReceiver extends BroadcastReceiver
     
     if (networkInfo != null && networkInfo.isConnected())
     {
-      onWifiConnected(context);
+      onWifiConnected();
     }
   }
   
-  private void onWifiConnected(Context context)
+  public void onWifiConnected()
   {
     Log.d(LOG_TAG, "Checking for captive portal...");
-    
-    Wispr wispr = Wispr.checkForCaptivePortal();
-    
-    if (wispr.isOnCaptivePortal())
-    {
-      Log.d(LOG_TAG, "Captive portal detected.");
-      
-      onCaptivePortalDetected(context, wispr.getPortalUri());
-    }
-  }
-  
-  private void onCaptivePortalDetected(Context context, Uri portalUri)
-  {
-    Intent showPortalIntent = getShowPortalIntent(context, portalUri);
-    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, showPortalIntent, 0);
-    
-    Notification notification = new Notification(R.drawable.ic_launcher, context.getString(R.string.ticker_text), System.currentTimeMillis());
-    notification.flags |= Notification.FLAG_AUTO_CANCEL;
-    
-    notification.setLatestEventInfo(context, context.getString(R.string.notification_title), context.getString(R.string.notification_text), contentIntent);
 
-    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-    notificationManager.notify(CONNECTED_NOTIFICATION_ID, notification);
-  }
-  
-  private Intent getShowPortalIntent(Context context, Uri portalUri)
-  {
-    Intent showPortalIntent = new Intent(Intent.ACTION_VIEW);
-    showPortalIntent.setData(portalUri);
-    
-    return showPortalIntent;
+    mDetector.checkForCaptivePortal(mContext);
   }
 
 }
