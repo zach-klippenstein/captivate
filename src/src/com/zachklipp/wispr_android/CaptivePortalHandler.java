@@ -4,5 +4,6 @@ import android.content.Context;
 
 public interface CaptivePortalHandler
 {
-  public void onCaptivePortalDetected(Context context, CaptivePortal portal);
+  public void onCaptivePortalDetected(Context context, CaptivePortalInfo portal);
+  public void onNoCaptivePortalDetected(Context context);
 }

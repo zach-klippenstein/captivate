@@ -7,15 +7,9 @@ import android.content.Context;
 // See http://erratasec.blogspot.com/2010/09/apples-secret-wispr-request.html
 public abstract class CaptivePortalDetector
 {
-  
   // Set by checkForCaptivePortal().
-  private CaptivePortal mPortal;
+  private CaptivePortalInfo mPortal;
   private ArrayList<CaptivePortalHandler> mHandlers = new ArrayList<CaptivePortalHandler>();
-  
-  public static CaptivePortalDetector createDetector()
-  {
-    return new AppleCaptivePortalDetector();
-  }
   
   // Should eventually cause reportCaptivePortal() to be called, followed
   // by triggerHandlers().
@@ -26,7 +20,7 @@ public abstract class CaptivePortalDetector
     return (mPortal != null);
   }
   
-  public CaptivePortal getCaptivePortal()
+  public CaptivePortalInfo getCaptivePortal()
   {
     return mPortal;
   }
@@ -39,7 +33,7 @@ public abstract class CaptivePortalDetector
     }
   }
   
-  protected void reportCaptivePortal(Context context, CaptivePortal portal)
+  protected void reportCaptivePortal(Context context, CaptivePortalInfo portal)
   {
     mPortal = portal;
     triggerHandlers(context);

@@ -1,10 +1,7 @@
 package com.zachklipp.wispr_android;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.regex.Pattern;
 
-import org.apache.http.HttpEntity;
+import java.io.IOException;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -41,7 +38,7 @@ public abstract class AndroidHttpClientCaptivePortalDetector extends CaptivePort
     
     if (doesResponseIndicatePortal(response))
     {
-      reportCaptivePortal(context, new CaptivePortal(Uri.parse(getDetectUri())));
+      reportCaptivePortal(context, new CaptivePortalInfo(Uri.parse(getDetectUri())));
     }
   }
   
@@ -54,43 +51,6 @@ public abstract class AndroidHttpClientCaptivePortalDetector extends CaptivePort
     catch (IOException ex)
     {
       throw new RuntimeException("Error executing request", ex);
-    }
-  }
-}
-
-class AppleCaptivePortalDetector extends AndroidHttpClientCaptivePortalDetector
-{
-  private static final String DETECT_URI = "http://www.apple.com/library/test/success.html";
-  private static final Pattern SUCCESS_PATTERN = Pattern.compile("^\\s*Success\\s*$");
-  
-  protected String getDetectUri()
-  {
-    return DETECT_URI;
-  }
-  
-  protected boolean doesResponseIndicatePortal(HttpResponse response)
-  {
-    return !doesEntityMatch(response.getEntity(), SUCCESS_PATTERN);
-  }
-  
-  private boolean doesEntityMatch(HttpEntity entity, Pattern pattern)
-  {
-    try
-    {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
-      String inputLine;
-      
-      while ((inputLine = reader.readLine()) != null)
-      {
-        if (pattern.matcher(inputLine).matches())
-          return true;
-      }
-      
-      return false;
-    }
-    catch (IOException ex)
-    {
-      throw new RuntimeException("Error reading response", ex);
     }
   }
 }
