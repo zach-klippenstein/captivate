@@ -5,7 +5,7 @@
     <string name="notification_title">Hotspot detected</string>
     <string name="notification_text">You need to login.</string>
     <string name="ticker_text">Hotspot detected</string>
-    <string name="about_text">Wispr Android automatically detects when you connect to a captive portal (e.g. Starbucks hotspots), and prompts you to accept its terms of service. Contact zk.at.sf@gmail.com with any issues.</string>
+    <string name="about_text">Wispr Android automatically detects when you connect to a captive portal (e.g. Starbucks hotspots), and prompts you to accept its terms of service. Report issues or contact the developer at https://github.com/zach-klippenstein/wispr-android</string>
     <string name="about_category_title">About</string>
 
 </resources>
