@@ -2,6 +2,8 @@ package com.zachklipp.wispr_android;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
+import android.widget.TextView;
 
 public class AboutActivity extends Activity
 {
@@ -10,6 +12,9 @@ public class AboutActivity extends Activity
   public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       
-      this.setContentView(R.layout.about_layout);
+      setContentView(R.layout.about_layout);
+      
+      TextView view = (TextView) findViewById(R.id.about_view);
+      view.setText(Html.fromHtml(getString(R.string.about_text)));
   }
 }
