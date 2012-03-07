@@ -3,10 +3,13 @@ package com.zachklipp.wispr_android;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 
 // See http://erratasec.blogspot.com/2010/09/apples-secret-wispr-request.html
 public abstract class CaptivePortalDetector
 {
+  private static final String LOG_TAG = "wispr-android";
+  
   // Set by checkForCaptivePortal().
   private CaptivePortalInfo mPortal;
   private ArrayList<CaptivePortalHandler> mHandlers = new ArrayList<CaptivePortalHandler>();
@@ -35,6 +38,8 @@ public abstract class CaptivePortalDetector
   
   protected void reportCaptivePortal(Context context, CaptivePortalInfo portal)
   {
+    Log.d(LOG_TAG, String.format("Reporting captive portal to %d handlers...", mHandlers.size()));
+    
     mPortal = portal;
     triggerHandlers(context);
   }

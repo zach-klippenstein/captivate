@@ -25,6 +25,15 @@ public final class WifiHelper
     return isConnectedFromNetworkInfo(networkInfo);
   }
   
+  public static boolean isDisconnectedFromNetworkStateChangedIntent(Intent intent)
+  {
+    assert(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION));
+    
+    NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+    
+    return (networkInfo == null);
+  }
+  
   private static boolean isConnectedFromNetworkInfo(NetworkInfo networkInfo)
   {
     return (networkInfo != null && networkInfo.isConnected());

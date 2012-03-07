@@ -3,22 +3,21 @@ package com.zachklipp.wispr_android;
 import com.zachklipp.wispr_android.PortalStateTracker.PortalStateChangedHandler;
 
 import android.app.IntentService;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 public class CaptivePortalDetectorService extends IntentService
 {
+  private static final String INTENT_NAMESPACE = "com.zachklipp.wispr_android.";
+  
   // Extras for start intent
-  public static final String EXTRA_PORTAL_DETECTOR_FACTORY = "com.zachklipp.wispr-android.EXTRA_PORTAL_DETECTOR_FACTORY";
+  public static final String EXTRA_PORTAL_DETECTOR_FACTORY = INTENT_NAMESPACE + "EXTRA_PORTAL_DETECTOR_FACTORY";
   
   // For broadcast intent
-  public static final String ACTION_PORTAL_STATE_CHANGED = "com.zachklipp.wispr-android.ACTION_PORTAL_STATE_CHANGED";
-  public static final String EXTRA_CAPTIVE_PORTAL_STATE = "com.zachklipp.wispr-android.EXTRA_CAPTIVE_PORTAL_STATE";
-  public static final String EXTRA_CAPTIVE_PORTAL_INFO = "com.zachklipp.wispr-android.EXTRA_CAPTIVE_PORTAL_INFO";
+  public static final String ACTION_PORTAL_STATE_CHANGED = INTENT_NAMESPACE + "ACTION_PORTAL_STATE_CHANGED";
+  public static final String EXTRA_CAPTIVE_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_CAPTIVE_PORTAL_STATE";
+  public static final String EXTRA_CAPTIVE_PORTAL_INFO = INTENT_NAMESPACE + "EXTRA_CAPTIVE_PORTAL_INFO";
   
   // Captive portal states
   public static final int STATE_UNKNOWN = 0;
@@ -27,7 +26,6 @@ public class CaptivePortalDetectorService extends IntentService
   public static final int STATE_SIGNING_IN = 3;
   public static final int STATE_SIGNED_IN = 4;
 
-  private static final int CONNECTED_NOTIFICATION_ID = 1;
   private static final String LOG_TAG = "wispr-android";
   
   private final PortalStateTracker mPortalStateTracker = new PortalStateTracker();
@@ -43,6 +41,7 @@ public class CaptivePortalDetectorService extends IntentService
     @Override
     public void onNoCaptivePortalDetected(Context context)
     {
+      Log.d(LOG_TAG, "Captive portal disappeared.");
       mPortalStateTracker.clearPortalInfo();
     }
   };
@@ -52,8 +51,6 @@ public class CaptivePortalDetectorService extends IntentService
     public void onStateChanged(int newState, CaptivePortalInfo portalInfo)
     {
       Intent intent = createStateChangedBroadcastIntent(newState, portalInfo);
-      
-      showNotification(portalInfo);
       
       Log.i(LOG_TAG, String.format("Broadcasting portal state change. new state=%d, portal=%s", newState, portalInfo));
       getBaseContext().sendBroadcast(intent);
@@ -108,20 +105,5 @@ public class CaptivePortalDetectorService extends IntentService
     }
     
     return intent;
-  }
-  
-  private void showNotification(CaptivePortalInfo portalInfo)
-  {
-    Context context = getBaseContext();
-    Intent showPortalIntent = portalInfo.getShowPortalIntent();
-    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, showPortalIntent, 0);
-    
-    Notification notification = new Notification(R.drawable.ic_launcher, context.getString(R.string.ticker_text), System.currentTimeMillis());
-    notification.flags |= Notification.FLAG_AUTO_CANCEL;
-    
-    notification.setLatestEventInfo(context, context.getString(R.string.notification_title), context.getString(R.string.notification_text), contentIntent);
-
-    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-    notificationManager.notify(CONNECTED_NOTIFICATION_ID, notification);
   }
 }
