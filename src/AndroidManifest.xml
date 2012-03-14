@@ -20,9 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".StateChangedReceiver">
+        <receiver android:name=".WifiStateChangedReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.STATE_CHANGE"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".PortalStateChangedReceiver">
+            <intent-filter>
                 <action android:name="com.zachklipp.wispr_android.ACTION_PORTAL_STATE_CHANGED"/>
             </intent-filter>
         </receiver>

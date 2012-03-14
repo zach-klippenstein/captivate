@@ -1,6 +1,5 @@
 package com.zachklipp.wispr_android.test;
 
-
 import com.zachklipp.wispr_android.CaptivePortalDetector;
 import com.zachklipp.wispr_android.CaptivePortalDetectorFactory;
 import com.zachklipp.wispr_android.CaptivePortalDetectorService;
