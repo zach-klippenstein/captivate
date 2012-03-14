@@ -9,7 +9,7 @@ import android.util.Log;
 public class WifiStateChangedReceiver extends BroadcastReceiver
 {
   private static final String LOG_TAG = "wispr-android";
-  private static final CaptivePortalDetectorFactory DETECTOR_FACTORY = new AppleCaptivePortalDetectorFactory();
+  private static final CaptivePortalSensorFactory DETECTOR_FACTORY = new AppleCaptivePortalDetectorFactory();
 
   @Override
   public void onReceive(Context context, Intent intent)

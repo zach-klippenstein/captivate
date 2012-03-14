@@ -57,7 +57,7 @@ public class CaptivePortalDetectorService extends IntentService
     }
   };
   
-  public static Intent createStartIntent(Context context, CaptivePortalDetectorFactory detectorFactory)
+  public static Intent createStartIntent(Context context, CaptivePortalSensorFactory detectorFactory)
   {
     Intent serviceIntent = new Intent(context, CaptivePortalDetectorService.class);
     serviceIntent.putExtra(CaptivePortalDetectorService.EXTRA_PORTAL_DETECTOR_FACTORY, detectorFactory);
@@ -76,21 +76,26 @@ public class CaptivePortalDetectorService extends IntentService
   protected void onHandleIntent(Intent intent)
   {
     Log.d(LOG_TAG, "Creating detector from factory from intent");
-    CaptivePortalDetector detector = createDetectorFromIntent(intent);
+    CaptivePortalDetector detector = new CaptivePortalDetector(this, createSensorFromIntent(intent));
     
     detector.addCaptivePortalHandler(mPortalHandler);
     
     // Assume we were called immediately after wifi connected, and if there is
     // a captive portal, we'll see it first.
-    detector.checkForCaptivePortal(getBaseContext());
+    detector.checkForCaptivePortal();
   }
   
-  private static CaptivePortalDetector createDetectorFromIntent(Intent intent)
+  private static CaptivePortalSensor createSensorFromIntent(Intent intent)
   {
-    CaptivePortalDetectorFactory factory = (CaptivePortalDetectorFactory) intent.getSerializableExtra(EXTRA_PORTAL_DETECTOR_FACTORY);
-    Log.d(LOG_TAG, String.format("Creating detector from factory %s", factory.getClass().getName()));
+    CaptivePortalSensorFactory factory = (CaptivePortalSensorFactory) intent.getSerializableExtra(EXTRA_PORTAL_DETECTOR_FACTORY);
+    assert(factory != null);
     
-    return factory.createDetector();
+    /*Class<? extends CaptivePortalSensorFactory> factoryClass = factory.getClass();
+    assert(factoryClass != null);
+    
+    Log.d(LOG_TAG, String.format("Creating detector from factory %s", factoryClass.getName()));*/
+    
+    return factory.createSensor();
   }
   
   private static Intent createStateChangedBroadcastIntent(int state, CaptivePortalInfo portal)

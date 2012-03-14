@@ -6,17 +6,36 @@ import android.content.Context;
 import android.util.Log;
 
 // See http://erratasec.blogspot.com/2010/09/apples-secret-wispr-request.html
-public abstract class CaptivePortalDetector
+public class CaptivePortalDetector
 {
   private static final String LOG_TAG = "wispr-android";
   
-  // Set by checkForCaptivePortal().
+  private Context mContext;
+  private CaptivePortalSensor mSensor;
   private CaptivePortalInfo mPortal;
   private ArrayList<CaptivePortalHandler> mHandlers = new ArrayList<CaptivePortalHandler>();
   
-  // Should eventually cause reportCaptivePortal() to be called, followed
-  // by triggerHandlers().
-  public abstract void checkForCaptivePortal(Context context);
+  public CaptivePortalDetector(Context context, CaptivePortalSensor sensor)
+  {
+    assert(sensor != null);
+    
+    mSensor = sensor;
+  }
+  
+  public void checkForCaptivePortal()
+  {
+    assert(mSensor != null);
+    
+    try
+    {
+      // This should result in reportCaptivePortal getting called.
+      mSensor.checkForCaptivePortal(this);
+    }
+    catch (Exception ex)
+    {
+      Log.w(LOG_TAG, "sensor error", ex);
+    }
+  }
   
   public boolean isOnCaptivePortal()
   {
@@ -36,19 +55,19 @@ public abstract class CaptivePortalDetector
     }
   }
   
-  protected void reportCaptivePortal(Context context, CaptivePortalInfo portal)
+  public void reportCaptivePortal(CaptivePortalInfo portal)
   {
     Log.d(LOG_TAG, String.format("Reporting captive portal to %d handlers...", mHandlers.size()));
     
     mPortal = portal;
-    triggerHandlers(context);
+    triggerHandlers();
   }
   
-  private void triggerHandlers(Context context)
+  private void triggerHandlers()
   {
     for (CaptivePortalHandler handler : mHandlers)
     {
-      handler.onCaptivePortalDetected(context, mPortal);
+      handler.onCaptivePortalDetected(mContext, mPortal);
     }
   }
 }

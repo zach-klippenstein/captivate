@@ -1,13 +1,13 @@
 package com.zachklipp.wispr_android.test;
 
-import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
 import com.zachklipp.wispr_android.CaptivePortalInfo;
 import com.zachklipp.wispr_android.CaptivePortalDetector;
+import com.zachklipp.wispr_android.CaptivePortalSensor;
 
-public class MockCaptivePortalDetector extends CaptivePortalDetector
+public class MockCaptivePortalSensor implements CaptivePortalSensor
 {
   private static final String LOG_TAG = "wispr-android-tests";
   
@@ -17,14 +17,14 @@ public class MockCaptivePortalDetector extends CaptivePortalDetector
   {
     mDetectFakePortal = enabled;
   }
-  
+
   @Override
-  public void checkForCaptivePortal(Context context)
+  public void checkForCaptivePortal(CaptivePortalDetector detector)
   {
     if (mDetectFakePortal)
     {
       Log.d(LOG_TAG, "Faking captive portal detection");
-      reportCaptivePortal(context, new CaptivePortalInfo(Uri.EMPTY));
+      detector.reportCaptivePortal(new CaptivePortalInfo(Uri.EMPTY));
     }
     else
     {
