@@ -2,8 +2,6 @@
 *.class
 
 # Eclipse files
-.classpath
-**/.classpath
 .settings
 **/.settings
 
