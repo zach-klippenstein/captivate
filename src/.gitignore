@@ -4,8 +4,6 @@
 # Eclipse files
 .classpath
 **/.classpath
-.project
-**/.project
 .settings
 **/.settings
 
