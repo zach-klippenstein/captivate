@@ -28,6 +28,7 @@ public class MockPortalDetector extends PortalDetector
     else
     {
       Log.d(LOG_TAG, "Not detecting captive portal");
+      reportNoPortal();
     }
   }
 }

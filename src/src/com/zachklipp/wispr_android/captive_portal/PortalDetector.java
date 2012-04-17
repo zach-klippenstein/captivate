@@ -11,7 +11,7 @@ public abstract class PortalDetector extends Observable<PortalInfo>
   
   private PortalInfo mPortal;
   
-  // Should eventually call reportPortal
+  // Should eventually call reportPortal or reportNoPortal
   public abstract void checkForPortal();
   
   public boolean isOnPortal()
@@ -26,9 +26,17 @@ public abstract class PortalDetector extends Observable<PortalInfo>
   
   protected void reportPortal(PortalInfo portal)
   {
-    Log.d(LOG_TAG, String.format("Reporting captive portal to handlers..."));
+    Log.d(LOG_TAG, String.format("Reporting captive portal to handlers: %s", portal));
     
     mPortal = portal;
-    notifyObservers(portal);
+    notifyObservers(mPortal);
+  }
+  
+  protected void reportNoPortal()
+  {
+    Log.d(LOG_TAG, "Reporting NO captive portal to handlers");
+    
+    mPortal = null;
+    notifyObservers(mPortal);
   }
 }

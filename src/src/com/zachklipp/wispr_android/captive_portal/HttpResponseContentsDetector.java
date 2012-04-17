@@ -62,6 +62,10 @@ public class HttpResponseContentsDetector extends PortalDetector
     {
       reportPortal(new PortalInfo(Uri.parse(mUrl)));
     }
+    else
+    {
+      reportNoPortal();
+    }
   }
   
   private HttpResponse executeRequestOrThrow(HttpClient client, HttpUriRequest request)

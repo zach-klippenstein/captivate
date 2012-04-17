@@ -32,7 +32,7 @@ public class PortalStateMachine extends StateMachine implements Observer<PortalI
     super(new State[][] {
         new State[] {State.UNKNOWN, State.NOT_CAPTIVE, State.NEEDS_SIGNIN},
         new State[] {State.NOT_CAPTIVE},
-        new State[] {State.NEEDS_SIGNIN, State.SIGNING_IN},
+        new State[] {State.NEEDS_SIGNIN, State.SIGNING_IN, State.SIGNED_IN},
         new State[] {State.SIGNING_IN, State.SIGNED_IN},
         new State[] {State.SIGNED_IN, State.NEEDS_SIGNIN, State.NOT_CAPTIVE},
       });
@@ -73,7 +73,7 @@ public class PortalStateMachine extends StateMachine implements Observer<PortalI
   {
     Log.d(LOG_TAG, "No portal detected.");
     
-    if (getCurrentState() == State.SIGNING_IN)
+    if (getCurrentState() == State.SIGNING_IN || getCurrentState() == State.NEEDS_SIGNIN)
     {
       transitionTo(State.SIGNED_IN);
     }
