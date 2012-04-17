@@ -7,26 +7,36 @@ import junit.framework.TestCase;
 public class StateMachineTest extends TestCase
 {
   private StateMachine machine;
+  
+  public void testNoStates()
+  {
+    try
+    {
+      new StateMachine((State) null, new State[][]{});
+      fail("Empty state machine created");
+    }
+    catch (IllegalArgumentException ex)
+    {
+      // pass
+    }
+  }
 
   public void testSingleState()
   {
     State startState = new State("start");
-    machine = new StateMachine(matrix(
-        transition(startState)));
+    machine = MockStateMachine.createWithSingleState(startState);
     
     assertSame(startState, machine.getCurrentState());
     
     assertTransitionFails(startState);
   }
-  
-  private static State[][] matrix(State[]... transitions)
+
+  public void testSingleStateByName()
   {
-    return transitions;
-  }
-  
-  private static State[] transition(State... states)
-  {
-    return states;
+    State startState = new State("start");
+    machine = new MockStateMachine(startState.getName(), new State[][]{new State[]{startState}});
+    
+    assertSame(startState, machine.getCurrentState());
   }
   
   private void assertTransitionFails(State toState)

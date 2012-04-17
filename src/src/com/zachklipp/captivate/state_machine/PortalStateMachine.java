@@ -7,7 +7,7 @@ import com.zachklipp.captivate.captive_portal.PortalInfo;
 import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
 
-public class PortalStateMachine extends StateMachine implements Observer<PortalInfo>
+public class PortalStateMachine extends StateMachine
 {
   public final static class State extends com.zachklipp.captivate.state_machine.State
   {
@@ -32,18 +32,18 @@ public class PortalStateMachine extends StateMachine implements Observer<PortalI
     };
 
   private static final String LOG_TAG = "captivate";
-  
+
   private PortalDetector mPortalDetector;
 
   public PortalStateMachine(PortalDetector detector)
   {
-    super(TRANSITION_MATRIX);
+    super(State.UNKNOWN, TRANSITION_MATRIX);
     initialize(detector);
   }
   
-  public PortalStateMachine(PortalDetector detector, State initialState)
+  public PortalStateMachine(PortalDetector detector, String initialStateName)
   {
-    super(initialState, TRANSITION_MATRIX);
+    super(initialStateName, TRANSITION_MATRIX);
     initialize(detector);
   }
   
@@ -51,19 +51,23 @@ public class PortalStateMachine extends StateMachine implements Observer<PortalI
   {
     assert(detector != null);
     mPortalDetector = detector;
-    mPortalDetector.addObserver(this);
-  }
-  
-  public void update(Observable<PortalInfo> observable, PortalInfo portal)
-  {
-    if (portal == null)
-    {
-      noLongerNeedsSignin();
-    }
-    else
-    {
-      needsSignin();
-    }
+    
+    mPortalDetector.addObserver(new Observer<PortalInfo>() {
+      @Override
+      public void update(Observable<PortalInfo> observable, PortalInfo portal)
+      {
+        if (portal == null)
+        {
+          noLongerNeedsSignin();
+        }
+        else
+        {
+          needsSignin();
+        }
+      }
+    });
+    
+    Log.d(LOG_TAG, String.format("Portal state machine initialized to state %s", getCurrentState().getName()));
   }
   
   public void startSignIn()
@@ -83,14 +87,14 @@ public class PortalStateMachine extends StateMachine implements Observer<PortalI
   
   private void noLongerNeedsSignin()
   {
-    Log.d(LOG_TAG, "No portal detected.");
-    
     if (getCurrentState() == State.SIGNING_IN || getCurrentState() == State.NEEDS_SIGNIN)
     {
+      Log.d(LOG_TAG, "Portal signed in.");
       transitionTo(State.SIGNED_IN);
     }
     else
     {
+      Log.d(LOG_TAG, "No portal detected.");
       transitionTo(State.NOT_CAPTIVE);
     }
   }

@@ -7,25 +7,46 @@ public class StateMachine extends Observable<TransitionEvent>
   private SetMap<State> mTransitionMatrix;
   private State mCurrentState;
   
-  public StateMachine(State[][] transitionMatrix)
-  {
-    initialize(transitionMatrix[0][0], transitionMatrix);
-  }
-  
   public StateMachine(State initialState, State[][] transitionMatrix)
-  {
-    initialize(initialState, transitionMatrix);
-  }
-  
-  private void initialize(State initialState, State[][] transitionMatrix)
   {
     mTransitionMatrix = new SetMap<State>(transitionMatrix);
     mCurrentState = initialState;
+    
+    validatePostConstructor();
+  }
+  
+  public StateMachine(String initialStateName, State[][] transitionMatrix)
+  {
+    mTransitionMatrix = new SetMap<State>(transitionMatrix);
+    
+    State initialState = findStateByName(initialStateName);
+    mCurrentState = initialState;
+    
+    validatePostConstructor();
+  }
+  
+  private void validatePostConstructor()
+  {
+    if (mCurrentState == null || mTransitionMatrix.size() == 0)
+    {
+      throw new IllegalArgumentException("Non-null initial state and non-empty transitionMatrix required");
+    }
   }
   
   public State getCurrentState()
   {
     return mCurrentState;
+  }
+  
+  public State findStateByName(String name)
+  {
+    for (State state : mTransitionMatrix.getKeys())
+    {
+      if (name.equals(state.getName()))
+        return state;
+    }
+    
+    return null;
   }
   
   /*

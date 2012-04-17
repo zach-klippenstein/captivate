@@ -14,9 +14,19 @@ public class SetMap<E>
     mMatrix = buildMatrixFrom2dArray(matrix);
   }
   
+  public int size()
+  {
+    return mMatrix.size();
+  }
+  
   public Set<E> get(E key)
   {
     return mMatrix.get(key);
+  }
+  
+  public Iterable<E> getKeys()
+  {
+    return mMatrix.keySet();
   }
   
   private Map<E, Set<E>> buildMatrixFrom2dArray(E[][] array)

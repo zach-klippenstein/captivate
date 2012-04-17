@@ -49,7 +49,10 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     Log.d(LOG_TAG, "Using portal detector " + sSeedPortalDetector.getClass().getName());
     
     mPortalDetector = sSeedPortalDetector;
-    mStateMachine = new PortalStateMachine(mPortalDetector);
+    
+    mStateMachine = (PortalStateMachine) new StateMachineStorage(
+        new PortalStateMachineStorageBackend(getApplicationContext(), mPortalDetector))
+    .loadOrCreate();
     
     mStateMachine.addObserver(this);
     

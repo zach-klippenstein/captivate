@@ -1,5 +1,7 @@
 package com.zachklipp.captivate;
 
+import com.zachklipp.captivate.util.WifiHelper;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
