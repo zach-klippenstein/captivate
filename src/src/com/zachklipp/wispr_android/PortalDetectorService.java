@@ -60,7 +60,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   {
     Intent intent = createStateChangedBroadcastIntent(event.getToState(), mPortalDetector.getPortal());
     
-    Log.i(LOG_TAG, String.format("Broadcasting portal state change. new state=%d, portal=%s", event.getToState(), mPortalDetector.getPortal()));
+    Log.i(LOG_TAG, String.format("Broadcasting portal state change. new state=%s, portal=%s", event.getToState(), mPortalDetector.getPortal()));
     
     getBaseContext().sendBroadcast(intent);
   }

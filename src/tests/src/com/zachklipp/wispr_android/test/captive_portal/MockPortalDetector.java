@@ -1,4 +1,4 @@
-package com.zachklipp.wispr_android.test;
+package com.zachklipp.wispr_android.test.captive_portal;
 
 import android.net.Uri;
 import android.util.Log;

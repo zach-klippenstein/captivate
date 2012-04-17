@@ -46,25 +46,40 @@ public class PortalStateMachine extends StateMachine implements Observer<PortalI
   {
     if (portal == null)
     {
-      Log.d(LOG_TAG, "Captive portal disappeared.");
-      
       noLongerNeedsSignin();
     }
     else
     {
-      Log.d(LOG_TAG, "Captive portal detected.");
-      
       needsSignin();
     }
   }
   
-  public void needsSignin()
+  public void startSignIn()
   {
-    throw new UnsupportedOperationException("Not implemented");
+    transitionTo(State.SIGNING_IN);
   }
   
-  public void noLongerNeedsSignin()
+  private void needsSignin()
   {
-    throw new UnsupportedOperationException("Not implemented");
+    if (getCurrentState() != State.NEEDS_SIGNIN && getCurrentState() != State.SIGNING_IN)
+    {
+      Log.d(LOG_TAG, "Captive portal detected.");
+      
+      transitionTo(State.NEEDS_SIGNIN);
+    }
+  }
+  
+  private void noLongerNeedsSignin()
+  {
+    Log.d(LOG_TAG, "No portal detected.");
+    
+    if (getCurrentState() == State.SIGNING_IN)
+    {
+      transitionTo(State.SIGNED_IN);
+    }
+    else
+    {
+      transitionTo(State.NOT_CAPTIVE);
+    }
   }
 }

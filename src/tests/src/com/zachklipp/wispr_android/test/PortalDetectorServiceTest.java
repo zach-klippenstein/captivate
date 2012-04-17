@@ -1,7 +1,7 @@
 package com.zachklipp.wispr_android.test;
 
 import com.zachklipp.wispr_android.PortalDetectorService;
-//import com.zachklipp.wispr_android.captive_portal.PortalDetector;
+import com.zachklipp.wispr_android.test.captive_portal.MockPortalDetector;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,19 +11,6 @@ import android.util.Log;
 public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorService>
 {
   private static final String LOG_TAG = "wispr-android-tests";
-  
-  /*private static final CaptivePortalSensorFactory mFactory = new CaptivePortalSensorFactory()
-  {
-    private static final long serialVersionUID = 5319030221033139374L;
-
-    @Override
-    public CaptivePortalSensor createSensor()
-    {
-      MockPortalDetector sensor = new MockPortalDetector();
-      sensor.setDetectFakePortal(true);
-      return sensor;
-    }
-  };*/
   
   private MockBroadcastReceiver mBroadcastReceiver;
   private IntentFilter mPortalStateChangedIntentFilter;
