@@ -7,7 +7,7 @@ import android.util.Log;
 // See http://erratasec.blogspot.com/2010/09/apples-secret-wispr-request.html
 public abstract class PortalDetector extends Observable<PortalInfo>
 {
-  private static final String LOG_TAG = "wispr-android";
+  private static final String LOG_TAG = "captivate";
   
   private PortalInfo mPortal;
   

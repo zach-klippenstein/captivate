@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorService>
 {
-  private static final String LOG_TAG = "wispr-android-tests";
+  private static final String LOG_TAG = "captivate-tests";
   
   private MockBroadcastReceiver mBroadcastReceiver;
   private IntentFilter mPortalStateChangedIntentFilter;

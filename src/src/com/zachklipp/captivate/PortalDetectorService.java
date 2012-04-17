@@ -20,7 +20,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   private static PortalDetector sSeedPortalDetector = HttpResponseContentsDetector.createDetector();
   
-  private static final String LOG_TAG = "wispr-android";
+  private static final String LOG_TAG = "captivate";
   
   /*
    * Set the detector to be used when the service is next started.

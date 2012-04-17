@@ -10,7 +10,7 @@ import android.util.Log;
 // Thread-safe
 class MockBroadcastReceiver extends BroadcastReceiver
 {
-  private static final String LOG_TAG = "wispr-android-tests";
+  private static final String LOG_TAG = "captivate-tests";
   
   private ArrayList<Intent> mReceivedIntents = new ArrayList<Intent>();
   

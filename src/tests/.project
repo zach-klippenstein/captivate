@@ -3,7 +3,7 @@
 	<name>captivate-tests</name>
 	<comment></comment>
 	<projects>
-		<project>wispr-android</project>
+		<project>captivate</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

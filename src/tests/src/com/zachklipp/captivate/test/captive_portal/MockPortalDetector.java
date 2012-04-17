@@ -8,7 +8,7 @@ import com.zachklipp.captivate.captive_portal.PortalInfo;
 
 public class MockPortalDetector extends PortalDetector
 {
-  private static final String LOG_TAG = "wispr-android-tests";
+  private static final String LOG_TAG = "captivate-tests";
   
   private boolean mDetectFakePortal = false;
   

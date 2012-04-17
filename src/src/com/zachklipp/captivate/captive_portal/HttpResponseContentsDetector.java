@@ -19,7 +19,7 @@ import android.util.Log;
 
 public class HttpResponseContentsDetector extends PortalDetector
 {
-  private static final String LOG_TAG = "wispr-android";
+  private static final String LOG_TAG = "captivate";
   
   private static final String USER_AGENT = "CaptiveNetworkSupport/1.0 wispr";
   private static final String URL = "http://www.apple.com/library/test/success.html";

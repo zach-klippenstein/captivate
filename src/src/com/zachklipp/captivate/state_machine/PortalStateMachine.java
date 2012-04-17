@@ -31,7 +31,7 @@ public class PortalStateMachine extends StateMachine implements Observer<PortalI
       new State[] {State.SIGNED_IN, State.NEEDS_SIGNIN, State.NOT_CAPTIVE},
     };
 
-  private static final String LOG_TAG = "wispr-android";
+  private static final String LOG_TAG = "captivate";
   
   private PortalDetector mPortalDetector;
 

@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class WifiStateChangedReceiver extends BroadcastReceiver
 {
-  private static final String LOG_TAG = "wispr-android";
+  private static final String LOG_TAG = "captivate";
   
   @Override
   public void onReceive(Context context, Intent intent)
