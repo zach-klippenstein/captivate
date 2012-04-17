@@ -1,5 +1,8 @@
 package com.zachklipp.wispr_android;
 
+import com.zachklipp.wispr_android.captive_portal.PortalInfo;
+import com.zachklipp.wispr_android.state_machine.PortalStateMachine;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +14,7 @@ public class PortalStateChangedReceiver extends BroadcastReceiver
   {
     String action = intent.getAction();
     
-    if (action.equals(CaptivePortalDetectorService.ACTION_PORTAL_STATE_CHANGED))
+    if (action.equals(PortalDetectorService.ACTION_PORTAL_STATE_CHANGED))
     {
       onPortalStateChanged(context, intent);
     }
@@ -19,10 +22,12 @@ public class PortalStateChangedReceiver extends BroadcastReceiver
   
   private void onPortalStateChanged(Context context, Intent intent)
   {
-    int portalState = intent.getIntExtra(CaptivePortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE, CaptivePortalDetectorService.STATE_UNKNOWN);
-    CaptivePortalInfo portalInfo = intent.getParcelableExtra(CaptivePortalDetectorService.EXTRA_CAPTIVE_PORTAL_INFO);
+    String portalState = intent.getStringExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE);
+    assert(portalState != null);
     
-    if (portalState == CaptivePortalDetectorService.STATE_NEEDS_SIGNIN)
+    PortalInfo portalInfo = intent.getParcelableExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_INFO);
+    
+    if (portalState.equals(PortalStateMachine.State.NEEDS_SIGNIN.getName()))
     {
       ConnectedNotification.showNotification(context, portalInfo);
     }

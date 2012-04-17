@@ -1,5 +1,7 @@
 package com.zachklipp.wispr_android;
 
+import com.zachklipp.wispr_android.captive_portal.PortalInfo;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,7 +12,7 @@ public final class ConnectedNotification
 {
   private static final int CONNECTED_NOTIFICATION_ID = 1;
 
-  public static void showNotification(Context context, CaptivePortalInfo portalInfo)
+  public static void showNotification(Context context, PortalInfo portalInfo)
   {
     Intent showPortalIntent = portalInfo.getShowPortalIntent();
     PendingIntent contentIntent = PendingIntent.getActivity(context, 0, showPortalIntent, 0);

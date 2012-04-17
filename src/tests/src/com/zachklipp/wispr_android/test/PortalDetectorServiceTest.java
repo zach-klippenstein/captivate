@@ -1,37 +1,36 @@
 package com.zachklipp.wispr_android.test;
 
-import com.zachklipp.wispr_android.CaptivePortalSensor;
-import com.zachklipp.wispr_android.CaptivePortalSensorFactory;
-import com.zachklipp.wispr_android.CaptivePortalDetectorService;
+import com.zachklipp.wispr_android.PortalDetectorService;
+//import com.zachklipp.wispr_android.captive_portal.PortalDetector;
 
-import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.test.ServiceTestCase;
 import android.util.Log;
 
-public class CaptivePortalDetectorServiceTest extends ServiceTestCase<CaptivePortalDetectorService>
+public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorService>
 {
   private static final String LOG_TAG = "wispr-android-tests";
   
-  private static final CaptivePortalSensorFactory mFactory = new CaptivePortalSensorFactory()
+  /*private static final CaptivePortalSensorFactory mFactory = new CaptivePortalSensorFactory()
   {
     private static final long serialVersionUID = 5319030221033139374L;
 
     @Override
     public CaptivePortalSensor createSensor()
     {
-      MockCaptivePortalSensor sensor = new MockCaptivePortalSensor();
+      MockPortalDetector sensor = new MockPortalDetector();
       sensor.setDetectFakePortal(true);
       return sensor;
     }
-  };
+  };*/
   
   private MockBroadcastReceiver mBroadcastReceiver;
   private IntentFilter mPortalStateChangedIntentFilter;
   
-  public CaptivePortalDetectorServiceTest()
+  public PortalDetectorServiceTest()
   {
-    super(CaptivePortalDetectorService.class);
+    super(PortalDetectorService.class);
   }
   
   @Override
@@ -41,7 +40,7 @@ public class CaptivePortalDetectorServiceTest extends ServiceTestCase<CaptivePor
     
     mBroadcastReceiver = new MockBroadcastReceiver();
     mPortalStateChangedIntentFilter = new IntentFilter(
-        CaptivePortalDetectorService.ACTION_PORTAL_STATE_CHANGED);
+        PortalDetectorService.ACTION_PORTAL_STATE_CHANGED);
     
     assertNotNull(mBroadcastReceiver);
     assertNotNull(mContext);
@@ -57,16 +56,17 @@ public class CaptivePortalDetectorServiceTest extends ServiceTestCase<CaptivePor
     assertNotNull(mPortalStateChangedIntentFilter);
     mContext.registerReceiver(mBroadcastReceiver, mPortalStateChangedIntentFilter);
     
-    startServiceWithMock();
-    mBroadcastReceiver.waitForIntents(1, 2000);
+    MockPortalDetector detector = new MockPortalDetector();
+    detector.setDetectFakePortal(true);
+    
+    PortalDetectorService.setPortalDetector(detector);
+    startService(new Intent(mContext, PortalDetectorService.class));
+    
+    // Wait for max 5 minutes
+    mBroadcastReceiver.waitForIntents(1, 300000);
 
     mContext.unregisterReceiver(mBroadcastReceiver);
     
     assertEquals(1, mBroadcastReceiver.getReceivedIntents().length);
-  }
-  
-  private void startServiceWithMock()
-  {
-    startService(CaptivePortalDetectorService.createStartIntent(mContext, mFactory));
   }
 }

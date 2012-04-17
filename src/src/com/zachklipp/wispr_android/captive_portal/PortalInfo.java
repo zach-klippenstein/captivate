@@ -1,31 +1,31 @@
-package com.zachklipp.wispr_android;
+package com.zachklipp.wispr_android.captive_portal;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class CaptivePortalInfo implements Parcelable
+public class PortalInfo implements Parcelable
 {
-  public static final Parcelable.Creator<CaptivePortalInfo> CREATOR = new Parcelable.Creator<CaptivePortalInfo>()
+  public static final Parcelable.Creator<PortalInfo> CREATOR = new Parcelable.Creator<PortalInfo>()
   {
-    public CaptivePortalInfo createFromParcel(Parcel in) {
-      return new CaptivePortalInfo(in);
+    public PortalInfo createFromParcel(Parcel in) {
+      return new PortalInfo(in);
     }
   
-    public CaptivePortalInfo[] newArray(int size) {
-      return new CaptivePortalInfo[size];
+    public PortalInfo[] newArray(int size) {
+      return new PortalInfo[size];
     }
   };
   
   private Uri mPortalUri;
   
-  public CaptivePortalInfo(Uri portalUri)
+  public PortalInfo(Uri portalUri)
   {
     mPortalUri = portalUri;
   }
   
-  private CaptivePortalInfo(Parcel in)
+  private PortalInfo(Parcel in)
   {
     mPortalUri = Uri.CREATOR.createFromParcel(in);
   }
@@ -52,6 +52,6 @@ public class CaptivePortalInfo implements Parcelable
   
   public String toString()
   {
-    return String.format("CaptivePortalInfo@%s", mPortalUri);
+    return String.format("PortalInfo@%s", mPortalUri);
   }
 }

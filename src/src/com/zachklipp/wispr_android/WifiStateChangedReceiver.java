@@ -9,8 +9,7 @@ import android.util.Log;
 public class WifiStateChangedReceiver extends BroadcastReceiver
 {
   private static final String LOG_TAG = "wispr-android";
-  private static final CaptivePortalSensorFactory DETECTOR_FACTORY = new AppleCaptivePortalDetectorFactory();
-
+  
   @Override
   public void onReceive(Context context, Intent intent)
   {
@@ -27,7 +26,8 @@ public class WifiStateChangedReceiver extends BroadcastReceiver
     if (WifiHelper.isConnectedFromNetworkStateChangedIntent(intent))
     {
       Log.d(LOG_TAG, "Wifi connected, starting service...");
-      context.startService(CaptivePortalDetectorService.createStartIntent(context, DETECTOR_FACTORY));
+      
+      context.startService(new Intent(context, PortalDetectorService.class));
     }
     else if (WifiHelper.isDisconnectedFromNetworkStateChangedIntent(intent))
     {

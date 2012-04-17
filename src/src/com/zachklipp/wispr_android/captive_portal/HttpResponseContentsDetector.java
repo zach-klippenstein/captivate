@@ -1,4 +1,4 @@
-package com.zachklipp.wispr_android;
+package com.zachklipp.wispr_android.captive_portal;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,18 +13,29 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+
 import android.net.Uri;
 import android.util.Log;
 
-class HttpResponseContentsSensor implements CaptivePortalSensor
+public class HttpResponseContentsDetector extends PortalDetector
 {
   private static final String LOG_TAG = "wispr-android";
+  
+  private static final String USER_AGENT = "CaptiveNetworkSupport/1.0 wispr";
+  private static final String URL = "http://www.apple.com/library/test/success.html";
+  private static final Pattern NO_PORTAL_PATTERN = Pattern.compile("^\\s*Success\\s*$");
+  
+  public static PortalDetector createDetector()
+  {
+    Log.d(LOG_TAG, "Creating HttpResponseContentsDetector");
+    return new HttpResponseContentsDetector(USER_AGENT, URL, NO_PORTAL_PATTERN);
+  }
   
   private String mUserAgent;
   private String mUrl;
   private Pattern mNoPortalPattern;
   
-  public HttpResponseContentsSensor(String userAgent, String url, Pattern noPortalPattern)
+  public HttpResponseContentsDetector(String userAgent, String url, Pattern noPortalPattern)
   {
     assert(userAgent != null && userAgent.length() > 0);
     assert(url != null && url.length() > 0);
@@ -35,9 +46,7 @@ class HttpResponseContentsSensor implements CaptivePortalSensor
     mNoPortalPattern = noPortalPattern;
   }
   
-  // If behind a captive portal, set portalUri to the portal
-  // login page, else set it to null.
-  public void checkForCaptivePortal(CaptivePortalDetector detector)
+  public void checkForPortal()
   {
     HttpClient client = new DefaultHttpClient();
     HttpUriRequest request = new HttpGet(mUrl);
@@ -51,7 +60,7 @@ class HttpResponseContentsSensor implements CaptivePortalSensor
     
     if (doesResponseIndicatePortal(response.getEntity()))
     {
-      detector.reportCaptivePortal(new CaptivePortalInfo(Uri.parse(mUrl)));
+      reportPortal(new PortalInfo(Uri.parse(mUrl)));
     }
   }
   
