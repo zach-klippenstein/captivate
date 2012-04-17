@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Wispr Android</string>
-    <string name="about_title">About Wispr Android</string>
+    <string name="app_name">Captivate</string>
+    <string name="about_title">About Captivate</string>
     <string name="notification_title">Public Hotspot Detected</string>
     <string name="notification_text">Touch to open login page</string>
     <string name="ticker_text">Hotspot requires login</string>
     <string name="about_text"><![CDATA[
         <p>
-            Wispr Android automatically detects when you connect to a captive portal (e.g. Starbucks hotspots), and prompts you to accept its terms of service.
+            Captivate automatically detects when you connect to a captive portal (e.g. Starbucks hotspots), and prompts you to accept its terms of service.
         </p>
         <p>
-            Report issues or contact the developer at https://github.com/zach-klippenstein/wispr-android
+            Report issues or contact the developer at https://github.com/zach-klippenstein/captivate
         </p>
     ]]></string>
     <string name="about_category_title">About</string>

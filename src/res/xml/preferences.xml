@@ -8,8 +8,8 @@
 	        android:title="@string/about_title">
 	        <intent
 	            android:action="android.intent.action.MAIN"
-	            android:targetPackage="com.zachklipp.wispr_android"
-	            android:targetClass="com.zachklipp.wispr_android.AboutActivity" />
+	            android:targetPackage="com.zachklipp.captivate"
+	            android:targetClass="com.zachklipp.captivate.AboutActivity" />
 	    </PreferenceScreen>
 	</PreferenceCategory>
 </PreferenceScreen>

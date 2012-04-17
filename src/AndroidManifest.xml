@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.zachklipp.wispr_android"
+    package="com.zachklipp.captivate"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name=".WisprPreferencesActivity"
+            android:name=".PreferenceActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
         </receiver>
         <receiver android:name=".PortalStateChangedReceiver">
             <intent-filter>
-                <action android:name="com.zachklipp.wispr_android.ACTION_PORTAL_STATE_CHANGED"/>
+                <action android:name="com.zachklipp.captivate.ACTION_PORTAL_STATE_CHANGED"/>
             </intent-filter>
         </receiver>
         <activity android:name="AboutActivity" android:label="@string/about_title"></activity>
