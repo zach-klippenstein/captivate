@@ -17,7 +17,7 @@ public final class ConnectedNotification
     Intent showPortalIntent = portalInfo.getShowPortalIntent();
     PendingIntent contentIntent = PendingIntent.getActivity(context, 0, showPortalIntent, 0);
     
-    Notification notification = new Notification(R.drawable.ic_launcher, context.getString(R.string.ticker_text), System.currentTimeMillis());
+    Notification notification = new Notification(R.drawable.notification_icon, context.getString(R.string.ticker_text), System.currentTimeMillis());
     notification.flags |= Notification.FLAG_AUTO_CANCEL;
     
     notification.setLatestEventInfo(context, context.getString(R.string.notification_title), context.getString(R.string.notification_text), contentIntent);
