@@ -22,18 +22,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".WifiStateChangedReceiver">
+        <receiver android:name=".service.WifiStateChangedReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.STATE_CHANGE"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".PortalStateChangedReceiver">
+        <receiver android:name=".service.PortalStateChangedReceiver">
             <intent-filter>
                 <action android:name="com.zachklipp.captivate.ACTION_PORTAL_STATE_CHANGED"/>
             </intent-filter>
         </receiver>
         <activity android:name="AboutActivity" android:label="@string/about_title"></activity>
-        <service android:name=".PortalDetectorService"></service>
+        <service android:name=".service.PortalDetectorServicerService"></service>
     </application>
 
 </manifest>

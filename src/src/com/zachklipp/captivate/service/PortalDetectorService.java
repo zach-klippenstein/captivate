@@ -1,5 +1,6 @@
-package com.zachklipp.captivate;
+package com.zachklipp.captivate.service;
 
+import com.zachklipp.captivate.ConnectedNotification;
 import com.zachklipp.captivate.captive_portal.*;
 import com.zachklipp.captivate.state_machine.*;
 import com.zachklipp.captivate.util.Observable;

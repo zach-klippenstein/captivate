@@ -1,6 +1,6 @@
-package com.zachklipp.captivate.test;
+package com.zachklipp.captivate.test.service;
 
-import com.zachklipp.captivate.PortalDetectorService;
+import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.test.captive_portal.MockPortalDetector;
 
 import android.content.Intent;

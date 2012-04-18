@@ -1,5 +1,6 @@
-package com.zachklipp.captivate;
+package com.zachklipp.captivate.service;
 
+import com.zachklipp.captivate.ConnectedNotification;
 import com.zachklipp.captivate.util.WifiHelper;
 
 import android.content.BroadcastReceiver;

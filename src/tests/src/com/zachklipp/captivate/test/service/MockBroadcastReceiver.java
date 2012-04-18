@@ -1,4 +1,4 @@
-package com.zachklipp.captivate.test;
+package com.zachklipp.captivate.test.service;
 
 import java.util.ArrayList;
 
