@@ -5,17 +5,6 @@
     <string name="notification_title">Captive Hotspot Detected</string>
     <string name="notification_text">Touch to open login page</string>
     <string name="ticker_text">Hotspot requires login</string>
-    <string name="about_text"><![CDATA[
-        <p>
-            Captivate automatically detects when you connect to a captive wifi portal (e.g. Starbucks), and pops up a notification to take you to the login page for the service. Starbucks, for example, just asks you to check a box to accept their terms of service.
-        </p>
-        <p>
-            Captivate is developed by Zach Klippenstein, of http://zachklipp.ca.
-        </p>
-        <p>
-            It is also open source! Check out the dirty details on the GitHub page: https://github.com/zach-klippenstein/captivate
-        </p>
-    ]]></string>
     <string name="about_category_title">About</string>
     <string name="feedback_title">Send Feedback</string>
     <string name="feedback_subject">Feedback on Captivate</string>
