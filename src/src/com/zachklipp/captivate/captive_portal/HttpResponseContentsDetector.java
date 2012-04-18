@@ -28,6 +28,7 @@ public class HttpResponseContentsDetector extends PortalDetector
   public static PortalDetector createDetector()
   {
     Log.d(LOG_TAG, "Creating HttpResponseContentsDetector");
+    
     return new HttpResponseContentsDetector(USER_AGENT, URL, NO_PORTAL_PATTERN);
   }
   
@@ -96,17 +97,18 @@ public class HttpResponseContentsDetector extends PortalDetector
   {
     BufferedReader reader = new BufferedReader(new InputStreamReader(response));
     String inputLine;
+    boolean onPortal = true;
     
-    while ((inputLine = reader.readLine()) != null)
+    while ((inputLine = reader.readLine()) != null && onPortal)
     {
-      if (doesResponseLineIndicatePortal(inputLine))
-        return true;
+      if (doesResponseLineIndicateNoPortal(inputLine))
+        onPortal = false;
     }
     
-    return false;
+    return onPortal;
   }
   
-  private boolean doesResponseLineIndicatePortal(String response)
+  private boolean doesResponseLineIndicateNoPortal(String response)
   {
     return mNoPortalPattern.matcher(response).matches();
   }

@@ -61,17 +61,39 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   public void update(Observable<TransitionEvent> observable, TransitionEvent event)
   {
-    Intent intent = createStateChangedBroadcastIntent(event.getToState(), mPortalDetector.getPortal());
-    
-    Log.i(LOG_TAG, String.format("Broadcasting portal state change. new state=%s, portal=%s", event.getToState(), mPortalDetector.getPortal()));
-    
-    getBaseContext().sendBroadcast(intent);
+    updateNotification();
+    sendStateChangedBroadcast();
   }
   
   @Override
   protected void onHandleIntent(Intent intent)
   {
     mPortalDetector.checkForPortal();
+  }
+  
+  private void updateNotification()
+  {
+    if (PortalStateMachine.State.NEEDS_SIGNIN == mStateMachine.getCurrentState())
+    {
+      ConnectedNotification.showNotification(this, mPortalDetector.getPortal());
+    }
+    else
+    {
+      ConnectedNotification.hideNotification(this);
+    }
+  }
+  
+  private void sendStateChangedBroadcast()
+  {
+    State state = mStateMachine.getCurrentState();
+    PortalInfo portal = mPortalDetector.getPortal();
+    
+    Intent intent = createStateChangedBroadcastIntent(state, portal);
+    
+    Log.i(LOG_TAG, String.format("Broadcasting portal state change. new state=%s, portal=%s",
+        state, portal));
+    
+    sendBroadcast(intent);
   }
   
   private static Intent createStateChangedBroadcastIntent(State state, PortalInfo portal)
