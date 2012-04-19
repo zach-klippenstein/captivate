@@ -1,14 +1,18 @@
 package com.zachklipp.captivate;
 
-import com.zachklipp.captivate.util.VersionNameInjector;
+import java.nio.charset.Charset;
+
+import com.zachklipp.captivate.util.HtmlResourceTemplate;
 
 import android.app.Activity;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebView;
 
 public class AboutActivity extends Activity
 {
-  private final static String ABOUT_CHARSET = "UTF-8";
+  private final static String LOG_TAG = "captivate";
   
   /** Called when the activity is first created. */
   @Override
@@ -26,13 +30,30 @@ public class AboutActivity extends Activity
       view.loadDataWithBaseURL("file:///android_res",
           getAboutHtml(),
           "text/html",
-          ABOUT_CHARSET,
+          Charset.defaultCharset().name(),
           null);
   }
   
   private String getAboutHtml()
   {
-    VersionNameInjector injector = new VersionNameInjector(this, ABOUT_CHARSET);
-    return injector.injectVersionNameIntoHtmlResource(R.raw.about);
+    return new HtmlResourceTemplate()
+      .withValues("version-name", getVersionName())
+      .render(this, R.raw.about);
+  }
+  
+  private String getVersionName()
+  {
+    String versionName = "unknown";
+    
+    try
+    {
+      versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+    }
+    catch (NameNotFoundException e)
+    {
+      Log.v(LOG_TAG, e.getMessage());
+    }
+    
+    return versionName;
   }
 }
