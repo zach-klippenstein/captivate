@@ -9,5 +9,7 @@
     <string name="feedback_title">Send Feedback</string>
     <string name="feedback_subject">[captivate] User Feedback</string>
     <string name="feedback_email">zk.at.sf@gmail.com</string>
+    <string name="no_feedback_receiver_message">Email zk.at.sf@gmail.com with “[captivate]” in the subject line."</string>
+    <string name="ok">OK</string>
 
 </resources>
