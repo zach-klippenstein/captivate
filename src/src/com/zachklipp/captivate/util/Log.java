@@ -4,8 +4,7 @@ public final class Log
 {
   private static final int DEFAULT_MIN_PRIORITY = ~0;
   
-  // Should be set by an accessor by a child class if this class is pulled into a library.
-  private static String sDefaultTag = "captivate";
+  private static String sDefaultTag;
   
   private static int sMinPriority = DEFAULT_MIN_PRIORITY;
   
