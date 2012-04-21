@@ -3,17 +3,15 @@ package com.zachklipp.captivate.state_machine;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 
 import com.zachklipp.captivate.captive_portal.PortalDetector;
 import com.zachklipp.captivate.state_machine.StateMachineStorage.StorageBackend;
+import com.zachklipp.captivate.util.Log;
 
 public class PortalStateMachineStorageBackend implements StorageBackend
 {
   private static final String PREFERENCES_NAME = "PortalStateMachine";
   private static final String STATE_KEY = "state";
-  
-  private static final String LOG_TAG = "captivate";
   
   private PortalDetector mDetector;
   private SharedPreferences mPreferences;
@@ -48,7 +46,7 @@ public class PortalStateMachineStorageBackend implements StorageBackend
   {
     String stateName = mPreferences.getString(STATE_KEY, PortalStateMachine.State.UNKNOWN.getName());
     
-    Log.d(LOG_TAG, String.format("Attempting to load state machine from state %s", stateName));
+    Log.d(String.format("Attempting to load state machine from state %s", stateName));
     
     return new PortalStateMachine(mDetector, stateName);
   }

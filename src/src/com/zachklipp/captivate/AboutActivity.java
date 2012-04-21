@@ -3,17 +3,15 @@ package com.zachklipp.captivate;
 import java.nio.charset.Charset;
 
 import com.zachklipp.captivate.util.HtmlResourceTemplate;
+import com.zachklipp.captivate.util.Log;
 
 import android.app.Activity;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebView;
 
 public class AboutActivity extends Activity
 {
-  private final static String LOG_TAG = "captivate";
-  
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,7 @@ public class AboutActivity extends Activity
     }
     catch (NameNotFoundException e)
     {
-      Log.v(LOG_TAG, e.getMessage());
+      Log.v(e.getMessage());
     }
     
     return versionName;

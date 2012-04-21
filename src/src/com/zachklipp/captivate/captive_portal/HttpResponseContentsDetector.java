@@ -13,21 +13,20 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.zachklipp.captivate.util.Log;
+
 
 import android.net.Uri;
-import android.util.Log;
 
 public class HttpResponseContentsDetector extends PortalDetector
 {
-  private static final String LOG_TAG = "captivate";
-  
   private static final String USER_AGENT = "CaptiveNetworkSupport/1.0 wispr";
   private static final String URL = "http://www.apple.com/library/test/success.html";
   private static final Pattern NO_PORTAL_PATTERN = Pattern.compile("^\\s*Success\\s*$");
   
   public static PortalDetector createDetector()
   {
-    Log.d(LOG_TAG, "Creating HttpResponseContentsDetector");
+    Log.d("Creating HttpResponseContentsDetector");
     
     return new HttpResponseContentsDetector(USER_AGENT, URL, NO_PORTAL_PATTERN);
   }
@@ -55,7 +54,7 @@ public class HttpResponseContentsDetector extends PortalDetector
     
     HttpResponse response = executeRequestOrThrow(client, request);
     
-    Log.d(LOG_TAG, String.format("Response (%d bytes): %s",
+    Log.d(String.format("Response (%d bytes): %s",
         response.getEntity().getContentLength(),
         response.getStatusLine()));
     

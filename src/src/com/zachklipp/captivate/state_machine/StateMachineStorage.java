@@ -1,14 +1,11 @@
 package com.zachklipp.captivate.state_machine;
 
-import android.util.Log;
-
+import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
 
 public class StateMachineStorage implements Observer<TransitionEvent>
 {
-  private static final String LOG_TAG = "captivate";
-  
   public static interface StorageBackend
   {
     void save(StateMachine machine);
@@ -53,7 +50,7 @@ public class StateMachineStorage implements Observer<TransitionEvent>
   {
     assert(stateMachine != null);
     
-    Log.d(LOG_TAG, String.format("Saving state machine in state %s",
+    Log.d(String.format("Saving state machine in state %s",
         stateMachine.getCurrentState().getName()));
     
     mBackend.save(stateMachine);
@@ -72,7 +69,7 @@ public class StateMachineStorage implements Observer<TransitionEvent>
   {
     if (mBackend.canLoad())
     {
-      Log.d(LOG_TAG, "Loading state machine");
+      Log.d("Loading state machine");
       
       mStateMachine = mBackend.load();
       return true;

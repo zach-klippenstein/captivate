@@ -3,12 +3,12 @@ package com.zachklipp.captivate.service;
 import com.zachklipp.captivate.ConnectedNotification;
 import com.zachklipp.captivate.captive_portal.*;
 import com.zachklipp.captivate.state_machine.*;
+import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 public class PortalDetectorService extends IntentService implements Observer<TransitionEvent>
 {
@@ -21,8 +21,6 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   private static PortalDetector sSeedPortalDetector = HttpResponseContentsDetector.createDetector();
   
-  private static final String LOG_TAG = "captivate";
-  
   /*
    * Set the detector to be used when the service is next started.
    * Must be called before the service is started.
@@ -31,7 +29,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   {
     assert(detector != null);
     
-    Log.w(LOG_TAG, "Setting custom portal detector...");
+    Log.w("Setting custom portal detector...");
     
     sSeedPortalDetector = detector;
   }
@@ -47,7 +45,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   @Override
   public void onCreate()
   {
-    Log.d(LOG_TAG, "Using portal detector " + sSeedPortalDetector.getClass().getName());
+    Log.d("Using portal detector " + sSeedPortalDetector.getClass().getName());
     
     mPortalDetector = sSeedPortalDetector;
     
@@ -91,7 +89,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     
     Intent intent = createStateChangedBroadcastIntent(state, portal);
     
-    Log.i(LOG_TAG, String.format("Broadcasting portal state change. new state=%s, portal=%s",
+    Log.i(String.format("Broadcasting portal state change. new state=%s, portal=%s",
         state, portal));
     
     sendBroadcast(intent);

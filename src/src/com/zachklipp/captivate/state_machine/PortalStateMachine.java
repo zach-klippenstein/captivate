@@ -1,9 +1,8 @@
 package com.zachklipp.captivate.state_machine;
 
-import android.util.Log;
-
 import com.zachklipp.captivate.captive_portal.PortalDetector;
 import com.zachklipp.captivate.captive_portal.PortalInfo;
+import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
 
@@ -30,8 +29,6 @@ public class PortalStateMachine extends StateMachine
       new State[] {State.SIGNING_IN, State.SIGNED_IN},
       new State[] {State.SIGNED_IN, State.NEEDS_SIGNIN, State.NOT_CAPTIVE},
     };
-
-  private static final String LOG_TAG = "captivate";
 
   private PortalDetector mPortalDetector;
 
@@ -67,7 +64,7 @@ public class PortalStateMachine extends StateMachine
       }
     });
     
-    Log.d(LOG_TAG, String.format("Portal state machine initialized to state %s", getCurrentState().getName()));
+    Log.d(String.format("Portal state machine initialized to state %s", getCurrentState().getName()));
   }
   
   public void startSignIn()
@@ -79,7 +76,7 @@ public class PortalStateMachine extends StateMachine
   {
     if (getCurrentState() != State.NEEDS_SIGNIN && getCurrentState() != State.SIGNING_IN)
     {
-      Log.d(LOG_TAG, "Captive portal detected.");
+      Log.d("Captive portal detected.");
       
       transitionTo(State.NEEDS_SIGNIN);
     }
@@ -89,12 +86,12 @@ public class PortalStateMachine extends StateMachine
   {
     if (getCurrentState() == State.SIGNING_IN || getCurrentState() == State.NEEDS_SIGNIN)
     {
-      Log.d(LOG_TAG, "Portal signed in.");
+      Log.d("Portal signed in.");
       transitionTo(State.SIGNED_IN);
     }
     else
     {
-      Log.d(LOG_TAG, "No portal detected.");
+      Log.d("No portal detected.");
       transitionTo(State.NOT_CAPTIVE);
     }
   }

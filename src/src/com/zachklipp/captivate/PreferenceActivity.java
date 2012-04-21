@@ -1,5 +1,6 @@
 package com.zachklipp.captivate;
 
+import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.SafeIntentSender;
 
 import android.app.AlertDialog;
@@ -8,14 +9,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.util.Log;
 
 public class PreferenceActivity extends android.preference.PreferenceActivity
 {
   private static final String FEEDBACK_PREFERENCE_KEY = "feedbackKey";
   private static final int NO_FEEDBACK_RECEIVER_DIALOG = 0;
-  
-  private static final String LOG_TAG = "captivate";
   
   /** Called when the activity is first created. */
   @Override
@@ -43,7 +41,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
         break;
         
       default:
-        Log.w(LOG_TAG, String.format("Attempted to show invalid dialog: %d", which));
+        Log.w(String.format("Attempted to show invalid dialog: %d", which));
     }
     
     return dialog;
