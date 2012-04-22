@@ -9,6 +9,11 @@ public class Application extends android.app.Application
   @Override
   public void onCreate()
   {
+    initializeLogging();
+  }
+  
+  private void initializeLogging()
+  {
     Log.setDefaultTag("captivate");
     
     if (isReleaseBuild())

@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <PreferenceCategory
+        android:title="@string/general_category_title" >
+        <CheckBoxPreference
+            android:key="enabled"
+            android:title="@string/enabled_title"
+            android:defaultValue="true"
+            android:summaryOn="@string/enabled_summary"
+            android:summaryOff="@string/disabled_summary" />
+    </PreferenceCategory>
+    
     <PreferenceCategory
         android:title="@string/about_category_title" >
 	    <PreferenceScreen
@@ -22,4 +33,5 @@
             </intent>
 	    </PreferenceScreen>
 	</PreferenceCategory>
+	
 </PreferenceScreen>

@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Captivate</string>
-    <string name="about_title">About Captivate</string>
+    <string name="ok">OK</string>
+    
     <string name="notification_title">Captive Hotspot Detected</string>
     <string name="notification_text">Touch to open login page</string>
     <string name="ticker_text">Hotspot requires login</string>
+    
+    <string name="general_category_title">General</string>
+    <string name="enabled_title">Enabled</string>
+    <string name="enabled_summary">Captivate will check for captive portals when wifi connects.</string>
+    <string name="disabled_summary">Captivate will never check for captive portals.</string>
+    
     <string name="about_category_title">About</string>
+    <string name="about_title">About Captivate</string>
     <string name="feedback_title">Send Feedback</string>
     <string name="feedback_subject">[captivate] User Feedback</string>
     <string name="feedback_email">zk.at.sf@gmail.com</string>
     <string name="no_feedback_receiver_message">Email zk.at.sf@gmail.com with “[captivate]” in the subject line."</string>
-    <string name="ok">OK</string>
 
 </resources>
