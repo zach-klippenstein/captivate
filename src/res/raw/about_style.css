@@ -1,18 +1,8 @@
 body {
   background-color: #000000;
   color: #ffffff;
+  padding-top: 1em;
 }
 a {
   color: #4444ff;
-}
-#icon-and-version {
-  text-align: center;
-  margin: auto;
-}
-#icon-and-version img {
-  width: 64px;
-  height: 64px;
-}
-#icon-and-version p {
-  margin-top: 0;
 }

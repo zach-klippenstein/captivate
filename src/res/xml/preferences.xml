@@ -5,7 +5,7 @@
     <PreferenceCategory
         android:title="@string/general_category_title" >
         <CheckBoxPreference
-            android:key="enabled"
+            android:key="enabled_pref"
             android:title="@string/enabled_title"
             android:defaultValue="true"
             android:summaryOn="@string/enabled_summary"
@@ -15,7 +15,7 @@
     <PreferenceCategory
         android:title="@string/about_category_title" >
 	    <PreferenceScreen
-	        android:key="aboutKey"
+	        android:key="about_pref"
 	        android:title="@string/about_title">
 	        <intent
 	            android:action="android.intent.action.MAIN"
@@ -23,7 +23,7 @@
 	            android:targetClass="com.zachklipp.captivate.AboutActivity" />
 	    </PreferenceScreen>
 	    <PreferenceScreen
-	        android:key="feedbackKey"
+	        android:key="feedback_pref"
 	        android:title="@string/feedback_title">
 	        <intent
 	            android:action="android.intent.action.SEND"

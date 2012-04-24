@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ok">Tamam</string>
+    
+    <string name="notification_title">Esir Hotspot Tespit</string>
+    <string name="notification_text">Giriş sayfasını açmak için dokunun</string>
+    <string name="ticker_text">Hotspot giriş gerektirir</string>
+    
+    <string name="general_category_title">Genel</string>
+    <string name="enabled_title">Etkin</string>
+    <string name="enabled_summary">wifi bağlandığında %s esir portalları kontrol edecektir.</string>
+    <string name="disabled_summary">%s esir portalları kontrol asla.</string>
+    
+    <string name="about_category_title">Hakkında</string>
+    <string name="about_title">%s Hakkında</string>
+    <string name="feedback_title">Görüş Gönder</string>
+    <string name="no_feedback_receiver_message">Ben sizden duymak isteriz! %s bana e-posta</string>
+
+</resources>
