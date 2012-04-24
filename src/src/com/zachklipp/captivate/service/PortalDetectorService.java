@@ -8,7 +8,6 @@ import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
 
 import android.app.IntentService;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -91,7 +90,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     if (isEnabled())
     {
       Log.v("Service updating portal status...");
-      mPortalDetector.checkForPortal();
+      mPortalDetector.checkForPortal(this);
     }
     else
     {

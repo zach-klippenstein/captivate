@@ -1,5 +1,6 @@
 package com.zachklipp.captivate.test.captive_portal;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -17,9 +18,23 @@ public class MockPortalDetector extends PortalDetector
     mDetectFakePortal = enabled;
     Log.d(LOG_TAG, "Portal detection " + (enabled ? "enabled" : "disabled"));
   }
+  
+  public void checkForPortal()
+  {
+    checkForPortal(null);
+  }
+
+  /*
+   * Disable Wifi checks for testing.
+   */
+  @Override
+  public void checkForPortal(Context context)
+  {
+    onCheckForPortal();
+  }
 
   @Override
-  public void checkForPortal()
+  protected void onCheckForPortal()
   {
     if (mDetectFakePortal)
     {

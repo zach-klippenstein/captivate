@@ -46,7 +46,8 @@ public class HttpResponseContentsDetector extends PortalDetector
     mNoPortalPattern = noPortalPattern;
   }
   
-  public void checkForPortal()
+  @Override
+  protected void onCheckForPortal()
   {
     HttpClient client = new DefaultHttpClient();
     HttpUriRequest request = new HttpGet(mUrl);

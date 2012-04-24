@@ -1,7 +1,6 @@
 package com.zachklipp.captivate.test.service;
 
 import com.zachklipp.captivate.service.PortalDetectorService;
-import com.zachklipp.captivate.service.PortalDetectorService.StorageBackendFactory;
 import com.zachklipp.captivate.state_machine.PortalStateMachine;
 import com.zachklipp.captivate.test.captive_portal.MockPortalDetector;
 import com.zachklipp.captivate.test.state_machine.MockStorageBackend;
