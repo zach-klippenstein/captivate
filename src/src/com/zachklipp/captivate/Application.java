@@ -2,8 +2,6 @@ package com.zachklipp.captivate;
 
 import com.zachklipp.captivate.util.Log;
 
-import android.content.pm.ApplicationInfo;
-
 public class Application extends android.app.Application
 {
   @Override
@@ -16,18 +14,14 @@ public class Application extends android.app.Application
   {
     Log.setDefaultTag("captivate");
     
-    if (isReleaseBuild())
+    if (!BuildConfig.DEBUG)
     {
+      Log.v("Configured for release, disabling debug logging");
       Log.setMinPriority(android.util.Log.INFO);
     }
     else
     {
       Log.v("Configured for dev, enabling debug logging");
     }
-  }
-  
-  private boolean isReleaseBuild()
-  {
-    return (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) == 0;
   }
 }

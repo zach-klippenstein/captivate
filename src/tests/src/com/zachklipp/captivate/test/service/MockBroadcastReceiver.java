@@ -2,6 +2,8 @@ package com.zachklipp.captivate.test.service;
 
 import java.util.ArrayList;
 
+import com.zachklipp.captivate.service.PortalDetectorService;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,14 +27,28 @@ class MockBroadcastReceiver extends BroadcastReceiver
     {
       synchronized(mReceivedIntents)
       {
+        Log.d(LOG_TAG, "Waiting for intent in thread " + Thread.currentThread().getName());
+        
+        try
+        {
+          mReceivedIntents.wait(startTime + timeoutMillis - System.currentTimeMillis());
+          Log.d(LOG_TAG, "Received an intent while waiting! now have " + mReceivedIntents.size());
+        }
+        catch (InterruptedException e)
+        {
+          Log.d(LOG_TAG, "Interrupted while waiting for intents!");
+        }
+        
         actualCount = mReceivedIntents.size();
       }
     }
     
+    Log.d(LOG_TAG, String.format("Done waiting for intents: expected %d got %d", expectedCount, actualCount));
+    
     return (actualCount == expectedCount);
   }
   
-  public Intent[] getReceivedIntents()
+  public Intent[] getReceivedIntentsAndClear()
   {
     Intent[] intents;
     
@@ -40,6 +56,7 @@ class MockBroadcastReceiver extends BroadcastReceiver
     {
       intents = new Intent[mReceivedIntents.size()];
       mReceivedIntents.toArray(intents);
+      mReceivedIntents.clear();
     }
     
     return intents;
@@ -48,10 +65,19 @@ class MockBroadcastReceiver extends BroadcastReceiver
   @Override
   public void onReceive(Context context, Intent intent)
   {
-    Log.d(LOG_TAG, String.format("Received intent: %s", intent.getAction()));
+    StringBuilder message = new StringBuilder(String.format("Received intent: %s", intent.getAction()));
+    
+    if (PortalDetectorService.ACTION_PORTAL_STATE_CHANGED.equals(intent.getAction()))
+      message.append(" new state=" + intent.getExtras().getString(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE));
+    
+    message.append(String.format("\non thread %s", Thread.currentThread().getName()));
+    
+    Log.d(LOG_TAG, message.toString());
+    
     synchronized(mReceivedIntents)
     {
       mReceivedIntents.add(intent);
+      mReceivedIntents.notify();
     }
   }
 }

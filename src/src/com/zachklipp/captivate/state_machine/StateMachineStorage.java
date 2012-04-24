@@ -38,6 +38,8 @@ public class StateMachineStorage implements Observer<TransitionEvent>
       mStateMachine = mBackend.create();
     }
     
+    assert(mStateMachine != null);
+    
     if (mAutoSave)
     {
       mStateMachine.addObserver(this);

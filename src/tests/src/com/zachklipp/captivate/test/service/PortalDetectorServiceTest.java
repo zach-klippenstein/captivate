@@ -1,10 +1,15 @@
 package com.zachklipp.captivate.test.service;
 
 import com.zachklipp.captivate.service.PortalDetectorService;
+import com.zachklipp.captivate.service.PortalDetectorService.StorageBackendFactory;
+import com.zachklipp.captivate.state_machine.PortalStateMachine;
 import com.zachklipp.captivate.test.captive_portal.MockPortalDetector;
+import com.zachklipp.captivate.test.state_machine.MockStorageBackend;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.test.ServiceTestCase;
 import android.util.Log;
 
@@ -13,6 +18,7 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
   private static final String LOG_TAG = "captivate-tests";
   
   private MockBroadcastReceiver mBroadcastReceiver;
+  private MockPortalDetector mDetector;
   private IntentFilter mPortalStateChangedIntentFilter;
   
   public PortalDetectorServiceTest()
@@ -25,6 +31,8 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
   {
     super.setUp();
     
+    setServiceEnabled(true);
+    
     mBroadcastReceiver = new MockBroadcastReceiver();
     mPortalStateChangedIntentFilter = new IntentFilter(
         PortalDetectorService.ACTION_PORTAL_STATE_CHANGED);
@@ -34,26 +42,97 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
     assertNotNull(mPortalStateChangedIntentFilter);
     
     Log.d(LOG_TAG, "context class: " + mContext.getClass().getName());
+    
+    mContext.registerReceiver(mBroadcastReceiver, mPortalStateChangedIntentFilter);
+    
+    mDetector = new MockPortalDetector();
+    
+    MockStorageBackend.Factory storageFactory = new MockStorageBackend.Factory();
+    storageFactory.mLoadFromSave = true;
+    storageFactory.mMachineToCreate = new PortalStateMachine(mDetector);
+    
+    PortalDetectorService.setPortalDetector(mDetector);
+    PortalDetectorService.setStorageBackendFactory(storageFactory);
+  }
+  
+  @Override
+  protected void tearDown()
+  {
+    mContext.unregisterReceiver(mBroadcastReceiver);
   }
 
   public void testSendsBroadcastIntentOnPortalDetected()
   {
-    assertNotNull(mBroadcastReceiver);
-    assertNotNull(mContext);
-    assertNotNull(mPortalStateChangedIntentFilter);
-    mContext.registerReceiver(mBroadcastReceiver, mPortalStateChangedIntentFilter);
+    mDetector.setDetectFakePortal(true);
+    startService();
     
-    MockPortalDetector detector = new MockPortalDetector();
-    detector.setDetectFakePortal(true);
-    
-    PortalDetectorService.setPortalDetector(detector);
-    startService(new Intent(mContext, PortalDetectorService.class));
-    
-    // Wait for max 5 minutes
-    mBroadcastReceiver.waitForIntents(1, 300000);
+    assertChangedToState(PortalStateMachine.State.NEEDS_SIGNIN);
+  }
 
-    mContext.unregisterReceiver(mBroadcastReceiver);
+  public void testDetectionStateChange()
+  {
+    mDetector.setDetectFakePortal(true);
+    startService();
+    assertChangedToState(PortalStateMachine.State.NEEDS_SIGNIN);
     
-    assertEquals(1, mBroadcastReceiver.getReceivedIntents().length);
+    mDetector.setDetectFakePortal(false);
+    startService();
+    assertChangedToState(PortalStateMachine.State.SIGNED_IN);
+  }
+
+  public void testDisablePreference()
+  {
+    mDetector.setDetectFakePortal(true);
+    startService();
+    assertChangedToState(PortalStateMachine.State.NEEDS_SIGNIN);
+    
+    // Disable via preferences
+    setServiceEnabled(false);
+    startService();
+    assertChangedToState(PortalStateMachine.State.UNKNOWN);
+    
+    setServiceEnabled(true);
+    startService();
+    assertChangedToState(PortalStateMachine.State.NEEDS_SIGNIN);
+    
+    // Disable via preferences
+    setServiceEnabled(false);
+    startService();
+    assertChangedToState(PortalStateMachine.State.UNKNOWN);
+    
+    setServiceEnabled(true);
+    mDetector.setDetectFakePortal(false);
+    startService();
+    assertChangedToState(PortalStateMachine.State.NOT_CAPTIVE);
+  }
+  
+  private void startService()
+  {
+    startService(new Intent(mContext, PortalDetectorService.class));
+  }
+
+  private void setServiceEnabled(boolean enabled)
+  {
+    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+    editor.putBoolean(PortalDetectorService.ENABLED_KEY, enabled);
+    editor.commit();
+  }
+  
+  private void assertChangedToState(PortalStateMachine.State expectedState)
+  {
+    mBroadcastReceiver.waitForIntents(1, 30000);
+    
+    Intent[] receivedIntents = mBroadcastReceiver.getReceivedIntentsAndClear();
+    
+    assertEquals(1, receivedIntents.length);
+     assertState(expectedState, receivedIntents[0]);
+  }
+  
+  private void assertState(PortalStateMachine.State expectedState, Intent receivedIntent)
+  {
+    String stateName = receivedIntent.getExtras().getString(
+        PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE);
+    
+    assertEquals(expectedState.getName(), stateName);
   }
 }

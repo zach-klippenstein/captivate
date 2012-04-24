@@ -24,10 +24,10 @@ public class PortalStateMachine extends StateMachine
   
   public static final State[][] TRANSITION_MATRIX = new State[][] {
       new State[] {State.UNKNOWN, State.NOT_CAPTIVE, State.NEEDS_SIGNIN},
-      new State[] {State.NOT_CAPTIVE},
-      new State[] {State.NEEDS_SIGNIN, State.SIGNING_IN, State.SIGNED_IN},
-      new State[] {State.SIGNING_IN, State.SIGNED_IN},
-      new State[] {State.SIGNED_IN, State.NEEDS_SIGNIN, State.NOT_CAPTIVE},
+      new State[] {State.NOT_CAPTIVE, State.UNKNOWN},
+      new State[] {State.NEEDS_SIGNIN, State.UNKNOWN, State.SIGNING_IN, State.SIGNED_IN},
+      new State[] {State.SIGNING_IN, State.UNKNOWN, State.SIGNED_IN},
+      new State[] {State.SIGNED_IN, State.UNKNOWN, State.NEEDS_SIGNIN, State.NOT_CAPTIVE},
     };
 
   private PortalDetector mPortalDetector;
@@ -70,6 +70,11 @@ public class PortalStateMachine extends StateMachine
   public void startSignIn()
   {
     transitionTo(State.SIGNING_IN);
+  }
+  
+  public void onDisabled()
+  {
+    transitionTo(State.UNKNOWN);
   }
   
   private void needsSignin()

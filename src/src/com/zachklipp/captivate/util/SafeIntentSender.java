@@ -7,6 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
+/*
+ * Allows sending implicit intents without crashing when there
+ * are no available receivers. 
+ */
 public class SafeIntentSender
 {
   public static interface OnNoReceiverListener

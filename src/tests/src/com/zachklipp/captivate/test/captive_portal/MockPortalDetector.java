@@ -15,6 +15,7 @@ public class MockPortalDetector extends PortalDetector
   public void setDetectFakePortal(boolean enabled)
   {
     mDetectFakePortal = enabled;
+    Log.d(LOG_TAG, "Portal detection " + (enabled ? "enabled" : "disabled"));
   }
 
   @Override

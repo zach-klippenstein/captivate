@@ -1,5 +1,9 @@
 package com.zachklipp.captivate.util;
 
+/*
+ * Wraps android.util.Log to filter by priority.
+ * TODO move to library project
+ */
 public final class Log
 {
   private static final int DEFAULT_MIN_PRIORITY = ~0;
