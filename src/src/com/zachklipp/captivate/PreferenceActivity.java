@@ -1,23 +1,50 @@
 package com.zachklipp.captivate;
 
+import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.SafeIntentSender;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceGroup;
 
 public class PreferenceActivity extends android.preference.PreferenceActivity
 {
-  private static final String ENABLED_PREFERENCE_KEY = "enabled_pref";
+  private static final String ENABLED_PREFERENCE_KEY = PortalDetectorService.ENABLED_PREFERENCE_KEY;
   private static final String FEEDBACK_PREFERENCE_KEY = "feedback_pref";
   private static final String ABOUT_PREFERENCE_KEY = "about_pref";
   
   private static final int NO_FEEDBACK_RECEIVER_DIALOG = 0;
+
+  private static final IntentFilter sDebugIntentFilter = new IntentFilter(
+      PortalDetectorService.ACTION_PORTAL_STATE_CHANGED);
+  
+  private final BroadcastReceiver mDebugReceiver = new BroadcastReceiver()
+  {
+    @Override
+    public void onReceive(Context context, Intent intent)
+    {
+      if (intent.getAction().equals(PortalDetectorService.ACTION_PORTAL_STATE_CHANGED))
+      {
+        if (mDebugStatePreference != null)
+        {
+          mDebugStatePreference.setSummary(
+              intent.getStringExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE));
+        }
+      }
+    }
+  };
+  
+  private Preference mDebugStatePreference;
   
   /** Called when the activity is first created. */
   @Override
@@ -27,9 +54,36 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     
     addPreferencesFromResource(R.xml.preferences);
     
+    if (BuildConfig.DEBUG)
+    {
+      createDebugPreferences(getPreferenceScreen());
+    }
+    
     formatStrings();
     
     initializeFeedbackIntent();
+  }
+  
+  @Override
+  public void onResume()
+  {
+    super.onResume();
+    
+    if (BuildConfig.DEBUG)
+    {
+      registerReceiver(mDebugReceiver, sDebugIntentFilter);
+    }
+  }
+  
+  @Override
+  public void onPause()
+  {
+    super.onPause();
+    
+    if (BuildConfig.DEBUG)
+    {
+      unregisterReceiver(mDebugReceiver);
+    }
   }
   
   @Override
@@ -114,5 +168,19 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     }
     
     return String.format(format.toString(), strArgs);
+  }
+  
+  private void createDebugPreferences(PreferenceGroup parent)
+  {
+    PreferenceCategory debugCategory = new PreferenceCategory(this);
+    debugCategory.setTitle("Debug");
+    parent.addPreference(debugCategory);
+    
+    mDebugStatePreference = new Preference(this);
+    mDebugStatePreference.setTitle("Portal State");
+    mDebugStatePreference.setEnabled(false);
+    mDebugStatePreference.setShouldDisableView(false);
+    mDebugStatePreference.setSelectable(false);
+    debugCategory.addPreference(mDebugStatePreference);
   }
 }

@@ -29,7 +29,9 @@
 	            android:action="android.intent.action.SEND"
                 android:mimeType="plain/text">
                 <!-- Email is an array, so can't be set from XML. PreferenceActivity.onCreate does that. -->
-	            <extra android:name="android.intent.extra.SUBJECT" android:value="@string/feedback_subject" />
+	            <extra
+	                android:name="android.intent.extra.SUBJECT" 
+	                android:value="@string/feedback_subject" />
             </intent>
 	    </PreferenceScreen>
 	</PreferenceCategory>

@@ -5,6 +5,7 @@ import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.WifiHelper;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
@@ -28,7 +29,9 @@ public class WifiStateChangedReceiver extends BroadcastReceiver
     {
       Log.d("Wifi connected, starting service...");
       
-      context.startService(new Intent(context, PortalDetectorService.class));
+      ComponentName service = context.startService(new Intent(context.getApplicationContext(), PortalDetectorService.class));
+      
+      Log.d("Started service: " + service);
     }
     else if (WifiHelper.isDisconnectedFromNetworkStateChangedIntent(intent))
     {

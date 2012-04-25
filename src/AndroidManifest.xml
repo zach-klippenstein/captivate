@@ -7,6 +7,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="15" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
@@ -35,7 +36,8 @@
             </intent-filter>
         </receiver>
         <activity android:name="AboutActivity" android:label="@string/about_title"></activity>
-        <service android:name=".service.PortalDetectorServicerService"></service>
+        <service android:name=".service.PortalDetectorService">
+        </service>
     </application>
 
 </manifest>

@@ -113,7 +113,7 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
   private void setServiceEnabled(boolean enabled)
   {
     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
-    editor.putBoolean(PortalDetectorService.ENABLED_KEY, enabled);
+    editor.putBoolean(PortalDetectorService.ENABLED_PREFERENCE_KEY, enabled);
     editor.commit();
   }
   

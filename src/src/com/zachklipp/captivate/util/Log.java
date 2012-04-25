@@ -26,6 +26,15 @@ public final class Log
     sMinPriority = DEFAULT_MIN_PRIORITY;
   }
   
+  public static int e(String msg)
+  {
+    return e(null, msg);
+  }
+  public static int e(String tag, String msg)
+  {
+    return println(android.util.Log.ERROR, tag, msg);
+  }
+  
   public static int w(String msg)
   {
     return w(null, msg);

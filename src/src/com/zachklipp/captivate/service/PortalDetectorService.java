@@ -27,7 +27,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   public static final String EXTRA_CAPTIVE_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_CAPTIVE_PORTAL_STATE";
   public static final String EXTRA_CAPTIVE_PORTAL_INFO = INTENT_NAMESPACE + "EXTRA_CAPTIVE_PORTAL_INFO";
   
-  public static final String ENABLED_KEY = "enabled";
+  public static final String ENABLED_PREFERENCE_KEY = "enabled_pref";
   
   private static PortalDetector sSeedPortalDetector = HttpResponseContentsDetector.createDetector();
 
@@ -90,19 +90,21 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     if (isEnabled())
     {
       Log.v("Service updating portal status...");
-      mPortalDetector.checkForPortal(this);
+      
+      try
+      {
+        mPortalDetector.checkForPortal(this);
+      }
+      catch (Exception e)
+      {
+        Log.e("Error checking for portal: " + e.getMessage());
+      }
     }
     else
     {
       Log.v("Service started, but disabled, so doing nothing.");
       mStateMachine.onDisabled();
     }
-  }
-  
-  @Override
-  public void onDestroy()
-  {
-    super.onDestroy();
   }
   
   @Override
@@ -153,7 +155,8 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   private boolean isEnabled()
   {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-    return preferences.getBoolean(ENABLED_KEY, true);
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(
+        getApplicationContext());
+    return preferences.getBoolean(ENABLED_PREFERENCE_KEY, true);
   }
 }
