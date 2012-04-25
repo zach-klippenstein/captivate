@@ -5,11 +5,11 @@
     <PreferenceCategory
         android:title="@string/general_category_title" >
         <CheckBoxPreference
-            android:key="enabled_pref"
-            android:title="@string/enabled_title"
+            android:key="detector_enabled_pref"
+            android:title="@string/detector_enabled_title"
             android:defaultValue="true"
-            android:summaryOn="@string/enabled_summary"
-            android:summaryOff="@string/disabled_summary" />
+            android:summaryOn="@string/detector_enabled_summary"
+            android:summaryOff="@string/detector_disabled_summary" />
     </PreferenceCategory>
     
     <PreferenceCategory

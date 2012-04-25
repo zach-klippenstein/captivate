@@ -7,9 +7,9 @@
     <string name="ticker_text">Hotspot exige une connexion</string>
     
     <string name="general_category_title">Général</string>
-    <string name="enabled_title">Activé</string>
-    <string name="enabled_summary">%s va vérifier pour les portails captifs au moment de wifi se connecte.</string>
-    <string name="disabled_summary">%s ne sera jamais vérifier pour les portails captifs.</string>
+    <string name="detector_enabled_title">Activé</string>
+    <string name="detector_enabled_summary">%s va vérifier pour les portails captifs au moment de wifi se connecte.</string>
+    <string name="detector_disabled_summary">%s ne sera jamais vérifier pour les portails captifs.</string>
     
     <string name="about_category_title">A propos</string>
     <string name="about_title">À propos de %s</string>

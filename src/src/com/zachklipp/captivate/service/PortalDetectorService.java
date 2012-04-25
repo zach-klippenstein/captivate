@@ -27,7 +27,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   public static final String EXTRA_CAPTIVE_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_CAPTIVE_PORTAL_STATE";
   public static final String EXTRA_CAPTIVE_PORTAL_INFO = INTENT_NAMESPACE + "EXTRA_CAPTIVE_PORTAL_INFO";
   
-  public static final String ENABLED_PREFERENCE_KEY = "enabled_pref";
+  public static final String ENABLED_PREFERENCE_KEY = "detector_enabled_pref";
   
   private static PortalDetector sSeedPortalDetector = HttpResponseContentsDetector.createDetector();
 

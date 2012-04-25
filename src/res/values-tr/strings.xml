@@ -7,9 +7,9 @@
     <string name="ticker_text">Hotspot giriş gerektirir</string>
     
     <string name="general_category_title">Genel</string>
-    <string name="enabled_title">Etkin</string>
-    <string name="enabled_summary">wifi bağlandığında %s esir portalları kontrol edecektir.</string>
-    <string name="disabled_summary">%s esir portalları kontrol asla.</string>
+    <string name="detector_enabled_title">Etkin</string>
+    <string name="detector_enabled_summary">wifi bağlandığında %s esir portalları kontrol edecektir.</string>
+    <string name="detector_disabled_summary">%s esir portalları kontrol asla.</string>
     
     <string name="about_category_title">Hakkında</string>
     <string name="about_title">%s Hakkında</string>

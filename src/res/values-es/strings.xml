@@ -7,9 +7,9 @@
     <string name="ticker_text">Hotspot requiere inicio de sesión</string>
     
     <string name="general_category_title">General</string>
-    <string name="enabled_title">Habilitado</string>
-    <string name="enabled_summary">%s comprobará portales cautivos, cuando se conecta wifi.</string>
-    <string name="disabled_summary">%s no se compruebe portales cautivos.</string>
+    <string name="detector_enabled_title">Habilitado</string>
+    <string name="detector_enabled_summary">%s comprobará portales cautivos, cuando se conecta wifi.</string>
+    <string name="detector_disabled_summary">%s no se compruebe portales cautivos.</string>
     
     <string name="about_category_title">Sobre</string>
     <string name="about_title">Acerca de %s</string>

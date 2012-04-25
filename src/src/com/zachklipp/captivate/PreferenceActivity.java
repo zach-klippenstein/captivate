@@ -20,7 +20,6 @@ import android.preference.PreferenceGroup;
 
 public class PreferenceActivity extends android.preference.PreferenceActivity
 {
-  private static final String ENABLED_PREFERENCE_KEY = PortalDetectorService.ENABLED_PREFERENCE_KEY;
   private static final String FEEDBACK_PREFERENCE_KEY = "feedback_pref";
   private static final String ABOUT_PREFERENCE_KEY = "about_pref";
   
@@ -56,7 +55,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     addPreferencesFromResource(R.xml.preferences);
     
     CheckBoxPreference enabledPref = (CheckBoxPreference)
-        getPreferenceManager().findPreference(ENABLED_PREFERENCE_KEY);
+        getPreferenceManager().findPreference(PortalDetectorService.ENABLED_PREFERENCE_KEY);
     enabledPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
     {
       @Override
@@ -127,7 +126,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     formatPreferenceTitle(ABOUT_PREFERENCE_KEY, R.string.app_name);
     
     CheckBoxPreference enabledPref = (CheckBoxPreference)
-        getPreferenceManager().findPreference(ENABLED_PREFERENCE_KEY);
+        getPreferenceManager().findPreference(PortalDetectorService.ENABLED_PREFERENCE_KEY);
     enabledPref.setSummaryOn(
         formatCharSequence(enabledPref.getSummaryOn(), R.string.app_name));
     enabledPref.setSummaryOff(
