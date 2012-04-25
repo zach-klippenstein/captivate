@@ -27,8 +27,16 @@ public class StateMachineTest extends TestCase
     machine = MockStateMachine.createWithSingleState(startState);
     
     assertSame(startState, machine.getCurrentState());
+  }
+
+  public void testImplicitLoops()
+  {
+    State startState = new State("start");
+    machine = MockStateMachine.createWithSingleState(startState);
     
-    assertTransitionFails(startState);
+    machine.transitionTo(startState);
+    
+    assertSame(startState, machine.getCurrentState());
   }
 
   public void testSingleStateByName()

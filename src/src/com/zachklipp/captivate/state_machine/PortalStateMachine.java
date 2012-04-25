@@ -79,7 +79,7 @@ public class PortalStateMachine extends StateMachine
   
   private void needsSignin()
   {
-    if (getCurrentState() != State.NEEDS_SIGNIN && getCurrentState() != State.SIGNING_IN)
+    if (getCurrentState() != State.NEEDS_SIGNIN)
     {
       Log.d("Captive portal detected.");
       

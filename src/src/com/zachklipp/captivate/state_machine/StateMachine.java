@@ -57,17 +57,20 @@ public class StateMachine extends Observable<TransitionEvent>
   {
     assert(state != null);
     
-    if (!mCurrentState.equals(state) && canTransition(mCurrentState, state))
+    if (!mCurrentState.equals(state))
     {
-      TransitionEvent event = new TransitionEvent(mCurrentState, state);
-      
-      mCurrentState = state;
-      
-      notifyObservers(event);
-    }
-    else
-    {
-      throw new InvalidTransitionException(mCurrentState, state);
+      if (canTransition(mCurrentState, state))
+      {
+        TransitionEvent event = new TransitionEvent(mCurrentState, state);
+        
+        mCurrentState = state;
+        
+        notifyObservers(event);
+      }
+      else
+      {
+        throw new InvalidTransitionException(mCurrentState, state);
+      }
     }
   }
   
