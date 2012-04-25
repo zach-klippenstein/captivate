@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
@@ -53,6 +54,18 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     super.onCreate(savedInstanceState);
     
     addPreferencesFromResource(R.xml.preferences);
+    
+    CheckBoxPreference enabledPref = (CheckBoxPreference)
+        getPreferenceManager().findPreference(ENABLED_PREFERENCE_KEY);
+    enabledPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+    {
+      @Override
+      public boolean onPreferenceChange(Preference preference, Object newValue)
+      {
+        startService(new Intent(PreferenceActivity.this, PortalDetectorService.class));
+        return true;
+      }
+    });
     
     if (BuildConfig.DEBUG)
     {
