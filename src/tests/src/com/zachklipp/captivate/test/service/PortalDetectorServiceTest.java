@@ -1,10 +1,15 @@
 package com.zachklipp.captivate.test.service;
 
+import com.zachklipp.captivate.captive_portal.PortalDetector;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.state_machine.PortalStateMachine;
+import com.zachklipp.captivate.state_machine.StateMachine;
+import com.zachklipp.captivate.state_machine.PortalStateMachine.StorageBackendFactory;
+import com.zachklipp.captivate.state_machine.StateMachineStorage.StorageBackend;
 import com.zachklipp.captivate.test.captive_portal.MockPortalDetector;
 import com.zachklipp.captivate.test.state_machine.MockStorageBackend;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -19,6 +24,15 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
   private MockBroadcastReceiver mBroadcastReceiver;
   private MockPortalDetector mDetector;
   private IntentFilter mPortalStateChangedIntentFilter;
+  
+  PortalDetector.Factory mDetectorFactory = new PortalDetector.Factory()
+  {
+    @Override
+    public PortalDetector create()
+    {
+      return mDetector;
+    }
+  };
   
   public PortalDetectorServiceTest()
   {
@@ -42,15 +56,14 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
     
     Log.d(LOG_TAG, "context class: " + mContext.getClass().getName());
     
-    mContext.registerReceiver(mBroadcastReceiver, mPortalStateChangedIntentFilter);
-    
     mDetector = new MockPortalDetector();
     
-    MockStorageBackend.Factory storageFactory = new MockStorageBackend.Factory();
-    storageFactory.mLoadFromSave = true;
-    storageFactory.mMachineToCreate = new PortalStateMachine(mDetector);
+    mContext.registerReceiver(mBroadcastReceiver, mPortalStateChangedIntentFilter);
     
-    PortalDetectorService.setPortalDetector(mDetector);
+    MockPortalStorageBackend.Factory storageFactory = new MockPortalStorageBackend.Factory();
+    storageFactory.mLoadFromSave = true;
+    
+    PortalDetectorService.setPortalDetectorFactory(mDetectorFactory);
     PortalDetectorService.setStorageBackendFactory(storageFactory);
   }
   
@@ -133,5 +146,38 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
         PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE);
     
     assertEquals(expectedState.getName(), stateName);
+  }
+}
+
+class MockPortalStorageBackend extends MockStorageBackend
+{
+  public static class Factory implements StorageBackendFactory
+  {
+    public boolean mLoadFromSave = false;
+    
+    @Override
+    public StorageBackend create(Context context, PortalDetector detector)
+    {
+      MockPortalStorageBackend backend = new MockPortalStorageBackend(detector);
+      
+      backend.setLoadFromSave(mLoadFromSave);
+      
+      return backend;
+    }
+  }
+  
+  private PortalDetector mDetector;
+  
+  public MockPortalStorageBackend(PortalDetector detector)
+  {
+    mDetector = detector;
+  }
+
+  @Override
+  public StateMachine create()
+  {
+    super.create();
+    
+    return new PortalStateMachine(mDetector);
   }
 }

@@ -3,32 +3,11 @@ package com.zachklipp.captivate.test.state_machine;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-
-import com.zachklipp.captivate.captive_portal.PortalDetector;
-import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.state_machine.StateMachine;
 import com.zachklipp.captivate.state_machine.StateMachineStorage.StorageBackend;
 
 public class MockStorageBackend implements StorageBackend
 {
-  public static class Factory implements PortalDetectorService.StorageBackendFactory
-  {
-    public boolean mLoadFromSave = false;
-    public StateMachine mMachineToCreate = null;
-    
-    @Override
-    public StorageBackend create(Context context, PortalDetector detector)
-    {
-      MockStorageBackend backend = new MockStorageBackend();
-      
-      backend.setLoadFromSave(mLoadFromSave);
-      backend.setStateMachineToCreate(mMachineToCreate);
-      
-      return backend;
-    }
-  };
-  
   private List<StateMachine> mSavedMachines = new ArrayList<StateMachine>();
   private long mCanLoadCallCount = 0;
   private boolean mCanLoad = false;
@@ -108,6 +87,7 @@ public class MockStorageBackend implements StorageBackend
   public StateMachine create()
   {
     mCreateCallCount++;
+    
     return mStateMachineToCreate;
   }
   

@@ -9,6 +9,11 @@ import com.zachklipp.captivate.util.WifiHelper;
 // See http://erratasec.blogspot.com/2010/09/apples-secret-wispr-request.html
 public abstract class PortalDetector extends Observable<PortalInfo>
 {
+  public interface Factory
+  {
+    public PortalDetector create();
+  }
+  
   private PortalInfo mPortal;
   
   public PortalDetector()

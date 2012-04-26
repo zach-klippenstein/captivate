@@ -3,6 +3,8 @@ package com.zachklipp.captivate.service;
 import com.zachklipp.captivate.ConnectedNotification;
 import com.zachklipp.captivate.captive_portal.*;
 import com.zachklipp.captivate.state_machine.*;
+import com.zachklipp.captivate.state_machine.PortalStateMachine.StorageBackendFactory;
+import com.zachklipp.captivate.state_machine.StateMachineStorage.StorageBackend;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
@@ -16,11 +18,6 @@ import android.preference.PreferenceManager;
 
 public class PortalDetectorService extends IntentService implements Observer<TransitionEvent>
 {
-  public static interface StorageBackendFactory
-  {
-    public StateMachineStorage.StorageBackend create(Context context, PortalDetector detector);
-  }
-  
   private static final String INTENT_NAMESPACE = "com.zachklipp.captivate.intent.";
   
   // For broadcast intent
@@ -31,12 +28,22 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   public static final String ENABLED_PREFERENCE_KEY = "detector_enabled_pref";
   
-  private static PortalDetector sSeedPortalDetector = HttpResponseContentsDetector.createDetector();
-
-  private static StorageBackendFactory sStorageBackendFactory = new StorageBackendFactory()
+  //private static PortalDetector sSeedPortalDetector = HttpResponseContentsDetector.createDetector();
+  private static PortalDetector.Factory sPortalDetectorFactory
+    = new PortalDetector.Factory()
   {
     @Override
-    public StateMachineStorage.StorageBackend create(Context context, PortalDetector detector)
+    public PortalDetector create()
+    {
+      return HttpResponseContentsDetector.createDetector();
+    }
+  };
+
+  private static StorageBackendFactory sStorageBackendFactory
+    = new StorageBackendFactory()
+  {
+    @Override
+    public StorageBackend create(Context context, PortalDetector detector)
     {
       return new PortalStateMachineStorageBackend(context, detector);
     }
@@ -44,17 +51,15 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   /*
    * Set the detector to be used when the service is next started.
-   * Must be called before the service is started.
    */
-  public static void setPortalDetector(PortalDetector detector)
+  public static void setPortalDetectorFactory(PortalDetector.Factory factory)
   {
-    assert(detector != null);
-    
-    Log.w("Setting custom portal detector...");
-    
-    sSeedPortalDetector = detector;
+    sPortalDetectorFactory = factory;
   }
   
+  /*
+   * Set the storage backend to be used when the service is next started.
+   */
   public static void setStorageBackendFactory(StorageBackendFactory factory)
   {
     sStorageBackendFactory = factory;
@@ -79,9 +84,10 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   @Override
   public void onCreate()
   {
-    Log.d("Using portal detector " + sSeedPortalDetector.getClass().getName());
+    mPortalDetector = sPortalDetectorFactory.create();
+    assert(mPortalDetector != null);
     
-    mPortalDetector = sSeedPortalDetector;
+    Log.d("Using portal detector " + mPortalDetector.getClass().getName());
     
     mStateMachine = (PortalStateMachine) new StateMachineStorage(
         sStorageBackendFactory.create(getApplicationContext(), mPortalDetector))

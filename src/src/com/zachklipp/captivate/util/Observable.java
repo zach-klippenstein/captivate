@@ -1,15 +1,15 @@
 package com.zachklipp.captivate.util;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Observable<Event>
 {
-  private List<Observer<Event>> mObservers = new LinkedList<Observer<Event>>();
+  private Set<Observer<Event>> mObservers = new HashSet<Observer<Event>>();
   
-  public void addObserver(Observer<Event> o)
+  public boolean addObserver(Observer<Event> o)
   {
-    mObservers.add(o);
+    return mObservers.add(o);
   }
   
   public void deleteObserver(Observer<Event> o)

@@ -1,13 +1,23 @@
 package com.zachklipp.captivate.state_machine;
 
+import android.content.Context;
+
 import com.zachklipp.captivate.captive_portal.PortalDetector;
 import com.zachklipp.captivate.captive_portal.PortalInfo;
+import com.zachklipp.captivate.state_machine.StateMachineStorage.StorageBackend;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
 
 public class PortalStateMachine extends StateMachine
 {
+  private static final String LOG_TAG = "PortalStateMachine";
+
+  public static interface StorageBackendFactory
+  {
+    public StorageBackend create(Context context, PortalDetector detector);
+  }
+  
   public final static class State extends com.zachklipp.captivate.state_machine.State
   {
     public static final State UNKNOWN = new State("unknown");
@@ -31,40 +41,44 @@ public class PortalStateMachine extends StateMachine
     };
 
   private PortalDetector mPortalDetector;
+  
+  private Observer<PortalInfo> mPortalDetectorObserver = new Observer<PortalInfo>()
+  {
+    @Override
+    public void update(Observable<PortalInfo> observable, PortalInfo portal)
+    {
+      if (portal == null)
+      {
+        noLongerNeedsSignin();
+      }
+      else
+      {
+        needsSignin();
+      }
+    }
+  };
 
   public PortalStateMachine(PortalDetector detector)
   {
     super(State.UNKNOWN, TRANSITION_MATRIX);
-    initialize(detector);
+    onCreate(detector);
   }
   
   public PortalStateMachine(PortalDetector detector, String initialStateName)
   {
     super(initialStateName, TRANSITION_MATRIX);
-    initialize(detector);
+    onCreate(detector);
   }
   
-  private void initialize(PortalDetector detector)
+  private void onCreate(PortalDetector detector)
   {
     assert(detector != null);
     mPortalDetector = detector;
     
-    mPortalDetector.addObserver(new Observer<PortalInfo>() {
-      @Override
-      public void update(Observable<PortalInfo> observable, PortalInfo portal)
-      {
-        if (portal == null)
-        {
-          noLongerNeedsSignin();
-        }
-        else
-        {
-          needsSignin();
-        }
-      }
-    });
+    mPortalDetector.addObserver(mPortalDetectorObserver);
     
-    Log.d(String.format("Portal state machine initialized to state %s", getCurrentState().getName()));
+    Log.d(LOG_TAG, String.format("Portal state machine initialized to state %s",
+        getCurrentState().getName()));
   }
   
   public void startSignIn()
@@ -81,7 +95,7 @@ public class PortalStateMachine extends StateMachine
   {
     if (getCurrentState() != State.NEEDS_SIGNIN)
     {
-      Log.d("Captive portal detected.");
+      Log.d(LOG_TAG, "Captive portal detected.");
       
       transitionTo(State.NEEDS_SIGNIN);
     }
@@ -91,12 +105,12 @@ public class PortalStateMachine extends StateMachine
   {
     if (getCurrentState() == State.SIGNING_IN || getCurrentState() == State.NEEDS_SIGNIN)
     {
-      Log.d("Portal signed in.");
+      Log.d(LOG_TAG, "Portal signed in.");
       transitionTo(State.SIGNED_IN);
     }
     else
     {
-      Log.d("No portal detected.");
+      Log.d(LOG_TAG, "No portal detected.");
       transitionTo(State.NOT_CAPTIVE);
     }
   }
