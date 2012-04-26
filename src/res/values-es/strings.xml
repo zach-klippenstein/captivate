@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <string name="portal_state_perm_label">acceder estado de portal cautivo</string>
+    <string name="portal_state_perm_desc">Permite que la aplicación para determinar si el dispositivo está detrás de un portal cautivo.</string>
+    
     <string name="ok">Aceptar</string>
     
     <string name="notification_title">Hotspot Captive Detectado</string>

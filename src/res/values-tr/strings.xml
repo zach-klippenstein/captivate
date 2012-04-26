@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <string name="portal_state_perm_label">esir portalı durumuna erişmek</string>
+    <string name="portal_state_perm_desc">Cihaz bir esir portalı arkasında olup olmadığını belirlemek için uygulama sağlar.</string>
+    
     <string name="ok">Tamam</string>
     
     <string name="notification_title">Esir Hotspot Tespit</string>

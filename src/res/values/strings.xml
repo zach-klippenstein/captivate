@@ -9,6 +9,9 @@
     
     <!-- Localizable strings -->
     
+    <string name="portal_state_perm_label">access captive portal state</string>
+    <string name="portal_state_perm_desc">Allows the application to determine if the device is behind a captive portal.</string>
+    
     <string name="ok">OK</string>
     
     <string name="notification_title">Captive Hotspot Detected</string>

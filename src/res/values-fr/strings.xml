@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <string name="portal_state_perm_label">accéder à l\'état de portail captif</string>
+    <string name="portal_state_perm_desc">Permet à l\'application afin de déterminer si l\'appareil se trouve derrière un portail captif.</string>
+    
     <string name="ok">OK</string>
     
     <string name="notification_title">Hotspot détecté en captivité</string>

@@ -10,7 +10,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE"/>
     <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+    <permission
+        android:name="com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE" 
+        android:label="@string/portal_state_perm_label" 
+        android:description="@string/portal_state_perm_desc"
+        android:permissionGroup="android.permission-group.NETWORK" 
+        android:protectionLevel="normal" />
 
     <application
         android:name="Application"
@@ -28,11 +35,6 @@
         <receiver android:name=".service.WifiStateChangedReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.STATE_CHANGE"/>
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".service.PortalStateChangedReceiver">
-            <intent-filter>
-                <action android:name="com.zachklipp.captivate.ACTION_PORTAL_STATE_CHANGED"/>
             </intent-filter>
         </receiver>
         <activity android:name="AboutActivity" android:label="@string/about_title"></activity>

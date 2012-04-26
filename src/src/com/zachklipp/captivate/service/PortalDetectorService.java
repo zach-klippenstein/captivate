@@ -21,9 +21,10 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     public StateMachineStorage.StorageBackend create(Context context, PortalDetector detector);
   }
   
-  private static final String INTENT_NAMESPACE = "com.zachklipp.captivate.";
+  private static final String INTENT_NAMESPACE = "com.zachklipp.captivate.intent.";
   
   // For broadcast intent
+  public static final String ACCESS_PORTAL_STATE_PERMISSION = "com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE";
   public static final String ACTION_PORTAL_STATE_CHANGED = INTENT_NAMESPACE + "ACTION_PORTAL_STATE_CHANGED";
   public static final String EXTRA_CAPTIVE_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_CAPTIVE_PORTAL_STATE";
   public static final String EXTRA_CAPTIVE_PORTAL_INFO = INTENT_NAMESPACE + "EXTRA_CAPTIVE_PORTAL_INFO";
@@ -143,7 +144,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     Log.i(String.format("Broadcasting portal state change. new state=%s, portal=%s",
         state, portal));
     
-    sendBroadcast(intent);
+    sendBroadcast(intent, ACCESS_PORTAL_STATE_PERMISSION);
   }
   
   private static Intent createStateChangedBroadcastIntent(State state, PortalInfo portal)
