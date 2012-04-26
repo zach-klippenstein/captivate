@@ -1,23 +1,12 @@
 package com.zachklipp.captivate.captive_portal;
 
+import com.zachklipp.captivate.service.PortalDetectorService;
+
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
 
-public class PortalInfo implements Parcelable
+public class PortalInfo
 {
-  public static final Parcelable.Creator<PortalInfo> CREATOR = new Parcelable.Creator<PortalInfo>()
-  {
-    public PortalInfo createFromParcel(Parcel in) {
-      return new PortalInfo(in);
-    }
-  
-    public PortalInfo[] newArray(int size) {
-      return new PortalInfo[size];
-    }
-  };
-  
   private Uri mPortalUri;
   
   public PortalInfo(Uri portalUri)
@@ -25,9 +14,10 @@ public class PortalInfo implements Parcelable
     mPortalUri = portalUri;
   }
   
-  private PortalInfo(Parcel in)
+  public PortalInfo(Intent intent)
   {
-    mPortalUri = Uri.CREATOR.createFromParcel(in);
+    String uri = intent.getStringExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_INFO);
+    mPortalUri = uri == null ? Uri.EMPTY : Uri.parse(uri);
   }
   
   public Intent getShowPortalIntent()
@@ -37,21 +27,14 @@ public class PortalInfo implements Parcelable
     
     return showPortalIntent;
   }
-
-  @Override
-  public int describeContents()
-  {
-    return 0;
-  }
-
-  @Override
-  public void writeToParcel(Parcel out, int flags)
-  {
-    Uri.writeToParcel(out, mPortalUri);
-  }
   
   public String toString()
   {
     return String.format("PortalInfo@%s", mPortalUri);
+  }
+  
+  public void saveToIntent(Intent intent)
+  {
+    intent.putExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_INFO, mPortalUri.toString());
   }
 }

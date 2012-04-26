@@ -46,19 +46,5 @@ public class StateMachineTest extends TestCase
     
     assertSame(startState, machine.getCurrentState());
   }
-  
-  private void assertTransitionFails(State toState)
-  {
-    try
-    {
-      machine.transitionTo(toState);
-      fail(String.format("Transition from '%s' to '%s' allowed.", machine.getCurrentState().getName(), toState.getName()));
-    }
-    catch (InvalidTransitionException ex)
-    {
-      // pass
-    }
-    // any other exceptions are errors.
-  }
 
 }

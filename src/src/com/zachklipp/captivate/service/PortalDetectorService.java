@@ -8,6 +8,7 @@ import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
 
 import android.app.IntentService;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -58,6 +59,14 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     sStorageBackendFactory = factory;
   }
   
+  /*
+   * Helper to send the necessary intent to start this service.
+   */
+  public static ComponentName startService(Context context)
+  {
+    return context.startService(new Intent(context, PortalDetectorService.class));
+  }
+  
   private PortalDetector mPortalDetector;
   private PortalStateMachine mStateMachine;
 
@@ -79,9 +88,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     
     mStateMachine.addObserver(this);
     
-    Log.d("Calling IntentService.onCreate()");
     super.onCreate();
-    Log.d("Back from IntentService.onCreate()");
   }
   
   @Override
@@ -147,7 +154,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     
     if (portal != null)
     {
-      intent.putExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_INFO, portal);
+      portal.saveToIntent(intent);
     }
     
     return intent;

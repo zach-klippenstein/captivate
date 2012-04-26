@@ -20,8 +20,13 @@ class MockBroadcastReceiver extends BroadcastReceiver
   // else false.
   public boolean waitForIntents(final int expectedCount, final long timeoutMillis)
   {
-    int actualCount = 0;
+    int actualCount;
     final long startTime = System.currentTimeMillis();
+    
+    synchronized(mReceivedIntents)
+    {
+      actualCount = mReceivedIntents.size();
+    }
     
     while (actualCount < expectedCount && System.currentTimeMillis() - startTime < timeoutMillis)
     {
@@ -68,9 +73,11 @@ class MockBroadcastReceiver extends BroadcastReceiver
     StringBuilder message = new StringBuilder(String.format("Received intent: %s", intent.getAction()));
     
     if (PortalDetectorService.ACTION_PORTAL_STATE_CHANGED.equals(intent.getAction()))
-      message.append(" new state=" + intent.getExtras().getString(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE));
-    
-    message.append(String.format("\non thread %s", Thread.currentThread().getName()));
+    {
+      message.append(String.format(" new state=%s, portal=%s",
+          intent.getStringExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE),
+          intent.getStringExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_INFO)));
+    }
     
     Log.d(LOG_TAG, message.toString());
     

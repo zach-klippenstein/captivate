@@ -124,12 +124,12 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
     Intent[] receivedIntents = mBroadcastReceiver.getReceivedIntentsAndClear();
     
     assertEquals(1, receivedIntents.length);
-     assertState(expectedState, receivedIntents[0]);
+    assertState(expectedState, receivedIntents[0]);
   }
   
   private void assertState(PortalStateMachine.State expectedState, Intent receivedIntent)
   {
-    String stateName = receivedIntent.getExtras().getString(
+    String stateName = receivedIntent.getStringExtra(
         PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE);
     
     assertEquals(expectedState.getName(), stateName);

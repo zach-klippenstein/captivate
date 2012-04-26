@@ -29,7 +29,7 @@ public class WifiStateChangedReceiver extends BroadcastReceiver
     {
       Log.d("Wifi connected, starting service...");
       
-      ComponentName service = context.startService(new Intent(context.getApplicationContext(), PortalDetectorService.class));
+      ComponentName service = PortalDetectorService.startService(context.getApplicationContext());
       
       Log.d("Started service: " + service);
     }

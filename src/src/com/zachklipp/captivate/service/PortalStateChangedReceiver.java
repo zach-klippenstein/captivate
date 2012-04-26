@@ -26,7 +26,7 @@ public class PortalStateChangedReceiver extends BroadcastReceiver
     String portalState = intent.getStringExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE);
     assert(portalState != null);
     
-    PortalInfo portalInfo = intent.getParcelableExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_INFO);
+    PortalInfo portalInfo = new PortalInfo(intent);
     
     if (portalState.equals(PortalStateMachine.State.NEEDS_SIGNIN.getName()))
     {
