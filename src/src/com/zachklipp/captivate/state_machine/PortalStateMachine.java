@@ -34,9 +34,9 @@ public class PortalStateMachine extends StateMachine
   
   public static final State[][] TRANSITION_MATRIX = new State[][] {
       new State[] {State.UNKNOWN, State.NOT_CAPTIVE, State.NEEDS_SIGNIN},
-      new State[] {State.NOT_CAPTIVE, State.UNKNOWN},
-      new State[] {State.NEEDS_SIGNIN, State.UNKNOWN, State.SIGNING_IN, State.SIGNED_IN},
-      new State[] {State.SIGNING_IN, State.UNKNOWN, State.SIGNED_IN},
+      new State[] {State.NOT_CAPTIVE, State.UNKNOWN, State.NEEDS_SIGNIN},
+      new State[] {State.NEEDS_SIGNIN, State.UNKNOWN, State.SIGNING_IN, State.SIGNED_IN, State.NOT_CAPTIVE},
+      new State[] {State.SIGNING_IN, State.UNKNOWN, State.SIGNED_IN, State.NOT_CAPTIVE},
       new State[] {State.SIGNED_IN, State.UNKNOWN, State.NEEDS_SIGNIN, State.NOT_CAPTIVE},
     };
 
@@ -49,11 +49,11 @@ public class PortalStateMachine extends StateMachine
     {
       if (portal == null)
       {
-        noLongerNeedsSignin();
+        onNoLongerNeedsSignin();
       }
       else
       {
-        needsSignin();
+        onNeedsSignin();
       }
     }
   };
@@ -91,7 +91,12 @@ public class PortalStateMachine extends StateMachine
     transitionTo(State.UNKNOWN);
   }
   
-  private void needsSignin()
+  public void onNoWifi()
+  {
+    transitionTo(State.NOT_CAPTIVE);
+  }
+  
+  private void onNeedsSignin()
   {
     if (getCurrentState() != State.NEEDS_SIGNIN)
     {
@@ -101,7 +106,7 @@ public class PortalStateMachine extends StateMachine
     }
   }
   
-  private void noLongerNeedsSignin()
+  private void onNoLongerNeedsSignin()
   {
     if (getCurrentState() == State.SIGNING_IN || getCurrentState() == State.NEEDS_SIGNIN)
     {

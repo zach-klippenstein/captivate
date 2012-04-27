@@ -8,6 +8,7 @@ import com.zachklipp.captivate.state_machine.StateMachineStorage.StorageBackend;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
+import com.zachklipp.captivate.util.WifiHelper;
 
 import android.app.IntentService;
 import android.content.ComponentName;
@@ -103,20 +104,28 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   {
     if (isEnabled())
     {
-      Log.v("Service updating portal status...");
+      Log.d("Service updating portal status...");
       
-      try
+      if (WifiHelper.isConnectedFromContext(this))
       {
-        mPortalDetector.checkForPortal(this);
+        try
+        {
+          mPortalDetector.checkForPortal(this);
+        }
+        catch (Exception e)
+        {
+          Log.e("Error checking for portal: " + e.getMessage());
+        }
       }
-      catch (Exception e)
+      else
       {
-        Log.e("Error checking for portal: " + e.getMessage());
+        Log.d("Wifi not connected, reporting no portal");
+        mStateMachine.onNoWifi();
       }
     }
     else
     {
-      Log.v("Service started, but disabled, so doing nothing.");
+      Log.d("Service started, but disabled, so doing nothing.");
       mStateMachine.onDisabled();
     }
   }

@@ -1,6 +1,5 @@
 package com.zachklipp.captivate.service;
 
-import com.zachklipp.captivate.ConnectedNotification;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.WifiHelper;
 
@@ -17,7 +16,8 @@ public class WifiStateChangedReceiver extends BroadcastReceiver
   {
     String action = intent.getAction();
     
-    if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION))
+    if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(action) ||
+        WifiManager.WIFI_STATE_CHANGED_ACTION.equals(action))
     {
       onNetworkStateChanged(context, intent);
     }
@@ -25,18 +25,13 @@ public class WifiStateChangedReceiver extends BroadcastReceiver
 
   private void onNetworkStateChanged(Context context, Intent intent)
   {
-    if (WifiHelper.isConnectedFromNetworkStateChangedIntent(intent))
+    if (WifiHelper.isWifiFinishedConnectingOrDisconnecting(intent))
     {
-      Log.d("Wifi connected, starting service...");
+      Log.d("Wifi connection state changed, starting service...");
       
       ComponentName service = PortalDetectorService.startService(context.getApplicationContext());
       
       Log.d("Started service: " + service);
-    }
-    else if (WifiHelper.isDisconnectedFromNetworkStateChangedIntent(intent))
-    {
-      Log.d("Wifi disconnected.");
-      ConnectedNotification.hideNotification(context);
     }
   }
 }

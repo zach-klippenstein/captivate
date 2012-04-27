@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
-import com.zachklipp.captivate.util.WifiHelper;
 
 // See http://erratasec.blogspot.com/2010/09/apples-secret-wispr-request.html
 public abstract class PortalDetector extends Observable<PortalInfo>
@@ -13,6 +12,8 @@ public abstract class PortalDetector extends Observable<PortalInfo>
   {
     public PortalDetector create();
   }
+  
+  private static final String LOG_TAG = "PortalDetector";
   
   private PortalInfo mPortal;
   
@@ -33,16 +34,7 @@ public abstract class PortalDetector extends Observable<PortalInfo>
   
   public void checkForPortal(Context context)
   {
-    if (WifiHelper.isConnectedFromContext(context))
-    {
-      onCheckForPortal();
-    }
-    else
-    {
-      Log.d("Not on wifi, skipping portal check");
-      
-      reportNoPortal();
-    }
+    onCheckForPortal();
   }
   
   public boolean isOnPortal()
@@ -57,7 +49,7 @@ public abstract class PortalDetector extends Observable<PortalInfo>
   
   protected void reportPortal(PortalInfo portal)
   {
-    Log.d(String.format("Reporting captive portal to handlers: %s", portal));
+    Log.d(LOG_TAG, String.format("Reporting captive portal to handlers: %s", portal));
     
     mPortal = portal;
     notifyObservers(mPortal);
@@ -65,7 +57,7 @@ public abstract class PortalDetector extends Observable<PortalInfo>
   
   protected void reportNoPortal()
   {
-    Log.d("Reporting NO captive portal to handlers");
+    Log.d(LOG_TAG, "Reporting NO captive portal to handlers");
     
     mPortal = null;
     notifyObservers(mPortal);
