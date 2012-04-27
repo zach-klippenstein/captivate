@@ -1,7 +1,9 @@
 package com.zachklipp.captivate.service;
 
+import com.zachklipp.captivate.BuildConfig;
 import com.zachklipp.captivate.ConnectedNotification;
 import com.zachklipp.captivate.captive_portal.*;
+import com.zachklipp.captivate.captive_portal.PortalDetector.OverrideMode;
 import com.zachklipp.captivate.state_machine.*;
 import com.zachklipp.captivate.state_machine.PortalStateMachine.StorageBackendFactory;
 import com.zachklipp.captivate.state_machine.StateMachineStorage.StorageBackend;
@@ -22,12 +24,14 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   private static final String INTENT_NAMESPACE = "com.zachklipp.captivate.intent.";
   
   // For broadcast intent
-  public static final String ACCESS_PORTAL_STATE_PERMISSION = "com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE";
+  public static final String ACCESS_PORTAL_STATE_PERMISSION =
+      "com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE";
   public static final String ACTION_PORTAL_STATE_CHANGED = INTENT_NAMESPACE + "ACTION_PORTAL_STATE_CHANGED";
   public static final String EXTRA_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_PORTAL_STATE";
   public static final String EXTRA_PORTAL_INFO = INTENT_NAMESPACE + "EXTRA_PORTAL_INFO";
   
   public static final String ENABLED_PREFERENCE_KEY = "detector_enabled_pref";
+  public static final String DEBUG_OVERRIDE_PREFERENCE_KEY = "debug_override_pref";
   
   //private static PortalDetector sSeedPortalDetector = HttpResponseContentsDetector.createDetector();
   private static PortalDetector.Factory sPortalDetectorFactory
@@ -76,6 +80,8 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   private PortalDetector mPortalDetector;
   private PortalStateMachine mStateMachine;
+  
+  private SharedPreferences mPreferences;
 
   public PortalDetectorService()
   {
@@ -85,8 +91,15 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   @Override
   public void onCreate()
   {
+    mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    
     mPortalDetector = sPortalDetectorFactory.create();
     assert(mPortalDetector != null);
+    
+    if (isDebugOverrideEnabled())
+    {
+      mPortalDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
+    }
     
     Log.d("Using portal detector " + mPortalDetector.getClass().getName());
     
@@ -110,7 +123,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
       {
         try
         {
-          mPortalDetector.checkForPortal(this);
+          mPortalDetector.checkForPortal();
         }
         catch (Exception e)
         {
@@ -178,8 +191,11 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   private boolean isEnabled()
   {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(
-        getApplicationContext());
-    return preferences.getBoolean(ENABLED_PREFERENCE_KEY, true);
+    return mPreferences.getBoolean(ENABLED_PREFERENCE_KEY, true);
+  }
+  
+  private boolean isDebugOverrideEnabled()
+  {
+    return BuildConfig.DEBUG && mPreferences.getBoolean(DEBUG_OVERRIDE_PREFERENCE_KEY, false);
   }
 }

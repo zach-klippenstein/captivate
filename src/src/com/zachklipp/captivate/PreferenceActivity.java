@@ -189,10 +189,25 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     parent.addPreference(debugCategory);
     
     mDebugStatePreference = new Preference(this);
-    mDebugStatePreference.setTitle("Portal State");
-    mDebugStatePreference.setEnabled(false);
-    mDebugStatePreference.setShouldDisableView(false);
-    mDebugStatePreference.setSelectable(false);
+    mDebugStatePreference.setTitle("Portal state (tap to refresh)");
+    mDebugStatePreference.setSelectable(true);
+    mDebugStatePreference.setOnPreferenceClickListener(new OnPreferenceClickListener()
+    {
+      @Override
+      public boolean onPreferenceClick(Preference preference)
+      {
+        PortalDetectorService.startService(PreferenceActivity.this);
+        return true;
+      }
+    });
     debugCategory.addPreference(mDebugStatePreference);
+    
+    CheckBoxPreference overridePref = new CheckBoxPreference(this);
+    overridePref.setKey(PortalDetectorService.DEBUG_OVERRIDE_PREFERENCE_KEY);
+    overridePref.setDefaultValue(false);
+    overridePref.setTitle("Override portal");
+    overridePref.setSummaryOn("A fake portal will always be detected.");
+    overridePref.setSummaryOff("The portal detector will look for a portal.");
+    debugCategory.addPreference(overridePref);
   }
 }

@@ -1,6 +1,6 @@
 package com.zachklipp.captivate.captive_portal;
 
-import android.content.Context;
+import android.net.Uri;
 
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
@@ -13,9 +13,17 @@ public abstract class PortalDetector extends Observable<PortalInfo>
     public PortalDetector create();
   }
   
+  public enum OverrideMode
+  {
+    NONE,
+    ALWAYS_DETECT,
+    NEVER_DETECT
+  }
+  
   private static final String LOG_TAG = "PortalDetector";
   
   private PortalInfo mPortal;
+  private OverrideMode mOverrideMode = OverrideMode.NONE;
   
   public PortalDetector()
   {
@@ -29,12 +37,27 @@ public abstract class PortalDetector extends Observable<PortalInfo>
     mPortal = portal;
   }
 
-  // Should eventually call reportPortal or reportNoPortal
+  /*
+   *  Should eventually call reportPortal or reportNoPortal
+   */
   protected abstract void onCheckForPortal();
   
-  public void checkForPortal(Context context)
+  public void checkForPortal()
   {
-    onCheckForPortal();
+    switch (mOverrideMode)
+    {
+      case NONE:
+        onCheckForPortal();
+        break;
+        
+      case ALWAYS_DETECT:
+        reportPortal(new PortalInfo(Uri.EMPTY));
+        break;
+        
+      case NEVER_DETECT:
+        reportNoPortal();
+        break;
+    }
   }
   
   public boolean isOnPortal()
@@ -45,6 +68,27 @@ public abstract class PortalDetector extends Observable<PortalInfo>
   public PortalInfo getPortal()
   {
     return mPortal;
+  }
+  
+  public void setPortalOverride(OverrideMode mode)
+  {
+    if (null == mode)
+    {
+      mode = OverrideMode.NONE;
+    }
+    
+    if (OverrideMode.ALWAYS_DETECT == mode)
+    {
+      mPortal = new PortalInfo(Uri.EMPTY);
+    }
+    else
+    {
+      mPortal = null;
+    }
+    
+    Log.d(LOG_TAG, "Setting override mode to " + mode);
+    
+    mOverrideMode = mode;
   }
   
   protected void reportPortal(PortalInfo portal)

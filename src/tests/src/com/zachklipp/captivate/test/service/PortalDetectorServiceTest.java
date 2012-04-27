@@ -1,6 +1,7 @@
 package com.zachklipp.captivate.test.service;
 
 import com.zachklipp.captivate.captive_portal.PortalDetector;
+import com.zachklipp.captivate.captive_portal.PortalDetector.OverrideMode;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.state_machine.PortalStateMachine;
 import com.zachklipp.captivate.state_machine.StateMachine;
@@ -75,7 +76,7 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
 
   public void testSendsBroadcastIntentOnPortalDetected()
   {
-    mDetector.setDetectFakePortal(true);
+    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
     startService();
     
     assertChangedToState(PortalStateMachine.State.SIGNIN_REQUIRED);
@@ -83,18 +84,18 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
 
   public void testDetectionStateChange()
   {
-    mDetector.setDetectFakePortal(true);
+    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
     startService();
     assertChangedToState(PortalStateMachine.State.SIGNIN_REQUIRED);
-    
-    mDetector.setDetectFakePortal(false);
+
+    mDetector.setPortalOverride(OverrideMode.NEVER_DETECT);
     startService();
     assertChangedToState(PortalStateMachine.State.SIGNED_IN);
   }
 
   public void testDisablePreference()
   {
-    mDetector.setDetectFakePortal(true);
+    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
     startService();
     assertChangedToState(PortalStateMachine.State.SIGNIN_REQUIRED);
     
@@ -113,7 +114,7 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
     assertChangedToState(PortalStateMachine.State.UNKNOWN);
     
     setServiceEnabled(true);
-    mDetector.setDetectFakePortal(false);
+    mDetector.setPortalOverride(OverrideMode.NEVER_DETECT);
     startService();
     assertChangedToState(PortalStateMachine.State.NO_PORTAL);
   }

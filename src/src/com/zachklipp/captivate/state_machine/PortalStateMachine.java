@@ -108,7 +108,9 @@ public class PortalStateMachine extends StateMachine
   
   private void onSigninNoLongerRequired()
   {
-    if (getCurrentState() == State.SIGNING_IN || getCurrentState() == State.SIGNIN_REQUIRED)
+    if (getCurrentState() == State.SIGNING_IN
+        || getCurrentState() == State.SIGNIN_REQUIRED
+        || getCurrentState() == State.SIGNED_IN)
     {
       Log.d(LOG_TAG, "Portal signed in.");
       transitionTo(State.SIGNED_IN);

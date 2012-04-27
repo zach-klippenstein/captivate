@@ -1,5 +1,6 @@
 package com.zachklipp.captivate.test.captive_portal;
 
+import com.zachklipp.captivate.captive_portal.PortalDetector.OverrideMode;
 import com.zachklipp.captivate.state_machine.PortalStateMachine;
 import com.zachklipp.captivate.state_machine.PortalStateMachine.State;
 
@@ -23,7 +24,7 @@ public class PortalStateMachineTest extends TestCase
 
   public void testNoPortalDetected()
   {
-    mDetector.setDetectFakePortal(false);
+    mDetector.setPortalOverride(OverrideMode.NEVER_DETECT);
     mDetector.checkForPortal();
     
     assertCurrentState(State.NO_PORTAL);
@@ -31,7 +32,7 @@ public class PortalStateMachineTest extends TestCase
 
   public void testPortalDetected()
   {
-    mDetector.setDetectFakePortal(true);
+    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
     mDetector.checkForPortal();
     
     assertCurrentState(State.SIGNIN_REQUIRED);
@@ -42,12 +43,12 @@ public class PortalStateMachineTest extends TestCase
 
   public void testPortalDetectedThenSignedIn()
   {
-    mDetector.setDetectFakePortal(true);
+    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
     mDetector.checkForPortal();
     
     assertCurrentState(State.SIGNIN_REQUIRED);
-    
-    mDetector.setDetectFakePortal(false);
+
+    mDetector.setPortalOverride(OverrideMode.NEVER_DETECT);
     mDetector.checkForPortal();
     
     assertCurrentState(State.SIGNED_IN);
@@ -55,15 +56,15 @@ public class PortalStateMachineTest extends TestCase
 
   public void testPortalDetectedThenSigningIn()
   {
-    mDetector.setDetectFakePortal(true);
+    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
     mDetector.checkForPortal();
     
     assertCurrentState(State.SIGNIN_REQUIRED);
     
     machine.startSignIn();
     assertCurrentState(State.SIGNING_IN);
-    
-    mDetector.setDetectFakePortal(false);
+
+    mDetector.setPortalOverride(OverrideMode.NEVER_DETECT);
     mDetector.checkForPortal();
     assertCurrentState(State.SIGNED_IN);
   }
