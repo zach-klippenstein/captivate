@@ -75,8 +75,8 @@ class MockBroadcastReceiver extends BroadcastReceiver
     if (PortalDetectorService.ACTION_PORTAL_STATE_CHANGED.equals(intent.getAction()))
     {
       message.append(String.format(" new state=%s, portal=%s",
-          intent.getStringExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE),
-          intent.getStringExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_INFO)));
+          intent.getStringExtra(PortalDetectorService.EXTRA_PORTAL_STATE),
+          intent.getStringExtra(PortalDetectorService.EXTRA_PORTAL_INFO)));
     }
     
     Log.d(LOG_TAG, message.toString());

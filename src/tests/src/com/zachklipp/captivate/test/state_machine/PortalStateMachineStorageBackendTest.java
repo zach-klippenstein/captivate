@@ -33,12 +33,12 @@ public class PortalStateMachineStorageBackendTest extends AndroidTestCase
 
   public void testSaveThenLoad()
   {
-    mStateMachine.transitionTo(PortalStateMachine.State.NEEDS_SIGNIN);
+    mStateMachine.transitionTo(PortalStateMachine.State.SIGNIN_REQUIRED);
     mBackend.save(mStateMachine);
     mStateMachine = (PortalStateMachine) mBackend.load();
     
     assertNotNull(mStateMachine);
-    assertEquals(PortalStateMachine.State.NEEDS_SIGNIN, mStateMachine.getCurrentState());
+    assertEquals(PortalStateMachine.State.SIGNIN_REQUIRED, mStateMachine.getCurrentState());
   }
 
   public void testCanLoad()

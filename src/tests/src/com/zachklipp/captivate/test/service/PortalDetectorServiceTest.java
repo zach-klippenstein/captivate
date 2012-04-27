@@ -78,14 +78,14 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
     mDetector.setDetectFakePortal(true);
     startService();
     
-    assertChangedToState(PortalStateMachine.State.NEEDS_SIGNIN);
+    assertChangedToState(PortalStateMachine.State.SIGNIN_REQUIRED);
   }
 
   public void testDetectionStateChange()
   {
     mDetector.setDetectFakePortal(true);
     startService();
-    assertChangedToState(PortalStateMachine.State.NEEDS_SIGNIN);
+    assertChangedToState(PortalStateMachine.State.SIGNIN_REQUIRED);
     
     mDetector.setDetectFakePortal(false);
     startService();
@@ -96,7 +96,7 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
   {
     mDetector.setDetectFakePortal(true);
     startService();
-    assertChangedToState(PortalStateMachine.State.NEEDS_SIGNIN);
+    assertChangedToState(PortalStateMachine.State.SIGNIN_REQUIRED);
     
     // Disable via preferences
     setServiceEnabled(false);
@@ -105,7 +105,7 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
     
     setServiceEnabled(true);
     startService();
-    assertChangedToState(PortalStateMachine.State.NEEDS_SIGNIN);
+    assertChangedToState(PortalStateMachine.State.SIGNIN_REQUIRED);
     
     // Disable via preferences
     setServiceEnabled(false);
@@ -115,7 +115,7 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
     setServiceEnabled(true);
     mDetector.setDetectFakePortal(false);
     startService();
-    assertChangedToState(PortalStateMachine.State.NOT_CAPTIVE);
+    assertChangedToState(PortalStateMachine.State.NO_PORTAL);
   }
   
   private void startService()
@@ -143,7 +143,7 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
   private void assertState(PortalStateMachine.State expectedState, Intent receivedIntent)
   {
     String stateName = receivedIntent.getStringExtra(
-        PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE);
+        PortalDetectorService.EXTRA_PORTAL_STATE);
     
     assertEquals(expectedState.getName(), stateName);
   }

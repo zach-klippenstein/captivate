@@ -21,8 +21,8 @@ public class PortalStateMachine extends StateMachine
   public final static class State extends com.zachklipp.captivate.state_machine.State
   {
     public static final State UNKNOWN = new State("unknown");
-    public static final State NOT_CAPTIVE = new State("no_portal");
-    public static final State NEEDS_SIGNIN = new State("needs_signin");
+    public static final State NO_PORTAL = new State("no_portal");
+    public static final State SIGNIN_REQUIRED = new State("signin_required");
     public static final State SIGNING_IN = new State("signing_in");
     public static final State SIGNED_IN = new State("signed_in");
     
@@ -33,11 +33,11 @@ public class PortalStateMachine extends StateMachine
   }
   
   public static final State[][] TRANSITION_MATRIX = new State[][] {
-      new State[] {State.UNKNOWN, State.NOT_CAPTIVE, State.NEEDS_SIGNIN},
-      new State[] {State.NOT_CAPTIVE, State.UNKNOWN, State.NEEDS_SIGNIN},
-      new State[] {State.NEEDS_SIGNIN, State.UNKNOWN, State.SIGNING_IN, State.SIGNED_IN, State.NOT_CAPTIVE},
-      new State[] {State.SIGNING_IN, State.UNKNOWN, State.SIGNED_IN, State.NOT_CAPTIVE},
-      new State[] {State.SIGNED_IN, State.UNKNOWN, State.NEEDS_SIGNIN, State.NOT_CAPTIVE},
+      new State[] {State.UNKNOWN, State.NO_PORTAL, State.SIGNIN_REQUIRED},
+      new State[] {State.NO_PORTAL, State.UNKNOWN, State.SIGNIN_REQUIRED},
+      new State[] {State.SIGNIN_REQUIRED, State.UNKNOWN, State.SIGNING_IN, State.SIGNED_IN, State.NO_PORTAL},
+      new State[] {State.SIGNING_IN, State.UNKNOWN, State.SIGNED_IN, State.NO_PORTAL},
+      new State[] {State.SIGNED_IN, State.UNKNOWN, State.SIGNIN_REQUIRED, State.NO_PORTAL},
     };
 
   private PortalDetector mPortalDetector;
@@ -49,11 +49,11 @@ public class PortalStateMachine extends StateMachine
     {
       if (portal == null)
       {
-        onNoLongerNeedsSignin();
+        onSigninNoLongerRequired();
       }
       else
       {
-        onNeedsSignin();
+        onSigninRequired();
       }
     }
   };
@@ -93,22 +93,22 @@ public class PortalStateMachine extends StateMachine
   
   public void onNoWifi()
   {
-    transitionTo(State.NOT_CAPTIVE);
+    transitionTo(State.NO_PORTAL);
   }
   
-  private void onNeedsSignin()
+  private void onSigninRequired()
   {
-    if (getCurrentState() != State.NEEDS_SIGNIN)
+    if (getCurrentState() != State.SIGNIN_REQUIRED)
     {
       Log.d(LOG_TAG, "Captive portal detected.");
       
-      transitionTo(State.NEEDS_SIGNIN);
+      transitionTo(State.SIGNIN_REQUIRED);
     }
   }
   
-  private void onNoLongerNeedsSignin()
+  private void onSigninNoLongerRequired()
   {
-    if (getCurrentState() == State.SIGNING_IN || getCurrentState() == State.NEEDS_SIGNIN)
+    if (getCurrentState() == State.SIGNING_IN || getCurrentState() == State.SIGNIN_REQUIRED)
     {
       Log.d(LOG_TAG, "Portal signed in.");
       transitionTo(State.SIGNED_IN);
@@ -116,7 +116,7 @@ public class PortalStateMachine extends StateMachine
     else
     {
       Log.d(LOG_TAG, "No portal detected.");
-      transitionTo(State.NOT_CAPTIVE);
+      transitionTo(State.NO_PORTAL);
     }
   }
 }

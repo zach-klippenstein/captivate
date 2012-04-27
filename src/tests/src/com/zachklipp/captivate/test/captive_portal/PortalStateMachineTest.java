@@ -26,7 +26,7 @@ public class PortalStateMachineTest extends TestCase
     mDetector.setDetectFakePortal(false);
     mDetector.checkForPortal();
     
-    assertCurrentState(State.NOT_CAPTIVE);
+    assertCurrentState(State.NO_PORTAL);
   }
 
   public void testPortalDetected()
@@ -34,10 +34,10 @@ public class PortalStateMachineTest extends TestCase
     mDetector.setDetectFakePortal(true);
     mDetector.checkForPortal();
     
-    assertCurrentState(State.NEEDS_SIGNIN);
+    assertCurrentState(State.SIGNIN_REQUIRED);
     
     mDetector.checkForPortal();
-    assertCurrentState(State.NEEDS_SIGNIN);
+    assertCurrentState(State.SIGNIN_REQUIRED);
   }
 
   public void testPortalDetectedThenSignedIn()
@@ -45,7 +45,7 @@ public class PortalStateMachineTest extends TestCase
     mDetector.setDetectFakePortal(true);
     mDetector.checkForPortal();
     
-    assertCurrentState(State.NEEDS_SIGNIN);
+    assertCurrentState(State.SIGNIN_REQUIRED);
     
     mDetector.setDetectFakePortal(false);
     mDetector.checkForPortal();
@@ -58,7 +58,7 @@ public class PortalStateMachineTest extends TestCase
     mDetector.setDetectFakePortal(true);
     mDetector.checkForPortal();
     
-    assertCurrentState(State.NEEDS_SIGNIN);
+    assertCurrentState(State.SIGNIN_REQUIRED);
     
     machine.startSignIn();
     assertCurrentState(State.SIGNING_IN);

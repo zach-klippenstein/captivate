@@ -24,8 +24,8 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   // For broadcast intent
   public static final String ACCESS_PORTAL_STATE_PERMISSION = "com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE";
   public static final String ACTION_PORTAL_STATE_CHANGED = INTENT_NAMESPACE + "ACTION_PORTAL_STATE_CHANGED";
-  public static final String EXTRA_CAPTIVE_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_CAPTIVE_PORTAL_STATE";
-  public static final String EXTRA_CAPTIVE_PORTAL_INFO = INTENT_NAMESPACE + "EXTRA_CAPTIVE_PORTAL_INFO";
+  public static final String EXTRA_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_PORTAL_STATE";
+  public static final String EXTRA_PORTAL_INFO = INTENT_NAMESPACE + "EXTRA_PORTAL_INFO";
   
   public static final String ENABLED_PREFERENCE_KEY = "detector_enabled_pref";
   
@@ -139,7 +139,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   private void updateNotification()
   {
-    if (PortalStateMachine.State.NEEDS_SIGNIN == mStateMachine.getCurrentState())
+    if (PortalStateMachine.State.SIGNIN_REQUIRED == mStateMachine.getCurrentState())
     {
       ConnectedNotification.showNotification(this, mPortalDetector.getPortal());
     }
@@ -166,7 +166,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   {
     Intent intent = new Intent(PortalDetectorService.ACTION_PORTAL_STATE_CHANGED);
     
-    intent.putExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE, state.getName());
+    intent.putExtra(PortalDetectorService.EXTRA_PORTAL_STATE, state.getName());
     
     if (portal != null)
     {

@@ -38,7 +38,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
         if (mDebugStatePreference != null)
         {
           mDebugStatePreference.setSummary(
-              intent.getStringExtra(PortalDetectorService.EXTRA_CAPTIVE_PORTAL_STATE));
+              intent.getStringExtra(PortalDetectorService.EXTRA_PORTAL_STATE));
         }
       }
     }
