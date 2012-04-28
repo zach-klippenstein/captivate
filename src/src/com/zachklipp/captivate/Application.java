@@ -14,6 +14,9 @@ public class Application extends android.app.Application
   {
     Log.setDefaultTag("captivate");
     
+    /* NOTE: Due to an ADT bug, Project -> Build Automatically must be unchecked for
+     * this to take effect.
+     */
     if (!BuildConfig.DEBUG)
     {
       Log.v("Configured for release, disabling debug logging");
