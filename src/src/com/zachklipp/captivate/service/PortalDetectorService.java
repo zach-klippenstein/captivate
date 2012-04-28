@@ -2,6 +2,7 @@ package com.zachklipp.captivate.service;
 
 import com.zachklipp.captivate.BuildConfig;
 import com.zachklipp.captivate.ConnectedNotification;
+import com.zachklipp.captivate.Manifest;
 import com.zachklipp.captivate.captive_portal.HttpResponseContentsDetector;
 import com.zachklipp.captivate.captive_portal.PortalDetector;
 import com.zachklipp.captivate.captive_portal.PortalDetector.OverrideMode;
@@ -34,8 +35,6 @@ public class PortalDetectorService extends StickyIntentService
   private static final String INTENT_NAMESPACE = "com.zachklipp.captivate.intent.";
   
   // For broadcast intent
-  public static final String ACCESS_PORTAL_STATE_PERMISSION =
-      "com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE";
   public static final String ACTION_PORTAL_STATE_CHANGED = INTENT_NAMESPACE + "ACTION_PORTAL_STATE_CHANGED";
   public static final String EXTRA_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_PORTAL_STATE";
   public static final String EXTRA_PORTAL_URL = INTENT_NAMESPACE + "EXTRA_PORTAL_URL";
@@ -246,7 +245,7 @@ public class PortalDetectorService extends StickyIntentService
     Log.i(String.format("Broadcasting portal state change. new state=%s, portal=%s",
         state, portal));
     
-    sendBroadcast(intent, ACCESS_PORTAL_STATE_PERMISSION);
+    sendBroadcast(intent, Manifest.permission.ACCESS_PORTAL_STATE);
   }
   
   private static Intent createStateChangedBroadcastIntent(State state, PortalInfo portal)
