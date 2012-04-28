@@ -48,4 +48,4 @@ Whenever Captivate detects a portal, or a portal signin, or timeout, or anything
     *   `signed_in`
 
 *   `com.zachklipp.captivate.intent.EXTRA_PORTAL_URL`
-    A string URL that will take the user to the login page. As of v1.1.0, it only contains the URL used to check for redirects, so it's not the actual URL of the portal sign-in page. This is planned for the future (see issue #9 ).
+    A string URL that will take the user to the login page. As of v1.1.0, it only contains the URL used to check for redirects, so it's not the actual URL of the portal sign-in page. This is planned for the future (see issue [#9](https://github.com/zach-klippenstein/captivate/issues/9)).
