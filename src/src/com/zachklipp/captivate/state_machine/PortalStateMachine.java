@@ -20,15 +20,36 @@ public class PortalStateMachine extends StateMachine
   
   public final static class State extends com.zachklipp.captivate.state_machine.State
   {
-    public static final State UNKNOWN = new State("unknown");
-    public static final State NO_PORTAL = new State("no_portal");
-    public static final State SIGNIN_REQUIRED = new State("signin_required");
-    public static final State SIGNING_IN = new State("signing_in");
-    public static final State SIGNED_IN = new State("signed_in");
+    public static final State UNKNOWN = new State("unknown", false, false);
+    public static final State NO_PORTAL = new State("no_portal", false, false);
+    public static final State SIGNIN_REQUIRED = new State("signin_required", true, true);
+    public static final State SIGNING_IN = new State("signing_in", true, true);
+    public static final State SIGNED_IN = new State("signed_in", true, false);
     
-    private State(String name)
+    private boolean mIsBehindPortal;
+    private boolean mIsBlocked;
+    
+    private State(String name, boolean behindPortal, boolean isBlocked)
     {
       super(name);
+      mIsBehindPortal = behindPortal;
+      mIsBlocked = isBlocked;
+    }
+    
+    /*
+     * Return true if the state means the device is behind a portal.
+     */
+    public boolean isBehindPortal()
+    {
+      return mIsBehindPortal;
+    }
+    
+    /*
+     * Return true if the state means the portal is blocking network traffic.
+     */
+    public boolean isBlocked()
+    {
+      return mIsBlocked;
     }
   }
   
@@ -79,6 +100,11 @@ public class PortalStateMachine extends StateMachine
     
     Log.d(LOG_TAG, String.format("Portal state machine initialized to state %s",
         getCurrentState().getName()));
+  }
+  
+  public State getCurrentPortalState()
+  {
+    return (State) getCurrentState();
   }
   
   public void startSignIn()

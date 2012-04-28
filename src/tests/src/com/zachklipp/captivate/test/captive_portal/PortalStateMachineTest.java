@@ -24,7 +24,7 @@ public class PortalStateMachineTest extends TestCase
 
   public void testNoPortalDetected()
   {
-    mDetector.setPortalOverride(OverrideMode.NEVER_DETECT);
+    mDetector.setTestingOverride(OverrideMode.NEVER_DETECT);
     mDetector.checkForPortal();
     
     assertCurrentState(State.NO_PORTAL);
@@ -32,7 +32,7 @@ public class PortalStateMachineTest extends TestCase
 
   public void testPortalDetected()
   {
-    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
+    mDetector.setTestingOverride(OverrideMode.ALWAYS_DETECT);
     mDetector.checkForPortal();
     
     assertCurrentState(State.SIGNIN_REQUIRED);
@@ -43,12 +43,12 @@ public class PortalStateMachineTest extends TestCase
 
   public void testPortalDetectedThenSignedIn()
   {
-    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
+    mDetector.setTestingOverride(OverrideMode.ALWAYS_DETECT);
     mDetector.checkForPortal();
     
     assertCurrentState(State.SIGNIN_REQUIRED);
 
-    mDetector.setPortalOverride(OverrideMode.NEVER_DETECT);
+    mDetector.setTestingOverride(OverrideMode.NEVER_DETECT);
     mDetector.checkForPortal();
     
     assertCurrentState(State.SIGNED_IN);
@@ -56,7 +56,7 @@ public class PortalStateMachineTest extends TestCase
 
   public void testPortalDetectedThenSigningIn()
   {
-    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
+    mDetector.setTestingOverride(OverrideMode.ALWAYS_DETECT);
     mDetector.checkForPortal();
     
     assertCurrentState(State.SIGNIN_REQUIRED);
@@ -64,7 +64,7 @@ public class PortalStateMachineTest extends TestCase
     machine.startSignIn();
     assertCurrentState(State.SIGNING_IN);
 
-    mDetector.setPortalOverride(OverrideMode.NEVER_DETECT);
+    mDetector.setTestingOverride(OverrideMode.NEVER_DETECT);
     mDetector.checkForPortal();
     assertCurrentState(State.SIGNED_IN);
   }

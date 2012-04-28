@@ -2,24 +2,34 @@ package com.zachklipp.captivate.service;
 
 import com.zachklipp.captivate.BuildConfig;
 import com.zachklipp.captivate.ConnectedNotification;
-import com.zachklipp.captivate.captive_portal.*;
+import com.zachklipp.captivate.captive_portal.HttpResponseContentsDetector;
+import com.zachklipp.captivate.captive_portal.PortalDetector;
 import com.zachklipp.captivate.captive_portal.PortalDetector.OverrideMode;
-import com.zachklipp.captivate.state_machine.*;
+import com.zachklipp.captivate.captive_portal.PortalInfo;
+import com.zachklipp.captivate.state_machine.PortalStateMachine;
+import com.zachklipp.captivate.state_machine.PortalStateMachine.State;
 import com.zachklipp.captivate.state_machine.PortalStateMachine.StorageBackendFactory;
+import com.zachklipp.captivate.state_machine.PortalStateMachineStorageBackend;
+import com.zachklipp.captivate.state_machine.StateMachineStorage;
 import com.zachklipp.captivate.state_machine.StateMachineStorage.StorageBackend;
+import com.zachklipp.captivate.state_machine.TransitionEvent;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
+import com.zachklipp.captivate.util.StickyIntentService;
 import com.zachklipp.captivate.util.WifiHelper;
 
-import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 
-public class PortalDetectorService extends IntentService implements Observer<TransitionEvent>
+public class PortalDetectorService extends StickyIntentService
+  implements Observer<TransitionEvent>
 {
   private static final String INTENT_NAMESPACE = "com.zachklipp.captivate.intent.";
   
@@ -32,6 +42,17 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   public static final String ENABLED_PREFERENCE_KEY = "detector_enabled_pref";
   public static final String DEBUG_OVERRIDE_PREFERENCE_KEY = "debug_override_pref";
+  public static final String STATE_REFRESH_INTERVAL_SECONDS_PREFERENCE_KEY
+    = "state_refresh_interval_seconds";
+  
+  private static class StartServiceReceiver extends BroadcastReceiver
+  {
+    @Override
+    public void onReceive(Context context, Intent intent)
+    {
+      PortalDetectorService.startService(context);
+    }
+  };
   
   //private static PortalDetector sSeedPortalDetector = HttpResponseContentsDetector.createDetector();
   private static PortalDetector.Factory sPortalDetectorFactory
@@ -80,8 +101,16 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   private PortalDetector mPortalDetector;
   private PortalStateMachine mStateMachine;
+  private BroadcastReceiver mScreenOnReceiver;
   
-  private SharedPreferences mPreferences;
+  private final Runnable mStartServiceRunnable = new Runnable()
+  {
+    @Override
+    public void run()
+    {
+      startService(PortalDetectorService.this);
+    }
+  };
 
   public PortalDetectorService()
   {
@@ -91,15 +120,8 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   @Override
   public void onCreate()
   {
-    mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-    
     mPortalDetector = sPortalDetectorFactory.create();
     assert(mPortalDetector != null);
-    
-    if (isDebugOverrideEnabled())
-    {
-      mPortalDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
-    }
     
     Log.d("Using portal detector " + mPortalDetector.getClass().getName());
     
@@ -113,28 +135,17 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   }
   
   @Override
+  public int onStartCommand(Intent intent, int flags, int startId)
+  {
+    return super.onStartCommand(intent, flags, startId);
+  }
+  
+  @Override
   protected void onHandleIntent(Intent intent)
   {
     if (isEnabled())
     {
-      Log.d("Service updating portal status...");
-      
-      if (WifiHelper.isConnectedFromContext(this))
-      {
-        try
-        {
-          mPortalDetector.checkForPortal();
-        }
-        catch (Exception e)
-        {
-          Log.e("Error checking for portal: " + e.getMessage());
-        }
-      }
-      else
-      {
-        Log.d("Wifi not connected, reporting no portal");
-        mStateMachine.onNoWifi();
-      }
+      checkForPortal();
     }
     else
     {
@@ -143,16 +154,79 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     }
   }
   
+  private void checkForPortal()
+  {
+    updateDetectorOverrideFromPrefs();
+    
+    Log.d("Service updating portal status...");
+    
+    if (WifiHelper.isConnectedFromContext(this))
+    {
+      mPortalDetector.checkForPortal();
+    }
+    else
+    {
+      Log.d("Wifi not connected, reporting no portal");
+      mStateMachine.onNoWifi();
+    }
+    
+    scheduleTimedRefreshIfBlocked();
+    
+    if (!mStateMachine.getCurrentPortalState().isBehindPortal())
+    {
+      stopSelf();
+    }
+  }
+  
   @Override
   public void update(Observable<TransitionEvent> observable, TransitionEvent event)
   {
+    scheduleRefreshWhenScreenTurnedOn();
     updateNotification();
     sendStateChangedBroadcast();
   }
   
+  private void updateDetectorOverrideFromPrefs()
+  {
+    mPortalDetector.setPortalOverride(
+        isDebugOverrideEnabled() ? OverrideMode.ALWAYS_DETECT : OverrideMode.NONE);
+  }
+  
+  private void scheduleRefreshWhenScreenTurnedOn()
+  {
+    if (mStateMachine.getCurrentPortalState().isBehindPortal())
+    {
+      registerScreenOnReceiver();
+    }
+    else
+    {
+      unregisterScreenOnReceiver();
+    }
+  }
+  
+  private void scheduleTimedRefreshIfBlocked()
+  {
+    if (isScreenOn() && mStateMachine.getCurrentPortalState().isBlocked())
+    {
+      Log.d(String.format("Scheduling state refresh in %d seconds",
+          getStateRefreshIntervalSeconds()));
+      
+      getHandler().postDelayed(mStartServiceRunnable,
+          getStateRefreshIntervalSeconds() * 1000);
+    }
+  }
+  
+  @Override
+  public void onDestroy()
+  {
+    super.onDestroy();
+    
+    unregisterScreenOnReceiver();
+  }
+  
   private void updateNotification()
   {
-    if (PortalStateMachine.State.SIGNIN_REQUIRED == mStateMachine.getCurrentState())
+    if (State.SIGNIN_REQUIRED == mStateMachine.getCurrentState())
     {
       ConnectedNotification.showNotification(this, mPortalDetector.getPortal());
     }
@@ -164,7 +238,7 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
   
   private void sendStateChangedBroadcast()
   {
-    State state = mStateMachine.getCurrentState();
+    State state = (State) mStateMachine.getCurrentState();
     PortalInfo portal = mPortalDetector.getPortal();
     
     Intent intent = createStateChangedBroadcastIntent(state, portal);
@@ -189,13 +263,47 @@ public class PortalDetectorService extends IntentService implements Observer<Tra
     return intent;
   }
   
+  private void registerScreenOnReceiver()
+  {
+    if (mScreenOnReceiver == null)
+    {
+      mScreenOnReceiver = new StartServiceReceiver();
+      registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+    }
+  }
+  
+  private void unregisterScreenOnReceiver()
+  {
+    if (mScreenOnReceiver != null)
+    {
+      unregisterReceiver(mScreenOnReceiver);
+      mScreenOnReceiver = null;
+    }
+  }
+  
+  private boolean isScreenOn()
+  {
+    PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    return powerManager.isScreenOn();
+  }
+  
   private boolean isEnabled()
   {
-    return mPreferences.getBoolean(ENABLED_PREFERENCE_KEY, true);
+    return getPreferences().getBoolean(ENABLED_PREFERENCE_KEY, true);
   }
   
   private boolean isDebugOverrideEnabled()
   {
-    return BuildConfig.DEBUG && mPreferences.getBoolean(DEBUG_OVERRIDE_PREFERENCE_KEY, false);
+    return BuildConfig.DEBUG && getPreferences().getBoolean(DEBUG_OVERRIDE_PREFERENCE_KEY, false);
+  }
+  
+  private int getStateRefreshIntervalSeconds()
+  {
+    return getPreferences().getInt(STATE_REFRESH_INTERVAL_SECONDS_PREFERENCE_KEY, 30);
+  }
+  
+  private SharedPreferences getPreferences()
+  {
+    return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
   }
 }

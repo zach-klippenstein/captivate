@@ -51,10 +51,12 @@ public abstract class PortalDetector extends Observable<PortalInfo>
         break;
         
       case ALWAYS_DETECT:
+        Log.i(LOG_TAG, "Overriding captive portal detector");
         reportPortal(new PortalInfo(Uri.EMPTY));
         break;
         
       case NEVER_DETECT:
+        Log.i(LOG_TAG, "Overriding captive portal detector with no portal");
         reportNoPortal();
         break;
     }
@@ -77,18 +79,21 @@ public abstract class PortalDetector extends Observable<PortalInfo>
       mode = OverrideMode.NONE;
     }
     
-    if (OverrideMode.ALWAYS_DETECT == mode)
+    if (mode != mOverrideMode)
     {
-      mPortal = new PortalInfo(Uri.EMPTY);
+      if (OverrideMode.ALWAYS_DETECT == mode)
+      {
+        mPortal = new PortalInfo(Uri.EMPTY);
+      }
+      else
+      {
+        mPortal = null;
+      }
+      
+      Log.d(LOG_TAG, "Setting override mode to " + mode);
+      
+      mOverrideMode = mode;
     }
-    else
-    {
-      mPortal = null;
-    }
-    
-    Log.d(LOG_TAG, "Setting override mode to " + mode);
-    
-    mOverrideMode = mode;
   }
   
   protected void reportPortal(PortalInfo portal)

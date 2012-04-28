@@ -18,6 +18,9 @@ import android.preference.PreferenceManager;
 import android.test.ServiceTestCase;
 import android.util.Log;
 
+/*
+ * These tests currently require Wifi to be on on the testing device.
+ */
 public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorService>
 {
   private static final String LOG_TAG = "captivate-tests";
@@ -76,7 +79,7 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
 
   public void testSendsBroadcastIntentOnPortalDetected()
   {
-    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
+    mDetector.setTestingOverride(OverrideMode.ALWAYS_DETECT);
     startService();
     
     assertChangedToState(PortalStateMachine.State.SIGNIN_REQUIRED);
@@ -84,18 +87,18 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
 
   public void testDetectionStateChange()
   {
-    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
+    mDetector.setTestingOverride(OverrideMode.ALWAYS_DETECT);
     startService();
     assertChangedToState(PortalStateMachine.State.SIGNIN_REQUIRED);
 
-    mDetector.setPortalOverride(OverrideMode.NEVER_DETECT);
+    mDetector.setTestingOverride(OverrideMode.NEVER_DETECT);
     startService();
     assertChangedToState(PortalStateMachine.State.SIGNED_IN);
   }
 
   public void testDisablePreference()
   {
-    mDetector.setPortalOverride(OverrideMode.ALWAYS_DETECT);
+    mDetector.setTestingOverride(OverrideMode.ALWAYS_DETECT);
     startService();
     assertChangedToState(PortalStateMachine.State.SIGNIN_REQUIRED);
     
@@ -114,7 +117,7 @@ public class PortalDetectorServiceTest extends ServiceTestCase<PortalDetectorSer
     assertChangedToState(PortalStateMachine.State.UNKNOWN);
     
     setServiceEnabled(true);
-    mDetector.setPortalOverride(OverrideMode.NEVER_DETECT);
+    mDetector.setTestingOverride(OverrideMode.NEVER_DETECT);
     startService();
     assertChangedToState(PortalStateMachine.State.NO_PORTAL);
   }
