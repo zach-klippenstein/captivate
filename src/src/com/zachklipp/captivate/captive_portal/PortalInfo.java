@@ -16,7 +16,7 @@ public class PortalInfo
   
   public PortalInfo(Intent intent)
   {
-    String uri = intent.getStringExtra(PortalDetectorService.EXTRA_PORTAL_INFO);
+    String uri = intent.getStringExtra(PortalDetectorService.EXTRA_PORTAL_URL);
     mPortalUri = uri == null ? Uri.EMPTY : Uri.parse(uri);
   }
   
@@ -35,6 +35,6 @@ public class PortalInfo
   
   public void saveToIntent(Intent intent)
   {
-    intent.putExtra(PortalDetectorService.EXTRA_PORTAL_INFO, mPortalUri.toString());
+    intent.putExtra(PortalDetectorService.EXTRA_PORTAL_URL, mPortalUri.toString());
   }
 }

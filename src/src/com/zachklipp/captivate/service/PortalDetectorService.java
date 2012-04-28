@@ -38,7 +38,7 @@ public class PortalDetectorService extends StickyIntentService
       "com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE";
   public static final String ACTION_PORTAL_STATE_CHANGED = INTENT_NAMESPACE + "ACTION_PORTAL_STATE_CHANGED";
   public static final String EXTRA_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_PORTAL_STATE";
-  public static final String EXTRA_PORTAL_INFO = INTENT_NAMESPACE + "EXTRA_PORTAL_INFO";
+  public static final String EXTRA_PORTAL_URL = INTENT_NAMESPACE + "EXTRA_PORTAL_URL";
   
   public static final String ENABLED_PREFERENCE_KEY = "detector_enabled_pref";
   public static final String DEBUG_OVERRIDE_PREFERENCE_KEY = "debug_override_pref";
