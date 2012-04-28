@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Non-language-specific strings -->
     
-    <string name="app_name">Captivate</string>
-    <string name="version_name_format">v%s</string>
-    <string name="feedback_email">zk.at.sf@gmail.com</string>
-    <string name="feedback_subject">[%s] User Feedback</string>
+    <string name="app_name" tools:ignore="MissingTranslation" >Captivate</string>
+    <string name="version_name_format" tools:ignore="MissingTranslation" >v%s</string>
+    <string name="feedback_email" tools:ignore="MissingTranslation" >zk.at.sf@gmail.com</string>
+    <string name="feedback_subject" tools:ignore="MissingTranslation" >[%s] User Feedback</string>
     
     <!-- Localizable strings -->
     
