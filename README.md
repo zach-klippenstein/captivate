@@ -13,6 +13,7 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
 ### 1.1.0
 
 *   Captivate is now more intelligent -- it automatically detects when you're logged into a portal, and if your session times out.
+*   Portal detection can be disabled in the settings.
 *   Spanish, Turkish, and French translations (thanks to Google Translate, so I can't vouch for their quality).
 
 ### 1.0.0
@@ -39,7 +40,12 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
 Whenever Captivate detects a portal, or a portal signin, or timeout, or anything, it broadcasts the intent `com.zachklipp.captivate.intent.ACTION_PORTAL_STATE_CHANGED`. It includes two extras containing the current portal state, and information about the portal. The intent and extra names as of v1.1.0 are defined around [here](https://github.com/zach-klippenstein/captivate/blob/fec8245d90de1e23788ce8924577d24597db3ff2/src/src/com/zachklipp/captivate/service/PortalDetectorService.java#L34).
 
 *   `com.zachklipp.captivate.intent.EXTRA_PORTAL_STATE`
-    One of the following (self-explanatory) strings:
-    *   ...
+    One of the following (self-explanatory) strings (defined, as of v1.1.0, [here](https://github.com/zach-klippenstein/captivate/blob/fec8245d90de1e23788ce8924577d24597db3ff2/src/src/com/zachklipp/captivate/state_machine/PortalStateMachine.java#L23)):
+    *   `unknown`
+    *   `no_portal`
+    *   `signin_required`
+    *   `signing_in` (currently not used)
+    *   `signed_in`
+
 *   `com.zachklipp.captivate.intent.EXTRA_PORTAL_URL`
-    A string URL that will take the user to the login page. As of v1.1.0, it only contains the URL used to check for redirects, so it's not the actual URL of the portal sign-in page. This is planned for the future (see issue #9).
+    A string URL that will take the user to the login page. As of v1.1.0, it only contains the URL used to check for redirects, so it's not the actual URL of the portal sign-in page. This is planned for the future (see issue #9 ).
