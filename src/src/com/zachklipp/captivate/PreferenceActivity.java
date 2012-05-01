@@ -69,6 +69,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     if (BuildConfig.DEBUG)
     {
       createDebugPreferences(getPreferenceScreen());
+      registerReceiver(mDebugReceiver, sDebugIntentFilter);
     }
     
     formatStrings();
@@ -77,20 +78,9 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
   }
   
   @Override
-  public void onResume()
+  public void onDestroy()
   {
-    super.onResume();
-    
-    if (BuildConfig.DEBUG)
-    {
-      registerReceiver(mDebugReceiver, sDebugIntentFilter);
-    }
-  }
-  
-  @Override
-  public void onPause()
-  {
-    super.onPause();
+    super.onDestroy();
     
     if (BuildConfig.DEBUG)
     {
