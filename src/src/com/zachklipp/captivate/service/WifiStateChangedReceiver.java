@@ -11,10 +11,14 @@ import android.net.wifi.WifiManager;
 
 public class WifiStateChangedReceiver extends BroadcastReceiver
 {
+  private final static String LOG_TAG = "WifiStateChangedReceiver";
+  
   @Override
   public void onReceive(Context context, Intent intent)
   {
     String action = intent.getAction();
+    
+    Log.d(LOG_TAG, String.format("onReceive(%s, %s)", context, intent));
     
     if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(action) ||
         WifiManager.WIFI_STATE_CHANGED_ACTION.equals(action))
@@ -25,13 +29,19 @@ public class WifiStateChangedReceiver extends BroadcastReceiver
 
   private void onNetworkStateChanged(Context context, Intent intent)
   {
+    Log.d(LOG_TAG, String.format("onNetworkStateChanged(%s, %s)", context, intent));
+    
     if (WifiHelper.isWifiFinishedConnectingOrDisconnecting(intent))
     {
-      Log.d("Wifi connection state changed, starting service...");
+      Log.d(LOG_TAG, "Wifi connection state changed, starting service...");
       
-      ComponentName service = PortalDetectorService.startService(context.getApplicationContext());
+      ComponentName service = PortalDetectorService.startService(context);
       
-      Log.d("Started service: " + service);
+      Log.d(LOG_TAG, "Started service: " + service);
+    }
+    else
+    {
+      Log.d(LOG_TAG, "Wifi state not significantly changed, not starting service");
     }
   }
 }

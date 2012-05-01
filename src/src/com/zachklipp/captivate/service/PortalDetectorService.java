@@ -134,12 +134,6 @@ public class PortalDetectorService extends StickyIntentService
   }
   
   @Override
-  public int onStartCommand(Intent intent, int flags, int startId)
-  {
-    return super.onStartCommand(intent, flags, startId);
-  }
-  
-  @Override
   protected void onHandleIntent(Intent intent)
   {
     if (isEnabled())
@@ -159,17 +153,17 @@ public class PortalDetectorService extends StickyIntentService
     
     Log.d("Service updating portal status...");
     
-    if (WifiHelper.isConnectedFromContext(this))
+    if (WifiHelper.isWifiConnectedFromContext(this))
     {
       mPortalDetector.checkForPortal();
+      
+      scheduleTimedRefreshIfBlocked();
     }
     else
     {
       Log.d("Wifi not connected, reporting no portal");
       mStateMachine.onNoWifi();
     }
-    
-    scheduleTimedRefreshIfBlocked();
     
     if (!mStateMachine.getCurrentPortalState().isBehindPortal())
     {
@@ -207,7 +201,7 @@ public class PortalDetectorService extends StickyIntentService
   {
     if (isScreenOn() && mStateMachine.getCurrentPortalState().isBlocked())
     {
-      Log.d(String.format("Scheduling state refresh in %d seconds",
+      Log.i(String.format("Scheduling state refresh in %d seconds",
           getStateRefreshIntervalSeconds()));
       
       getHandler().postDelayed(mStartServiceRunnable,

@@ -2,39 +2,101 @@ package com.zachklipp.captivate.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.NetworkInfo.DetailedState;
 import android.net.wifi.WifiManager;
 
 public final class WifiHelper
 {
-  public static boolean isConnectedFromContext(Context context)
+  private static final String LOG_TAG = "WifiHelper";
+  
+  public static boolean isWifiConnectedFromContext(Context context)
   {
-    WifiManager wManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    ConnectivityManager cManager = (ConnectivityManager)
+        context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo network = cManager.getActiveNetworkInfo();
     
-    return WifiManager.WIFI_STATE_ENABLED == wManager.getWifiState();
+    boolean isWifiConnected = false;
+    
+    if (null != network)
+    {
+      Log.d(LOG_TAG, String.format("Type = %s, isConnected() = %s", network.getType(), network.isConnected()));
+      
+      isWifiConnected = ConnectivityManager.TYPE_WIFI == network.getType() && network.isConnected(); 
+    }
+    
+    Log.d(LOG_TAG, "isWifiConnectedFromContext() = " + isWifiConnected);
+    
+    return isWifiConnected;
   }
   
   public static boolean isWifiFinishedConnectingOrDisconnecting(Intent intent)
   {
+    boolean isFinished = false;
+    
+    Log.d(LOG_TAG, String.format("isWifiFinishedConnectingOrDisconnecting(%s)", intent));
+    
+    isFinished = hasWifiNetworkConnectedOrDisconnected(intent)
+        || hasWifiBeenDisabled(intent);
+
+    Log.d(LOG_TAG, "isWifiFinishedConnectingOrDisconnecting() = " + isFinished);
+    
+    return isFinished;
+  }
+  
+  public static boolean isDisconnectedFromNetworkStateChangedIntent(Intent intent)
+  {
+    Log.d(LOG_TAG, String.format("isDisconnectedFromNetworkStateChangedIntent(%s)", intent));
+    
     assert(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION));
     
+    NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+    
+    return (networkInfo == null);
+  }
+  
+  private static boolean hasWifiNetworkConnectedOrDisconnected(Intent intent)
+  {
     if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(intent.getAction()))
     {
+      // Could also do with WifiManager.getWifiState();
       NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+      
+      Log.d(LOG_TAG, "Wifi network state changed network info = " + networkInfo);
       
       if (networkInfo != null)
       {
-        DetailedState detailedState = networkInfo.getDetailedState();
+        NetworkInfo.State state = networkInfo.getState();
         
-        return detailedState == DetailedState.CONNECTED
-            || detailedState == DetailedState.DISCONNECTED;
+        Log.d(LOG_TAG, "Wifi state = " + state);
+        
+        switch (state)
+        {
+          case CONNECTED:
+          case DISCONNECTED:
+          case SUSPENDED:
+            return true;
+        }
+      }
+      else
+      {
+        Log.d(LOG_TAG, "No wifi network info");
       }
     }
-    else if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction()))
+    
+    return false;
+  }
+  
+  private static boolean hasWifiBeenDisabled(Intent intent)
+  {
+    if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction()))
     {
+      // Could also be done with !WifiManager.isConnected() maybe
+      
       // This will always be present, default value doesn't matter
       int currState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
+      
+      Log.d(LOG_TAG, "Wifi enabled state = " + currState);
       
       // This one may not be present
       int prevState = intent.getIntExtra(
@@ -45,14 +107,5 @@ public final class WifiHelper
     }
     
     return false;
-  }
-  
-  public static boolean isDisconnectedFromNetworkStateChangedIntent(Intent intent)
-  {
-    assert(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION));
-    
-    NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-    
-    return (networkInfo == null);
   }
 }
