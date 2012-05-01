@@ -41,10 +41,11 @@
         <activity
             android:name="AboutActivity"
             android:label="@string/about_title"
-            android:configChanges="orientation"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.Sherlock"></activity>
         <activity
             android:name="PortalSigninActivity"
+            android:label="@string/portal_signin"
             android:theme="@style/Theme.PortalSignin"
             android:configChanges="orientation|screenSize|keyboardHidden" ></activity>
         <service android:name=".service.PortalDetectorService">

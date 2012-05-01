@@ -23,10 +23,15 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
   private static final String FEEDBACK_PREFERENCE_KEY = "feedback_pref";
   private static final String ABOUT_PREFERENCE_KEY = "about_pref";
   
-  private static final int NO_FEEDBACK_RECEIVER_DIALOG = 0;
+  private static final int DIALOG_NO_FEEDBACK_RECEIVER = 0;
 
   private static final IntentFilter sDebugIntentFilter = new IntentFilter(
       PortalDetectorService.ACTION_PORTAL_STATE_CHANGED);
+  
+  public static void showPreferences(Context context)
+  {
+    context.startActivity(new Intent(context, PreferenceActivity.class));
+  }
   
   private final BroadcastReceiver mDebugReceiver = new BroadcastReceiver()
   {
@@ -95,7 +100,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     
     switch (which)
     {
-      case NO_FEEDBACK_RECEIVER_DIALOG:
+      case DIALOG_NO_FEEDBACK_RECEIVER:
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
           .setMessage(getString(
               R.string.no_feedback_receiver_message, getString(R.string.feedback_email)))
@@ -140,7 +145,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
       @Override
       public void onNoReceiver(Intent primary)
       {
-        showDialog(NO_FEEDBACK_RECEIVER_DIALOG);
+        showDialog(DIALOG_NO_FEEDBACK_RECEIVER);
       }
     });
     

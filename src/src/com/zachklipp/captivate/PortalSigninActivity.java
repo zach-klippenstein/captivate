@@ -3,16 +3,23 @@ package com.zachklipp.captivate;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.zachklipp.captivate.captive_portal.PortalInfo;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.state_machine.PortalStateMachine.State;
 import com.zachklipp.captivate.util.Log;
+import com.zachklipp.captivate.util.SafeIntentSender;
+import com.zachklipp.captivate.util.SafeIntentSender.OnNoReceiverListener;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -23,6 +30,8 @@ import android.widget.ProgressBar;
 public class PortalSigninActivity extends SherlockActivity
 {
   private static final String LOG_TAG = "PortalSigninActivity";
+  
+  private static final int DIALOG_NO_BROWSER = 0;
   
   public static Intent getStartIntent(Context context, PortalInfo portal)
   {
@@ -35,6 +44,7 @@ public class PortalSigninActivity extends SherlockActivity
   private PortalInfo mPortalInfo;
   private WebView mWebView;
   private ProgressBar mProgressBar;
+  private SafeIntentSender mOpenInBrowserSender;
   
   private PortalStateChangedReceiver mPortalStateChangedReceiver;
 
@@ -51,22 +61,35 @@ public class PortalSigninActivity extends SherlockActivity
     getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     
     mPortalInfo = new PortalInfo(getIntent());
+    if (BuildConfig.DEBUG && mPortalInfo.getPortalUrl().length() == 0)
+    {
+      mPortalInfo = new PortalInfo("http://www.google.com");
+    }
     
     mWebView = (WebView) findViewById(R.id.webview);
     mProgressBar = (ProgressBar) findViewById(R.id.progress);
     
+    mOpenInBrowserSender = new SafeIntentSender(this);
+    mOpenInBrowserSender.setNoReceiverHandler(new OnNoReceiverListener()
+    {
+      @Override
+      public void onNoReceiver(Intent primary)
+      {
+        showDialog(DIALOG_NO_BROWSER);
+      }
+    });
+    
     initializeWebView();
     
     String portalUrl = mPortalInfo.getPortalUrl();
-
-    if (BuildConfig.DEBUG && portalUrl.length() == 0)
-    {
-      portalUrl = "http://www.google.com";
-    }
     
     Log.d(LOG_TAG, "Loading portal url: " + portalUrl);
     
     mWebView.loadUrl(portalUrl);
+    
+    DisplayMetrics metrics = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    Log.i(LOG_TAG, "Screen density: " +  metrics.densityDpi);
   }
   
   private void initializeWebView()
@@ -91,6 +114,32 @@ public class PortalSigninActivity extends SherlockActivity
     inflater.inflate(R.menu.portal_signin_menu, menu);
     
     return true;
+  }
+  
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item)
+  {
+    switch (item.getItemId())
+    {
+      case R.id.menu_close:
+        finish();
+        return true;
+        
+      case R.id.menu_open_browser:
+        showPortalInBrowser();
+        return true;
+        
+      case R.id.menu_refresh:
+        mWebView.reload();
+        return true;
+        
+      case R.id.menu_settings:
+        PreferenceActivity.showPreferences(this);
+        return true;
+        
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
   
   @Override
@@ -138,18 +187,43 @@ public class PortalSigninActivity extends SherlockActivity
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event)
   {
-      if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack())
-      {
-          mWebView.goBack();
-          return true;
-      }
-      
-      return super.onKeyDown(keyCode, event);
+    if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack())
+    {
+      mWebView.goBack();
+      return true;
+    }
+    
+    return super.onKeyDown(keyCode, event);
   }
   
-  public void onCloseClicked(View view)
+  @Override
+  protected Dialog onCreateDialog(int which)
   {
-    finish();
+    Dialog dialog = null;
+    
+    switch (which)
+    {
+      case DIALOG_NO_BROWSER:
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+          .setMessage(getString(
+              R.string.no_browser_message))
+          .setNeutralButton(R.string.ok, null);
+        dialog = builder.create();
+        break;
+        
+      default:
+        Log.w(String.format("Attempted to show invalid dialog: %d", which));
+    }
+    
+    return dialog;
+  }
+  
+  private void showPortalInBrowser()
+  {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setData(Uri.parse(mPortalInfo.getPortalUrl()));
+    
+    mOpenInBrowserSender.startActivity(intent);
   }
 
   private class WebViewClient extends android.webkit.WebViewClient
