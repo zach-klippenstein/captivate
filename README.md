@@ -1,6 +1,6 @@
 # Captivate
 
-*v1.1.0*
+*v1.1.1*
 
 Captivate is an Android app that does one very simple thing: whenever you connect to a wifi hotspot, it tries to determine if you are behind a [captive portal](http://en.wikipedia.org/wiki/Captive_portal). If you are, it shows a notification to let you quickly open the portal login page. If your session times out, Captivate will re-show the notification when you next turn on your screen.
 
@@ -9,6 +9,10 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
 *For developers:* Captivate sends a broadcast intent whenever the portal state changes. See more [below](#developers).
 
 ## What's New
+
+### 1.1.1
+
+*   Fixed some portal detection bugs
 
 ### 1.1.0
 
