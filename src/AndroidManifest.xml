@@ -38,7 +38,10 @@
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
             </intent-filter>
         </receiver>
-        <activity android:name="AboutActivity" android:label="@string/about_title"></activity>
+        <activity
+            android:name="AboutActivity"
+            android:label="@string/about_title"
+            android:configChanges="orientation" ></activity>
         <service android:name=".service.PortalDetectorService">
         </service>
     </application>
