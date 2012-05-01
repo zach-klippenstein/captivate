@@ -41,7 +41,11 @@ public final class Log
   }
   public static int w(String tag, String msg)
   {
-    return println(android.util.Log.WARN, tag, msg);
+    return w(tag, msg, null);
+  }
+  public static int w(String tag, String msg, Throwable e)
+  {
+    return println(android.util.Log.WARN, tag, msg, e);
   }
   
   public static int i(String msg)
@@ -86,5 +90,15 @@ public final class Log
     }
     
     return bytesWritten;
+  }
+  
+  private static int println(int priority, String tag, String msg, Throwable e)
+  {
+    if (e != null)
+    {
+      msg += "\n" + android.util.Log.getStackTraceString(e);
+    }
+    
+    return println(priority, tag, msg);
   }
 }

@@ -47,7 +47,7 @@ public abstract class PortalDetector extends Observable<PortalInfo>
     switch (mOverrideMode)
     {
       case NONE:
-        onCheckForPortal();
+        tryCheckForPortal();
         break;
         
       case ALWAYS_DETECT:
@@ -110,5 +110,18 @@ public abstract class PortalDetector extends Observable<PortalInfo>
     
     mPortal = null;
     notifyObservers(mPortal);
+  }
+  
+  private void tryCheckForPortal()
+  {
+    try
+    {
+      onCheckForPortal();
+    }
+    catch (Exception e)
+    {
+      Log.w(LOG_TAG, "Error checking for portal", e);
+      reportNoPortal();
+    }
   }
 }
