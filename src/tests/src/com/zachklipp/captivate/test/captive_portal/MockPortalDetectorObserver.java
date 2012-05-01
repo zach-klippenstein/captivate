@@ -17,7 +17,7 @@ public class MockPortalDetectorObserver implements Observer<PortalInfo>
     return mDetectedPortals.toArray(portals);
   }
   
-  public long GetDetectedNoPortalCount()
+  public long getDetectedNoPortalCount()
   {
     return mDetectedNoPortalCount;
   }
