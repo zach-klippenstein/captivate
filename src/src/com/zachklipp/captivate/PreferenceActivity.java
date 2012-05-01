@@ -199,5 +199,19 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     overridePref.setSummaryOn("A fake portal will always be detected.");
     overridePref.setSummaryOff("The portal detector will look for a portal.");
     debugCategory.addPreference(overridePref);
+    
+    Preference launchSigninPref = new Preference(this);
+    launchSigninPref.setTitle("Launch Signin");
+    launchSigninPref.setOnPreferenceClickListener(new OnPreferenceClickListener()
+    {
+      @Override
+      public boolean onPreferenceClick(Preference preference)
+      {
+        PreferenceActivity.this.startActivity(
+            new Intent(PreferenceActivity.this, PortalSigninActivity.class));
+        return true;
+      }
+    });
+    debugCategory.addPreference(launchSigninPref);
   }
 }

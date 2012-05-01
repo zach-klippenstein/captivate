@@ -13,6 +13,7 @@
     <string name="portal_state_perm_desc">Allows the application to determine if the device is behind a captive portal.</string>
     
     <string name="ok">OK</string>
+    <string name="close">Close</string>
     
     <string name="notification_title">Captive Hotspot Detected</string>
     <string name="notification_text">Touch to open login page</string>
@@ -27,5 +28,5 @@
     <string name="about_title">About %s</string>
     <string name="feedback_title">Send Feedback</string>
     <string name="no_feedback_receiver_message">I\'d love to hear from you! Email me at %s</string>
-
+    
 </resources>

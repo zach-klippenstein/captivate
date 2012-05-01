@@ -42,6 +42,10 @@
             android:name="AboutActivity"
             android:label="@string/about_title"
             android:configChanges="orientation" ></activity>
+        <activity
+            android:name="PortalSigninActivity"
+            android:theme="@style/Theme.MaximizedFramelessDialog"
+            android:configChanges="orientation|keyboardHidden" ></activity>
         <service android:name=".service.PortalDetectorService">
         </service>
     </application>
