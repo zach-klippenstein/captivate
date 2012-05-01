@@ -1,11 +1,13 @@
 package com.zachklipp.captivate;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.zachklipp.captivate.captive_portal.PortalInfo;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.state_machine.PortalStateMachine.State;
 import com.zachklipp.captivate.util.Log;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +20,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-public class PortalSigninActivity extends Activity
+public class PortalSigninActivity extends SherlockActivity
 {
   private static final String LOG_TAG = "PortalSigninActivity";
   
@@ -80,6 +82,15 @@ public class PortalSigninActivity extends Activity
     
     mWebView.setWebViewClient(new WebViewClient());
     mWebView.setWebChromeClient(new WebChromeClient());
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu)
+  {
+    MenuInflater inflater = getSupportMenuInflater();
+    inflater.inflate(R.menu.portal_signin_menu, menu);
+    
+    return true;
   }
   
   @Override

@@ -1,14 +1,14 @@
 package com.zachklipp.captivate;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.zachklipp.captivate.util.Log;
 
-import android.app.Activity;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-public class AboutActivity extends Activity
+public class AboutActivity extends SherlockActivity
 {
   /** Called when the activity is first created. */
   @Override

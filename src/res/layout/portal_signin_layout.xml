@@ -2,17 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:animateLayoutChanges="true" >
     
-    <Button
-        android:id="@+id/close_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="0dp"
-        android:padding="0dp"
-        android:text="@string/close"
-        android:onClick="onCloseClicked" />
-
     <ProgressBar
         android:id="@+id/progress"
         style="@style/Widget.Sherlock.ProgressBar.Horizontal"

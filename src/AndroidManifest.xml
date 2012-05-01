@@ -45,8 +45,8 @@
             android:theme="@style/Theme.Sherlock"></activity>
         <activity
             android:name="PortalSigninActivity"
-            android:theme="@style/Theme.MaximizedFramelessDialog"
-            android:configChanges="orientation|keyboardHidden" ></activity>
+            android:theme="@style/Theme.PortalSignin"
+            android:configChanges="orientation|screenSize|keyboardHidden" ></activity>
         <service android:name=".service.PortalDetectorService">
         </service>
     </application>

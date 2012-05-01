@@ -4,5 +4,12 @@ body {
   padding-top: 1em;
 }
 a {
-  color: #4444ff;
+  color: #5555ff;
+}
+
+h2 {
+  margin-top: 2em;
+  border-bottom: 1px solid white;
+  font-size: inherit;
+  font-weight: bold;
 }
