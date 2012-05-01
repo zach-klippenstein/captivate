@@ -46,7 +46,7 @@ public class PortalSigninActivity extends Activity
         mPortalStateChangedReceiver.INTENT_FILTER);
     
     setContentView(R.layout.portal_signin_layout);
-    getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+    getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     
     mPortalInfo = new PortalInfo(getIntent());
     
