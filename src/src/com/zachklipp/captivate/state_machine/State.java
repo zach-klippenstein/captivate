@@ -21,4 +21,21 @@ public class State
   {
     return getName();
   }
+  
+  @Override
+  public boolean equals(Object other)
+  {
+    if (other instanceof String)
+    {
+      return mName.equals(other);
+    }
+    
+    return super.equals(other);
+  }
+  
+  @Override
+  public int hashCode()
+  {
+    return mName.hashCode();
+  }
 }

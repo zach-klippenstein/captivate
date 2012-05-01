@@ -2,6 +2,7 @@ package com.zachklipp.captivate;
 
 import com.zachklipp.captivate.captive_portal.PortalInfo;
 import com.zachklipp.captivate.service.PortalDetectorService;
+import com.zachklipp.captivate.state_machine.PortalStateMachine.State;
 import com.zachklipp.captivate.util.Log;
 
 import android.app.Activity;
@@ -20,6 +21,14 @@ import android.widget.ProgressBar;
 public class PortalSigninActivity extends Activity
 {
   private static final String LOG_TAG = "PortalSigninActivity";
+  
+  public static Intent getStartIntent(Context context, PortalInfo portal)
+  {
+    Intent intent = new Intent(context, PortalSigninActivity.class);
+    intent.putExtra(PortalDetectorService.EXTRA_PORTAL_URL, portal.getPortalUrl());
+    
+    return intent;
+  }
   
   private PortalInfo mPortalInfo;
   private WebView mWebView;
@@ -174,6 +183,8 @@ public class PortalSigninActivity extends Activity
     @Override
     public void onReceive(Context context, Intent intent)
     {
+      Log.d(LOG_TAG, "Received broadcast intent");
+      
       if (intent.getAction().equals(PortalDetectorService.ACTION_PORTAL_STATE_CHANGED))
       {
         if (!isBlocked(intent))
@@ -182,13 +193,13 @@ public class PortalSigninActivity extends Activity
         }
       }
     }
-    
+
+    // TODO this should deserialize strings to States, then use isBlocked().
     private boolean isBlocked(Intent intent)
     {
-      // TODO
-      Log.w(LOG_TAG, "Auto-closing the portal signin dialog isn't implemented");
-      
-      return true;
+      String newState = intent.getStringExtra(PortalDetectorService.EXTRA_PORTAL_STATE);
+
+      return !(State.NO_PORTAL.equals(newState) || State.SIGNED_IN.equals(newState));
     }
   }
 }

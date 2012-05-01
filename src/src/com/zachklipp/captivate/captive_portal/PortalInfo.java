@@ -3,7 +3,6 @@ package com.zachklipp.captivate.captive_portal;
 import com.zachklipp.captivate.service.PortalDetectorService;
 
 import android.content.Intent;
-import android.net.Uri;
 
 public class PortalInfo
 {
@@ -27,14 +26,6 @@ public class PortalInfo
   private void initialize(String portalUrl)
   {
     mPortalUrl = portalUrl == null ? "" : portalUrl;
-  }
-  
-  public Intent getShowPortalIntent()
-  {
-    Intent showPortalIntent = new Intent(Intent.ACTION_VIEW);
-    showPortalIntent.setData(Uri.parse(mPortalUrl));
-    
-    return showPortalIntent;
   }
   
   public String toString()

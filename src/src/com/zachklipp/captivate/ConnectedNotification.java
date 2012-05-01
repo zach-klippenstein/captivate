@@ -14,21 +14,26 @@ public final class ConnectedNotification
 
   public static void showNotification(Context context, PortalInfo portalInfo)
   {
-    Intent showPortalIntent = portalInfo.getShowPortalIntent();
+    Intent showPortalIntent = PortalSigninActivity.getStartIntent(context, portalInfo);
     PendingIntent contentIntent = PendingIntent.getActivity(context, 0, showPortalIntent, 0);
     
-    Notification notification = new Notification(R.drawable.notification_icon, context.getString(R.string.ticker_text), System.currentTimeMillis());
+    Notification notification = new Notification(R.drawable.notification_icon,
+        context.getString(R.string.ticker_text), System.currentTimeMillis());
     notification.flags |= Notification.FLAG_AUTO_CANCEL;
     
-    notification.setLatestEventInfo(context, context.getString(R.string.notification_title), context.getString(R.string.notification_text), contentIntent);
+    notification.setLatestEventInfo(context,
+        context.getString(R.string.notification_title),
+        context.getString(R.string.notification_text), contentIntent);
 
-    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationManager notificationManager = (NotificationManager)
+        context.getSystemService(Context.NOTIFICATION_SERVICE);
     notificationManager.notify(CONNECTED_NOTIFICATION_ID, notification);
   }
   
   public static void hideNotification(Context context)
   {
-    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationManager notificationManager = (NotificationManager)
+        context.getSystemService(Context.NOTIFICATION_SERVICE);
     notificationManager.cancel(CONNECTED_NOTIFICATION_ID);
   }
 }
