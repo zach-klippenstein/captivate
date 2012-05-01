@@ -34,6 +34,9 @@ public class PortalDetectorService extends StickyIntentService
 {
   private static final String INTENT_NAMESPACE = "com.zachklipp.captivate.intent.";
   
+  // For start intent
+  static final String EXTRA_ASSUME_WIFI_CONNECTED = INTENT_NAMESPACE + "EXTRA_ASSUME_WIFI_CONNECTED";
+  
   // For broadcast intent
   public static final String ACTION_PORTAL_STATE_CHANGED = INTENT_NAMESPACE + "ACTION_PORTAL_STATE_CHANGED";
   public static final String EXTRA_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_PORTAL_STATE";
@@ -90,12 +93,21 @@ public class PortalDetectorService extends StickyIntentService
     sStorageBackendFactory = factory;
   }
   
+  public static ComponentName startService(Context context)
+  {
+    return startService(context, false);
+  }
+  
   /*
    * Helper to send the necessary intent to start this service.
    */
-  public static ComponentName startService(Context context)
+  public static ComponentName startService(Context context, boolean assumeWifiConnected)
   {
-    return context.startService(new Intent(context, PortalDetectorService.class));
+    Intent intent = new Intent(context, PortalDetectorService.class);
+    
+    intent.putExtra(EXTRA_ASSUME_WIFI_CONNECTED, assumeWifiConnected);
+    
+    return context.startService(intent);
   }
   
   private PortalDetector mPortalDetector;
@@ -136,9 +148,16 @@ public class PortalDetectorService extends StickyIntentService
   @Override
   protected void onHandleIntent(Intent intent)
   {
+    boolean assumeWifiConnected = false;
+    
     if (isEnabled())
     {
-      checkForPortal();
+      if (null != intent)
+      {
+        assumeWifiConnected = intent.getBooleanExtra(EXTRA_ASSUME_WIFI_CONNECTED, assumeWifiConnected);
+      }
+      
+      checkForPortal(assumeWifiConnected);
     }
     else
     {
@@ -147,14 +166,19 @@ public class PortalDetectorService extends StickyIntentService
     }
   }
   
-  private void checkForPortal()
+  private void checkForPortal(boolean assumeWifiConnected)
   {
     updateDetectorOverrideFromPrefs();
     
     Log.d("Service updating portal status...");
     
-    if (WifiHelper.isWifiConnectedFromContext(this))
+    if (assumeWifiConnected || WifiHelper.isWifiConnectedFromContext(this))
     {
+      if (assumeWifiConnected)
+      {
+        Log.d("Intent suggests wifi is connected, going with that");
+      }
+      
       mPortalDetector.checkForPortal();
       
       scheduleTimedRefreshIfBlocked();

@@ -44,15 +44,32 @@ public final class WifiHelper
     return isFinished;
   }
   
-  public static boolean isDisconnectedFromNetworkStateChangedIntent(Intent intent)
+  public static boolean isWifiDisconnectedFromNetworkStateChangedIntent(Intent intent)
   {
-    Log.d(LOG_TAG, String.format("isDisconnectedFromNetworkStateChangedIntent(%s)", intent));
+    Log.d(LOG_TAG, String.format("isWifiDisconnectedFromNetworkStateChangedIntent(%s)", intent));
     
-    assert(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION));
+    NetworkInfo networkInfo = null;
     
-    NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+    if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION))
+    {
+      networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+    }
     
     return (networkInfo == null);
+  }
+  
+  public static boolean isWifiConnectedFromNetworkStateChangedIntent(Intent intent)
+  {
+    Log.d(LOG_TAG, String.format("isWifiConnectedFromNetworkStateChangedIntent(%s)", intent));
+    
+    NetworkInfo networkInfo = null;
+    
+    if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION))
+    {
+      networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+    }
+    
+    return (networkInfo != null && networkInfo.isConnected());
   }
   
   private static boolean hasWifiNetworkConnectedOrDisconnected(Intent intent)
