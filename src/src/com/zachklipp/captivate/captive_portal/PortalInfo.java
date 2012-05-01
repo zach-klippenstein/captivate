@@ -7,34 +7,48 @@ import android.net.Uri;
 
 public class PortalInfo
 {
-  private Uri mPortalUri;
+  private String mPortalUrl;
   
-  public PortalInfo(Uri portalUri)
+  public PortalInfo()
   {
-    mPortalUri = portalUri;
+    initialize(null);
+  }
+  
+  public PortalInfo(String portalUrl)
+  {
+    initialize(portalUrl);
   }
   
   public PortalInfo(Intent intent)
   {
-    String uri = intent.getStringExtra(PortalDetectorService.EXTRA_PORTAL_URL);
-    mPortalUri = uri == null ? Uri.EMPTY : Uri.parse(uri);
+    initialize(intent.getStringExtra(PortalDetectorService.EXTRA_PORTAL_URL));
+  }
+  
+  private void initialize(String portalUrl)
+  {
+    mPortalUrl = portalUrl == null ? "" : portalUrl;
   }
   
   public Intent getShowPortalIntent()
   {
     Intent showPortalIntent = new Intent(Intent.ACTION_VIEW);
-    showPortalIntent.setData(mPortalUri);
+    showPortalIntent.setData(Uri.parse(mPortalUrl));
     
     return showPortalIntent;
   }
   
   public String toString()
   {
-    return String.format("PortalInfo@%s", mPortalUri);
+    return String.format("PortalInfo@%s", mPortalUrl);
   }
   
   public void saveToIntent(Intent intent)
   {
-    intent.putExtra(PortalDetectorService.EXTRA_PORTAL_URL, mPortalUri.toString());
+    intent.putExtra(PortalDetectorService.EXTRA_PORTAL_URL, mPortalUrl.toString());
+  }
+  
+  public String getPortalUrl()
+  {
+    return mPortalUrl;
   }
 }

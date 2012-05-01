@@ -1,7 +1,5 @@
 package com.zachklipp.captivate.captive_portal;
 
-import android.net.Uri;
-
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
 
@@ -52,7 +50,7 @@ public abstract class PortalDetector extends Observable<PortalInfo>
         
       case ALWAYS_DETECT:
         Log.i(LOG_TAG, "Overriding captive portal detector");
-        reportPortal(new PortalInfo(Uri.EMPTY));
+        reportPortal(new PortalInfo());
         break;
         
       case NEVER_DETECT:
@@ -83,7 +81,7 @@ public abstract class PortalDetector extends Observable<PortalInfo>
     {
       if (OverrideMode.ALWAYS_DETECT == mode)
       {
-        mPortal = new PortalInfo(Uri.EMPTY);
+        mPortal = new PortalInfo();
       }
       else
       {

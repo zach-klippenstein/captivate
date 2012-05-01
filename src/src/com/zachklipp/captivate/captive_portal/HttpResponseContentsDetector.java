@@ -15,9 +15,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.zachklipp.captivate.util.Log;
 
-
-import android.net.Uri;
-
 public class HttpResponseContentsDetector extends PortalDetector
 {
   private static final String USER_AGENT = "CaptiveNetworkSupport/1.0 wispr";
@@ -61,7 +58,7 @@ public class HttpResponseContentsDetector extends PortalDetector
     
     if (doesResponseIndicatePortal(response.getEntity()))
     {
-      reportPortal(new PortalInfo(Uri.parse(mUrl)));
+      reportPortal(new PortalInfo(mUrl));
     }
     else
     {
