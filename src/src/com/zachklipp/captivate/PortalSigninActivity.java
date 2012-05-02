@@ -121,10 +121,6 @@ public class PortalSigninActivity extends SherlockActivity
   {
     switch (item.getItemId())
     {
-      case R.id.menu_close:
-        finish();
-        return true;
-        
       case R.id.menu_open_browser:
         showPortalInBrowser();
         return true;
