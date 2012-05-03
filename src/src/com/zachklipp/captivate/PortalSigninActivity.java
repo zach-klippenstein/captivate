@@ -98,6 +98,7 @@ public class PortalSigninActivity extends SherlockActivity
     
     settings.setJavaScriptEnabled(true);
     settings.setBuiltInZoomControls(true);
+    settings.setPluginState(WebSettings.PluginState.ON_DEMAND);
     
     // Desktop-sized webpages (e.g. Google) seem to load better when this is set,
     // and it seems to be required for double-tap zooming.
