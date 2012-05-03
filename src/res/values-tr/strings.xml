@@ -5,6 +5,13 @@
     <string name="portal_state_perm_desc">Cihaz bir esir portalı arkasında olup olmadığını belirlemek için uygulama sağlar.</string>
     
     <string name="ok">Tamam</string>
+    <string name="close">Yakın</string>
+    
+    <string name="portal_signin">Portal giriş yapın</string>
+    <string name="refresh">Yenile</string>
+    <string name="open_browser">Tarayıcıda açın</string>
+    <string name="no_browser_message">Bir tarayıcı yüklü görünmemektedir var.</string>
+    <string name="settings">Ayarlar</string>
     
     <string name="notification_title">Esir Hotspot Tespit</string>
     <string name="notification_text">Giriş sayfasını açmak için dokunun</string>

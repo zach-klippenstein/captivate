@@ -5,6 +5,13 @@
     <string name="portal_state_perm_desc">Permite que la aplicación para determinar si el dispositivo está detrás de un portal cautivo.</string>
     
     <string name="ok">Aceptar</string>
+    <string name="close">Cerrar</string>
+    
+    <string name="portal_signin">Entra al portal</string>
+    <string name="refresh">Refrescar</string>
+    <string name="open_browser">Abre en el navegador</string>
+    <string name="no_browser_message">Has no parecen tener un navegador instalado.</string>
+    <string name="settings">Configuración</string>
     
     <string name="notification_title">Hotspot Captive Detectado</string>
     <string name="notification_text">Toque para abrir la página de inicio de sesión</string>
