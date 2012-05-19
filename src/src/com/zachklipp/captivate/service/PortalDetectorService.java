@@ -95,7 +95,7 @@ public class PortalDetectorService extends StickyIntentService
   
   public static ComponentName startService(Context context)
   {
-    return startService(context, false);
+    return context.startService(createStartServiceIntent(context));
   }
   
   /*
@@ -103,11 +103,16 @@ public class PortalDetectorService extends StickyIntentService
    */
   public static ComponentName startService(Context context, boolean assumeWifiConnected)
   {
-    Intent intent = new Intent(context, PortalDetectorService.class);
+    Intent intent = createStartServiceIntent(context);
     
     intent.putExtra(EXTRA_ASSUME_WIFI_CONNECTED, assumeWifiConnected);
     
     return context.startService(intent);
+  }
+  
+  private static Intent createStartServiceIntent(Context context)
+  {
+    return new Intent(context, PortalDetectorService.class);
   }
   
   private PortalDetector mPortalDetector;
@@ -148,11 +153,11 @@ public class PortalDetectorService extends StickyIntentService
   @Override
   protected void onHandleIntent(Intent intent)
   {
-    boolean assumeWifiConnected = false;
+    boolean assumeWifiConnected = BuildConfig.DEBUG;
     
     if (isEnabled())
     {
-      if (null != intent)
+      if (null != intent && intent.hasExtra(EXTRA_ASSUME_WIFI_CONNECTED))
       {
         assumeWifiConnected = intent.getBooleanExtra(EXTRA_ASSUME_WIFI_CONNECTED, assumeWifiConnected);
       }
