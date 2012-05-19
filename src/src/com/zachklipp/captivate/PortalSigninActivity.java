@@ -1,6 +1,6 @@
 package com.zachklipp.captivate;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,11 +28,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-public class PortalSigninActivity extends SherlockActivity
+public class PortalSigninActivity extends SherlockFragmentActivity
 {
   private static final String LOG_TAG = "PortalSigninActivity";
-  
-  private static final int DIALOG_NO_BROWSER = 0;
   
   public static Intent getStartIntent(Context context, PortalInfo portal)
   {
@@ -75,7 +74,7 @@ public class PortalSigninActivity extends SherlockActivity
       @Override
       public void onNoReceiver(Intent primary)
       {
-        showDialog(DIALOG_NO_BROWSER);
+        showNoBrowserDialog();
       }
     });
     
@@ -193,28 +192,6 @@ public class PortalSigninActivity extends SherlockActivity
     return super.onKeyDown(keyCode, event);
   }
   
-  @Override
-  protected Dialog onCreateDialog(int which)
-  {
-    Dialog dialog = null;
-    
-    switch (which)
-    {
-      case DIALOG_NO_BROWSER:
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-          .setMessage(getString(
-              R.string.no_browser_message))
-          .setNeutralButton(R.string.ok, null);
-        dialog = builder.create();
-        break;
-        
-      default:
-        Log.w(String.format("Attempted to show invalid dialog: %d", which));
-    }
-    
-    return dialog;
-  }
-  
   private void showPortalInBrowser()
   {
     Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -238,6 +215,12 @@ public class PortalSigninActivity extends SherlockActivity
     {
       PortalDetectorService.startService(PortalSigninActivity.this);
     }
+  }
+  
+  private void showNoBrowserDialog()
+  {
+    DialogFragment fragment = new NoBrowserAlertDialog();
+    fragment.show(getSupportFragmentManager(), "dialog");
   }
   
   private class WebChromeClient extends android.webkit.WebChromeClient
@@ -282,6 +265,19 @@ public class PortalSigninActivity extends SherlockActivity
       String newState = intent.getStringExtra(PortalDetectorService.EXTRA_PORTAL_STATE);
 
       return !(State.NO_PORTAL.equals(newState) || State.SIGNED_IN.equals(newState));
+    }
+  }
+  
+  private class NoBrowserAlertDialog extends DialogFragment
+  {
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState)
+    {
+      return new AlertDialog.Builder(getActivity())
+        .setMessage(getString(
+            R.string.no_browser_message))
+        .setNeutralButton(R.string.ok, null)
+        .create();
     }
   }
 }

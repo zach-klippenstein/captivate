@@ -142,9 +142,12 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     
     sender.setNoReceiverHandler(new SafeIntentSender.OnNoReceiverListener()
     {
+      @SuppressWarnings("deprecation")
       @Override
       public void onNoReceiver(Intent primary)
       {
+        // Can't use DialogFragment since there's no such thing as
+        // SherlockPreferenceFragmentActivity.
         showDialog(DIALOG_NO_FEEDBACK_RECEIVER);
       }
     });
