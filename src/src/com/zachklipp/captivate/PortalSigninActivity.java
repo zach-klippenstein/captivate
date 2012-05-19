@@ -17,6 +17,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -24,6 +26,7 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebIconDatabase;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
@@ -31,6 +34,8 @@ import android.widget.ProgressBar;
 public class PortalSigninActivity extends SherlockFragmentActivity
 {
   private static final String LOG_TAG = "PortalSigninActivity";
+  
+  private static final String ICONS_DIRECTORY = "web-icons";
   
   public static Intent getStartIntent(Context context, PortalInfo portal)
   {
@@ -105,6 +110,8 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     
     mWebView.setWebViewClient(new WebViewClient());
     mWebView.setWebChromeClient(new WebChromeClient());
+    
+    WebIconDatabase.getInstance().open(getDir(ICONS_DIRECTORY, Context.MODE_PRIVATE).getPath());
   }
 
   @Override
@@ -214,6 +221,12 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     public void onPageFinished(WebView view, String url)
     {
       PortalDetectorService.startService(PortalSigninActivity.this);
+      
+      // Default to Captivate icon if page doesn't specify a favicon
+      if (view.getFavicon() == null)
+      {
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+      }
     }
   }
   
@@ -237,6 +250,12 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     public void onReceivedTitle(WebView view, String title)
     {
       setTitle(title);
+    }
+    
+    @Override
+    public void onReceivedIcon (WebView view, Bitmap icon)
+    {
+      getSupportActionBar().setIcon(new BitmapDrawable(getResources(), icon));
     }
   }
   

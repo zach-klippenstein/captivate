@@ -5,7 +5,7 @@
         android:id="@+id/menu_refresh"
         android:icon="@drawable/ic_menu_refresh"
         android:title="@string/refresh"
-        android:showAsAction="ifRoom|withText" />
+        android:showAsAction="withText" />
     
     <item
         android:id="@+id/menu_open_browser"
