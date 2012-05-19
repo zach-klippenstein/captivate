@@ -47,7 +47,9 @@
             android:name="PortalSigninActivity"
             android:label="@string/portal_signin"
             android:theme="@style/Theme.PortalSignin"
-            android:configChanges="orientation|screenSize|keyboardHidden" ></activity>
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:noHistory="false" ></activity>
         <service android:name=".service.PortalDetectorService">
         </service>
     </application>
