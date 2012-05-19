@@ -48,8 +48,7 @@
             android:label="@string/portal_signin"
             android:theme="@style/Theme.PortalSignin"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:excludeFromRecents="true"
-            android:noHistory="false" ></activity>
+            android:excludeFromRecents="true" ></activity>
         <service android:name=".service.PortalDetectorService">
         </service>
     </application>
