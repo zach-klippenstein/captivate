@@ -18,6 +18,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 
+@SuppressWarnings("deprecation")
 public class PreferenceActivity extends android.preference.PreferenceActivity
 {
   private static final String FEEDBACK_PREFERENCE_KEY = "feedback_pref";
@@ -142,7 +143,6 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     
     sender.setNoReceiverHandler(new SafeIntentSender.OnNoReceiverListener()
     {
-      @SuppressWarnings("deprecation")
       @Override
       public void onNoReceiver(Intent primary)
       {
