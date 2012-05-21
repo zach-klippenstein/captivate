@@ -270,6 +270,7 @@ public class PortalSigninActivity extends SherlockFragmentActivity
       {
         if (!isBlocked(intent))
         {
+          ConnectedNotification.showSignedInToast(PortalSigninActivity.this);
           finish();
         }
       }

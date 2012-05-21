@@ -16,6 +16,7 @@
     <string name="notification_title">Hotspot Captive Detectado</string>
     <string name="notification_text">Toque para abrir la página de inicio de sesión</string>
     <string name="ticker_text">Hotspot requiere inicio de sesión</string>
+    <string name="signed_in_toast">Firmado en el portal!</string>
     
     <string name="general_category_title">General</string>
     <string name="detector_enabled_title">Habilitado</string>

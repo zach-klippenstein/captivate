@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.widget.Toast;
 
 public final class ConnectedNotification
 {
@@ -35,5 +36,10 @@ public final class ConnectedNotification
     NotificationManager notificationManager = (NotificationManager)
         context.getSystemService(Context.NOTIFICATION_SERVICE);
     notificationManager.cancel(CONNECTED_NOTIFICATION_ID);
+  }
+  
+  public static void showSignedInToast(Context context)
+  {
+    Toast.makeText(context, R.string.signed_in_toast, Toast.LENGTH_SHORT).show();
   }
 }

@@ -24,6 +24,7 @@
     <string name="notification_title">Captive Hotspot Detected</string>
     <string name="notification_text">Touch to open login page</string>
     <string name="ticker_text">Hotspot requires login</string>
+    <string name="signed_in_toast">Signed in to portal!</string>
     
     <string name="general_category_title">General</string>
     <string name="detector_enabled_title">Enabled</string>
