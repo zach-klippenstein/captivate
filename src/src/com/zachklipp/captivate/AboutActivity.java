@@ -1,12 +1,12 @@
 package com.zachklipp.captivate;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.zachklipp.captivate.util.Log;
 
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 public class AboutActivity extends SherlockActivity
 {
@@ -17,9 +17,10 @@ public class AboutActivity extends SherlockActivity
       setContentView(R.layout.about_layout);
       
       setTitle(getString(R.string.about_title, getString(R.string.app_name)));
+      getSupportActionBar().setSubtitle(getString(R.string.version_name_format, getVersionName()));
       
-      TextView versionName = (TextView) findViewById(R.id.version_name_view);
-      versionName.setText(getString(R.string.version_name_format, getVersionName()));
+      getSupportActionBar().setHomeButtonEnabled(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       
       WebView view = (WebView) findViewById(R.id.about_content_view);
       
@@ -28,6 +29,21 @@ public class AboutActivity extends SherlockActivity
       
       view.loadUrl("file:///android_res/raw/about.html");
   }
+  
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item)
+  {
+    switch (item.getItemId())
+    {
+      case android.R.id.home:
+        finish();
+        return true;
+        
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
+      
   
   private String getVersionName()
   {

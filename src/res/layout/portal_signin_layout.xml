@@ -2,16 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:animateLayoutChanges="true" >
-    
-    <ProgressBar
-        android:id="@+id/progress"
-        style="@style/Widget.Sherlock.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="false"
-        android:visibility="gone" />
+    android:orientation="vertical" >
     
     <WebView
         android:id="@+id/webview"

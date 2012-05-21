@@ -4,6 +4,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.zachklipp.captivate.captive_portal.PortalInfo;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.state_machine.PortalStateMachine.State;
@@ -24,12 +25,9 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
 
 public class PortalSigninActivity extends SherlockFragmentActivity
 {
@@ -47,7 +45,6 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   
   private PortalInfo mPortalInfo;
   private WebView mWebView;
-  private ProgressBar mProgressBar;
   private SafeIntentSender mOpenInBrowserSender;
   
   private PortalStateChangedReceiver mPortalStateChangedReceiver;
@@ -57,12 +54,13 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     
+    requestWindowFeature(Window.FEATURE_PROGRESS);
+    
     mPortalStateChangedReceiver = new PortalStateChangedReceiver();
     registerReceiver(mPortalStateChangedReceiver,
         mPortalStateChangedReceiver.INTENT_FILTER);
     
     setContentView(R.layout.portal_signin_layout);
-    getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     
     mPortalInfo = new PortalInfo(getIntent());
     if (BuildConfig.DEBUG && mPortalInfo.getPortalUrl().length() == 0)
@@ -71,7 +69,6 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     }
     
     mWebView = (WebView) findViewById(R.id.webview);
-    mProgressBar = (ProgressBar) findViewById(R.id.progress);
     
     mOpenInBrowserSender = new SafeIntentSender(this);
     mOpenInBrowserSender.setNoReceiverHandler(new OnNoReceiverListener()
@@ -241,9 +238,9 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     @Override
     public void onProgressChanged(WebView view, int newProgress)
     {
-      mProgressBar.setProgress(newProgress);
+      setSupportProgress(newProgress * 100);
       
-      mProgressBar.setVisibility(newProgress < 100 ? View.VISIBLE : View.GONE);
+      setSupportProgressBarVisibility(newProgress < 100);
     }
     
     @Override
