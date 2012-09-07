@@ -50,7 +50,7 @@ public abstract class PortalDetector extends Observable<PortalInfo>
         
       case ALWAYS_DETECT:
         Log.i(LOG_TAG, "Overriding captive portal detector");
-        reportPortal(new PortalInfo());
+        reportPortal(new PortalInfo("http://www.google.com"));
         break;
         
       case NEVER_DETECT:

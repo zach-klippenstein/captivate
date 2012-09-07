@@ -2,7 +2,6 @@ package com.zachklipp.captivate.service;
 
 import com.zachklipp.captivate.BuildConfig;
 import com.zachklipp.captivate.ConnectedNotification;
-import com.zachklipp.captivate.Manifest;
 import com.zachklipp.captivate.captive_portal.HttpResponseContentsDetector;
 import com.zachklipp.captivate.captive_portal.PortalDetector;
 import com.zachklipp.captivate.captive_portal.PortalDetector.OverrideMode;
@@ -32,15 +31,18 @@ import android.preference.PreferenceManager;
 public class PortalDetectorService extends StickyIntentService
   implements Observer<TransitionEvent>
 {
-  private static final String INTENT_NAMESPACE = "com.zachklipp.captivate.intent.";
+  private static final String STRING_NAMESPACE = "com.zachklipp.captivate.";
+  private static final String INTENT_NAMESPACE = STRING_NAMESPACE + "intent.";
   
   // For start intent
   static final String EXTRA_ASSUME_WIFI_CONNECTED = INTENT_NAMESPACE + "EXTRA_ASSUME_WIFI_CONNECTED";
   
   // For broadcast intent
+  public static final String PERMISSION_ACCESS_PORTAL_STATE = STRING_NAMESPACE + "permission.ACCESS_PORTAL_STATE";
   public static final String ACTION_PORTAL_STATE_CHANGED = INTENT_NAMESPACE + "ACTION_PORTAL_STATE_CHANGED";
   public static final String EXTRA_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_PORTAL_STATE";
   public static final String EXTRA_PORTAL_URL = INTENT_NAMESPACE + "EXTRA_PORTAL_URL";
+  public static final String EXTRA_FAVICON_URL = INTENT_NAMESPACE + "EXTRA_FAVICON_URL";
   
   public static final String ENABLED_PREFERENCE_KEY = "detector_enabled_pref";
   public static final String DEBUG_OVERRIDE_PREFERENCE_KEY = "debug_override_pref";
@@ -268,7 +270,7 @@ public class PortalDetectorService extends StickyIntentService
     Log.i(String.format("Broadcasting portal state change. new state=%s, portal=%s",
         state, portal));
     
-    sendBroadcast(intent, Manifest.permission.ACCESS_PORTAL_STATE);
+    sendBroadcast(intent, PERMISSION_ACCESS_PORTAL_STATE);
   }
   
   private static Intent createStateChangedBroadcastIntent(State state, PortalInfo portal)

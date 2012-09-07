@@ -125,4 +125,6 @@ public final class WifiHelper
     
     return false;
   }
+  
+  private WifiHelper() { }
 }
