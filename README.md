@@ -8,6 +8,10 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
 
 ## What's New
 
+### 1.2.1
+
+*   Portal notification shows the favicon from the sign-in page
+
 ### 1.2.0
 
 *   Tapping on the portal notification now launches a custom browser window which automatically closes when the portal is signed in.
