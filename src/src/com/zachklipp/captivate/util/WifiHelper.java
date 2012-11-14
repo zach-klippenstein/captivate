@@ -72,6 +72,7 @@ public final class WifiHelper
     return (networkInfo != null && networkInfo.isConnected());
   }
   
+  @SuppressWarnings("incomplete-switch")
   private static boolean hasWifiNetworkConnectedOrDisconnected(Intent intent)
   {
     if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(intent.getAction()))
