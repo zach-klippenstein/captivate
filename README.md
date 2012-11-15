@@ -8,6 +8,12 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
 
 ## What's New
 
+### 1.3.0
+
+*   Better tablet experience
+*   UI changes (dark ActionBar)
+*   Updated ActionBarSherlock to 4.2.0
+
 ### 1.2.1
 
 *   Portal notification shows the favicon from the sign-in page
