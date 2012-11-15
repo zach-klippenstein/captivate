@@ -7,11 +7,13 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
+    
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+    
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE"/>
-    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
     <permission
         android:name="com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE" 
         android:label="@string/portal_state_perm_label" 

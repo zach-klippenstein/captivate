@@ -8,10 +8,12 @@ import com.actionbarsherlock.view.Window;
 import com.zachklipp.captivate.captive_portal.PortalInfo;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.state_machine.PortalStateMachine.State;
+import com.zachklipp.captivate.util.ActivityHelper;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.SafeIntentSender;
 import com.zachklipp.captivate.util.SafeIntentSender.OnNoReceiverListener;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -35,6 +37,9 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   
   private static final String ICONS_DIRECTORY = "web-icons";
   
+  // Should be 600, but can't get real display size before SDK 17, so fake it.
+  private static final int SMALLEST_WIDTH_FOR_DIALOG_DP = 550;
+  
   public static Intent getStartIntent(Context context, PortalInfo portal)
   {
     Intent intent = new Intent(context, PortalSigninActivity.class);
@@ -53,8 +58,10 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    
+
     requestWindowFeature(Window.FEATURE_PROGRESS);
+    
+    ActivityHelper.initializeAsDialogWhenSwIs(this, SMALLEST_WIDTH_FOR_DIALOG_DP);
     
     mPortalStateChangedReceiver = new PortalStateChangedReceiver();
     registerReceiver(mPortalStateChangedReceiver,
@@ -93,6 +100,7 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     Log.i(LOG_TAG, "Screen density: " +  metrics.densityDpi);
   }
   
+  @SuppressLint("SetJavaScriptEnabled")
   private void initializeWebView()
   {
     WebSettings settings = mWebView.getSettings();
@@ -285,7 +293,7 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     }
   }
   
-  private class NoBrowserAlertDialog extends DialogFragment
+  public static class NoBrowserAlertDialog extends DialogFragment
   {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
