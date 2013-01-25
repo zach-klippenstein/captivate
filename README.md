@@ -10,9 +10,11 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
 
 ### 1.3.0
 
-*   Better tablet experience
+*   Better tablet experience (sign-in appears as dialog on screens 7" and up)
 *   UI changes (dark ActionBar)
 *   Updated ActionBarSherlock to 4.2.0
+*   Fixed recent false portal notifications
+*   Removed French and Turkish translations (too few installs to warrant maintaining)
 
 ### 1.2.1
 

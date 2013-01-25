@@ -13,13 +13,15 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.annotation.SuppressLint;
+
 import com.zachklipp.captivate.util.Log;
 
 public class HttpResponseContentsDetector extends PortalDetector
 {
   private static final String USER_AGENT = "CaptiveNetworkSupport/1.0 wispr";
   private static final String URL = "http://www.apple.com/library/test/success.html";
-  private static final Pattern NO_PORTAL_PATTERN = Pattern.compile("^\\s*Success\\s*$");
+  private static final Pattern NO_PORTAL_PATTERN = Pattern.compile("<body>\\s*Success\\s*</body>", Pattern.CASE_INSENSITIVE);
   
   public static PortalDetector createDetector()
   {
@@ -43,6 +45,7 @@ public class HttpResponseContentsDetector extends PortalDetector
     mNoPortalPattern = noPortalPattern;
   }
   
+  @SuppressLint("DefaultLocale")
   @Override
   protected void onCheckForPortal()
   {
@@ -107,6 +110,7 @@ public class HttpResponseContentsDetector extends PortalDetector
   
   private boolean doesResponseLineIndicateNoPortal(String response)
   {
-    return mNoPortalPattern.matcher(response).matches();
+    // Don't use matches(), cause that requires the ENTIRE string to match
+    return mNoPortalPattern.matcher(response).find();
   }
 }
