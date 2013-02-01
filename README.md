@@ -8,6 +8,10 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
 
 ## What's New
 
+### 1.3.1
+
+*   Hopefully fixed the crash when signin activity finished
+
 ### 1.3.0
 
 *   Better tablet experience (sign-in appears as dialog on screens 7" and up)
