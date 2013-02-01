@@ -49,7 +49,7 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   }
   
   private PortalInfo mPortalInfo;
-  private WebView mWebView;
+  private com.zachklipp.captivate.WebView mWebView;
   private SafeIntentSender mOpenInBrowserSender;
   
   private PortalStateChangedReceiver mPortalStateChangedReceiver;
@@ -75,7 +75,7 @@ public class PortalSigninActivity extends SherlockFragmentActivity
       mPortalInfo = new PortalInfo("http://www.google.com");
     }
     
-    mWebView = (WebView) findViewById(R.id.webview);
+    mWebView = (com.zachklipp.captivate.WebView) findViewById(R.id.webview);
     
     mOpenInBrowserSender = new SafeIntentSender(this);
     mOpenInBrowserSender.setNoReceiverHandler(new OnNoReceiverListener()
@@ -108,6 +108,10 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     settings.setJavaScriptEnabled(true);
     settings.setBuiltInZoomControls(true);
     settings.setPluginState(WebSettings.PluginState.ON_DEMAND);
+
+    // Don't show the ugly buttons (and fix a possible crash on destroy),
+    // see issue 31: https://github.com/zach-klippenstein/captivate/issues/31
+    mWebView.setDisplayZoomControls(false);
     
     // Desktop-sized webpages (e.g. Google) seem to load better when this is set,
     // and it seems to be required for double-tap zooming.
@@ -187,7 +191,12 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   {
     super.onDestroy();
     
-    mWebView.destroy();
+    // Workaround to ensure the WebView is not destroyed while still attached
+    mWebView.post(new Runnable() {
+      public void run() {
+        mWebView.destroy();
+      }
+    });
     
     unregisterReceiver(mPortalStateChangedReceiver);
   }
