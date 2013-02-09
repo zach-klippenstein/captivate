@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -49,6 +50,7 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   }
   
   private PortalInfo mPortalInfo;
+  private View mQuicksettingsBar;
   private com.zachklipp.captivate.WebView mWebView;
   private SafeIntentSender mOpenInBrowserSender;
   
@@ -68,6 +70,8 @@ public class PortalSigninActivity extends SherlockFragmentActivity
         mPortalStateChangedReceiver.INTENT_FILTER);
     
     setContentView(R.layout.portal_signin_layout);
+    
+    mQuicksettingsBar = findViewById(R.id.quicksettings_bar);
     
     mPortalInfo = new PortalInfo(getIntent());
     if (BuildConfig.DEBUG && mPortalInfo.getPortalUrl().length() == 0)
@@ -137,21 +141,27 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   {
     switch (item.getItemId())
     {
+      case R.id.menu_quicksettings:
+        toggleQuicksettings();
+        break;
+        
       case R.id.menu_open_browser:
         showPortalInBrowser();
-        return true;
+        break;
         
       case R.id.menu_refresh:
         mWebView.reload();
-        return true;
+        break;
         
       case R.id.menu_settings:
         PreferenceActivity.showPreferences(this);
-        return true;
+        break;
         
       default:
         return super.onOptionsItemSelected(item);
     }
+    
+    return true;
   }
   
   @Override
@@ -211,6 +221,12 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     }
     
     return super.onKeyDown(keyCode, event);
+  }
+  
+  private void toggleQuicksettings()
+  {
+    mQuicksettingsBar.setVisibility(
+        mQuicksettingsBar.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
   }
   
   private void showPortalInBrowser()

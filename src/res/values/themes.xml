@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <!--
         Activities using this theme *must* call ActivityHelper.initializeAsDialogWhenSwIs()
         ASAP in onCreate().
     -->
-    <style name="Theme.ActionBarDialog" parent="@style/Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.ActionBarDialog" parent="@style/Theme.Sherlock">
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="Theme.DialogWhenLarge" parent="@style/Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.DialogWhenLarge" parent="@style/Theme.Sherlock">
     </style>
     
     <style name="Theme.PortalSignin" parent="@style/Theme.DialogWhenLarge">
