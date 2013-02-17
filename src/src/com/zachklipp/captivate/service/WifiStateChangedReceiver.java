@@ -18,7 +18,7 @@ public class WifiStateChangedReceiver extends BroadcastReceiver
   {
     String action = intent.getAction();
     
-    Log.d(LOG_TAG, String.format("onReceive(%s, %s)", context, intent));
+    Log.d(LOG_TAG, "onReceive(%s, %s)", context, intent);
     
     if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(action) ||
         WifiManager.WIFI_STATE_CHANGED_ACTION.equals(action))
@@ -29,7 +29,7 @@ public class WifiStateChangedReceiver extends BroadcastReceiver
 
   private void onNetworkStateChanged(Context context, Intent intent)
   {
-    Log.d(LOG_TAG, String.format("onNetworkStateChanged(%s, %s)", context, intent));
+    Log.d(LOG_TAG, "onNetworkStateChanged(%s, %s)", context, intent);
     
     if (WifiHelper.isWifiFinishedConnectingOrDisconnecting(intent))
     {

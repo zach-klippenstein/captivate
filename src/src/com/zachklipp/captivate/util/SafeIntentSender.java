@@ -25,7 +25,7 @@ public class SafeIntentSender
     @Override
     public void onNoReceiver(Intent primary)
     {
-      Log.w(LOG_TAG, String.format("No receiver for intent %s", primary.getAction()));
+      Log.w(LOG_TAG, "No receiver for intent %s", primary.getAction());
     }
   };
   

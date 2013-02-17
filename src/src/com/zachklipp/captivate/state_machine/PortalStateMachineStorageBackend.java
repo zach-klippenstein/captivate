@@ -46,7 +46,7 @@ public class PortalStateMachineStorageBackend implements StorageBackend
   {
     String stateName = mPreferences.getString(STATE_KEY, PortalStateMachine.State.UNKNOWN.getName());
     
-    Log.d(String.format("Attempting to load state machine from state %s", stateName));
+    Log.d("Attempting to load state machine from state %s", stateName);
     
     return new PortalStateMachine(mDetector, stateName);
   }

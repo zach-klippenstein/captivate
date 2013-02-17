@@ -20,7 +20,7 @@ public final class WifiHelper
     
     if (null != network)
     {
-      Log.d(LOG_TAG, String.format("Type = %s, isConnected() = %s", network.getType(), network.isConnected()));
+      Log.d(LOG_TAG, "Type = %s, isConnected() = %s", network.getType(), network.isConnected());
       
       isWifiConnected = ConnectivityManager.TYPE_WIFI == network.getType() && network.isConnected(); 
     }
@@ -34,7 +34,7 @@ public final class WifiHelper
   {
     boolean isFinished = false;
     
-    Log.d(LOG_TAG, String.format("isWifiFinishedConnectingOrDisconnecting(%s)", intent));
+    Log.d(LOG_TAG, "isWifiFinishedConnectingOrDisconnecting(%s)", intent);
     
     isFinished = hasWifiNetworkConnectedOrDisconnected(intent)
         || hasWifiBeenDisabled(intent);
@@ -46,7 +46,7 @@ public final class WifiHelper
   
   public static boolean isWifiDisconnectedFromNetworkStateChangedIntent(Intent intent)
   {
-    Log.d(LOG_TAG, String.format("isWifiDisconnectedFromNetworkStateChangedIntent(%s)", intent));
+    Log.d(LOG_TAG, "isWifiDisconnectedFromNetworkStateChangedIntent(%s)", intent);
     
     NetworkInfo networkInfo = null;
     
@@ -60,7 +60,7 @@ public final class WifiHelper
   
   public static boolean isWifiConnectedFromNetworkStateChangedIntent(Intent intent)
   {
-    Log.d(LOG_TAG, String.format("isWifiConnectedFromNetworkStateChangedIntent(%s)", intent));
+    Log.d(LOG_TAG, "isWifiConnectedFromNetworkStateChangedIntent(%s)", intent);
     
     NetworkInfo networkInfo = null;
     

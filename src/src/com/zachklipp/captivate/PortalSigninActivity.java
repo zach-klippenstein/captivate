@@ -146,7 +146,7 @@ public class PortalSigninActivity extends SherlockFragmentActivity
         return true;
         
       case R.id.menu_settings:
-        PreferenceActivity.showPreferences(this);
+        Preferences.showPreferences(this);
         return true;
         
       default:
