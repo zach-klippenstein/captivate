@@ -96,7 +96,7 @@ public abstract class PortalDetector extends Observable<PortalInfo>
   
   protected void reportPortal(PortalInfo portal)
   {
-    Log.d(LOG_TAG, String.format("Reporting captive portal to handlers: %s", portal));
+    Log.d(LOG_TAG, "Reporting captive portal to handlers: %s", portal);
     
     mPortal = portal;
     notifyObservers(mPortal);

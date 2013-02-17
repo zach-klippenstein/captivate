@@ -98,8 +98,8 @@ public class PortalStateMachine extends StateMachine
     
     mPortalDetector.addObserver(mPortalDetectorObserver);
     
-    Log.d(LOG_TAG, String.format("Portal state machine initialized to state %s",
-        getCurrentState().getName()));
+    Log.d(LOG_TAG, "Portal state machine initialized to state %s",
+        getCurrentState().getName());
   }
   
   public State getCurrentPortalState()

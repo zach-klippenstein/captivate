@@ -13,8 +13,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.annotation.SuppressLint;
-
 import com.zachklipp.captivate.util.Log;
 
 public class HttpResponseContentsDetector extends PortalDetector
@@ -45,7 +43,6 @@ public class HttpResponseContentsDetector extends PortalDetector
     mNoPortalPattern = noPortalPattern;
   }
   
-  @SuppressLint("DefaultLocale")
   @Override
   protected void onCheckForPortal()
   {
@@ -55,9 +52,9 @@ public class HttpResponseContentsDetector extends PortalDetector
     
     HttpResponse response = executeRequestOrThrow(client, request);
     
-    Log.d(String.format("Response (%d bytes): %s",
+    Log.d("Response (%d bytes): %s",
         response.getEntity().getContentLength(),
-        response.getStatusLine()));
+        response.getStatusLine());
     
     if (doesResponseIndicatePortal(response.getEntity()))
     {

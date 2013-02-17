@@ -52,8 +52,7 @@ public class StateMachineStorage implements Observer<TransitionEvent>
   {
     assert(stateMachine != null);
     
-    Log.d(String.format("Saving state machine in state %s",
-        stateMachine.getCurrentState().getName()));
+    Log.d("Saving state machine in state %s", stateMachine.getCurrentState().getName());
     
     mBackend.save(stateMachine);
   }

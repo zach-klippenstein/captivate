@@ -3,6 +3,7 @@ package com.zachklipp.captivate;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.SafeIntentSender;
+import com.zachklipp.captivate.util.StringHelper;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,18 +22,11 @@ import android.preference.PreferenceGroup;
 @SuppressWarnings("deprecation")
 public class PreferenceActivity extends android.preference.PreferenceActivity
 {
-  private static final String FEEDBACK_PREFERENCE_KEY = "feedback_pref";
-  private static final String ABOUT_PREFERENCE_KEY = "about_pref";
   
   private static final int DIALOG_NO_FEEDBACK_RECEIVER = 0;
 
   private static final IntentFilter sDebugIntentFilter = new IntentFilter(
       PortalDetectorService.ACTION_PORTAL_STATE_CHANGED);
-  
-  public static void showPreferences(Context context)
-  {
-    context.startActivity(new Intent(context, PreferenceActivity.class));
-  }
   
   private final BroadcastReceiver mDebugReceiver = new BroadcastReceiver()
   {
@@ -61,7 +55,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     addPreferencesFromResource(R.xml.preferences);
     
     CheckBoxPreference enabledPref = (CheckBoxPreference)
-        getPreferenceManager().findPreference(PortalDetectorService.ENABLED_PREFERENCE_KEY);
+        getPreferenceManager().findPreference(Preferences.ENABLED_PREFERENCE_KEY);
     enabledPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
     {
       @Override
@@ -110,7 +104,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
         break;
         
       default:
-        Log.w(String.format("Attempted to show invalid dialog: %d", which));
+        Log.w("Attempted to show invalid dialog: %d", which);
     }
     
     return dialog;
@@ -118,20 +112,23 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
   
   private void formatStrings()
   {
-    formatPreferenceTitle(FEEDBACK_PREFERENCE_KEY, R.string.feedback_email);
-    formatPreferenceTitle(ABOUT_PREFERENCE_KEY, R.string.app_name);
+    formatPreferenceTitle(Preferences.FEEDBACK_PREFERENCE_KEY, R.string.feedback_email);
+    formatPreferenceTitle(Preferences.ABOUT_PREFERENCE_KEY, R.string.app_name);
     
     CheckBoxPreference enabledPref = (CheckBoxPreference)
-        getPreferenceManager().findPreference(PortalDetectorService.ENABLED_PREFERENCE_KEY);
-    enabledPref.setSummaryOn(
-        formatCharSequence(enabledPref.getSummaryOn(), R.string.app_name));
-    enabledPref.setSummaryOff(
-        formatCharSequence(enabledPref.getSummaryOff(), R.string.app_name));
+        getPreferenceManager().findPreference(Preferences.ENABLED_PREFERENCE_KEY);
+    
+    enabledPref.setSummaryOn(StringHelper.formatWithResourceStrings(
+        this, enabledPref.getSummaryOn(), R.string.app_name));
+    
+    enabledPref.setSummaryOff(StringHelper.formatWithResourceStrings(
+        this, enabledPref.getSummaryOff(), R.string.app_name));
   }
   
   private void initializeFeedbackIntent()
   {
-    Preference feedbackPreference = getPreferenceScreen().findPreference(FEEDBACK_PREFERENCE_KEY);
+    Preference feedbackPreference = getPreferenceScreen().findPreference(
+        Preferences.FEEDBACK_PREFERENCE_KEY);
     Intent primaryIntent = feedbackPreference.getIntent();
     final SafeIntentSender sender = new SafeIntentSender(this);
     
@@ -165,19 +162,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
   private void formatPreferenceTitle(CharSequence key, int... args)
   {
     Preference pref = getPreferenceManager().findPreference(key);
-    pref.setTitle(formatCharSequence(pref.getTitle(), args));
-  }
-  
-  private CharSequence formatCharSequence(CharSequence format, int... args)
-  {
-    Object[] strArgs = new Object[args.length];
-    
-    for (int i = 0; i < args.length; i++)
-    {
-      strArgs[i] = getString(args[i]);
-    }
-    
-    return String.format(format.toString(), strArgs);
+    pref.setTitle(StringHelper.formatWithResourceStrings(this, pref.getTitle(), args));
   }
   
   private void createDebugPreferences(PreferenceGroup parent)
@@ -201,7 +186,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     debugCategory.addPreference(mDebugStatePreference);
     
     CheckBoxPreference overridePref = new CheckBoxPreference(this);
-    overridePref.setKey(PortalDetectorService.DEBUG_OVERRIDE_PREFERENCE_KEY);
+    overridePref.setKey(Preferences.DEBUG_OVERRIDE_PREFERENCE_KEY);
     overridePref.setDefaultValue(false);
     overridePref.setTitle("Override portal");
     overridePref.setSummaryOn("A fake portal will always be detected.");

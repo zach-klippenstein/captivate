@@ -2,7 +2,6 @@ package com.zachklipp.captivate.util;
 
 /*
  * Wraps android.util.Log to filter by priority.
- * TODO move to library project
  */
 public final class Log
 {
@@ -25,57 +24,87 @@ public final class Log
   {
     sMinPriority = DEFAULT_MIN_PRIORITY;
   }
+
+  /**
+   * Log a message with the default tag.
+   * @param msg
+   * @param args
+   * @return
+   */
+  public static int e(String msg, Object... args)
+  {
+    return e(null, msg, args);
+  }
+  public static int e(String tag, String msg, Object... args)
+  {
+    return println(android.util.Log.ERROR, tag, msg, args);
+  }
+
+  /**
+   * Log a message with the default tag.
+   * @param msg
+   * @param args
+   * @return
+   */
+  public static int w(String msg, Object... args)
+  {
+    return w(null, msg, args);
+  }
+  public static int w(String tag, String msg, Object... args)
+  {
+    return w(tag, msg, null, args);
+  }
+  public static int w(String tag, String msg, Throwable e, Object... args)
+  {
+    return println(android.util.Log.WARN, tag, msg, e, args);
+  }
+
+  /**
+   * Log a message with the default tag.
+   * @param msg
+   * @param args
+   * @return
+   */
+  public static int i(String msg, Object... args)
+  {
+    return i(null, msg, args);
+  }
+  public static int i(String tag, String msg, Object... args)
+  {
+    return println(android.util.Log.INFO, tag, msg, args);
+  }
   
-  public static int e(String msg)
+  /**
+   * Log a message with the default tag.
+   * @param msg
+   * @param args
+   * @return
+   */
+  public static int d(String msg, Object... args)
   {
-    return e(null, msg);
+    return d(null, msg, args);
   }
-  public static int e(String tag, String msg)
+  public static int d(String tag, String msg, Object... args)
   {
-    return println(android.util.Log.ERROR, tag, msg);
+    return println(android.util.Log.DEBUG, tag, msg, args);
   }
-  
-  public static int w(String msg)
+
+  /**
+   * Log a message with the default tag.
+   * @param msg
+   * @param args
+   * @return
+   */
+  public static int v(String msg, Object... args)
   {
-    return w(null, msg);
+    return v(null, msg, args);
   }
-  public static int w(String tag, String msg)
+  public static int v(String tag, String msg, Object... args)
   {
-    return w(tag, msg, null);
-  }
-  public static int w(String tag, String msg, Throwable e)
-  {
-    return println(android.util.Log.WARN, tag, msg, e);
-  }
-  
-  public static int i(String msg)
-  {
-    return i(null, msg);
-  }
-  public static int i(String tag, String msg)
-  {
-    return println(android.util.Log.INFO, tag, msg);
-  }
-  
-  public static int d(String msg)
-  {
-    return d(null, msg);
-  }
-  public static int d(String tag, String msg)
-  {
-    return println(android.util.Log.DEBUG, tag, msg);
+    return println(android.util.Log.VERBOSE, tag, msg, args);
   }
   
-  public static int v(String msg)
-  {
-    return v(null, msg);
-  }
-  public static int v(String tag, String msg)
-  {
-    return println(android.util.Log.VERBOSE, tag, msg);
-  }
-  
-  public static int println(int priority, String tag, String msg)
+  public static int println(int priority, String tag, String msg, Object... args)
   {
     int bytesWritten = 0;
     
@@ -85,20 +114,22 @@ public final class Log
       {
         tag = sDefaultTag;
       }
-  
-      bytesWritten = android.util.Log.println(priority, tag, msg);
+      
+      // Don't use StringHelper.format because we don't want log messages
+      // in other languages.
+      bytesWritten = android.util.Log.println(priority, tag, String.format(msg, args));
     }
     
     return bytesWritten;
   }
   
-  private static int println(int priority, String tag, String msg, Throwable e)
+  private static int println(int priority, String tag, String msg, Throwable e, Object... args)
   {
     if (e != null)
     {
       msg += "\n" + android.util.Log.getStackTraceString(e);
     }
     
-    return println(priority, tag, msg);
+    return println(priority, tag, msg, args);
   }
 }
