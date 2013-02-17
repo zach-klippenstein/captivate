@@ -2,14 +2,20 @@ body {
   background-color: #000000;
   color: #ffffff;
   padding-top: 1em;
-}
-a {
-  color: #5555ff;
+  font-family: Roboto, sans-serif;
 }
 
+a {
+  color: #A1CBFD;
+}
+
+/* Fake out listSeparatorTextViewStyle */
 h2 {
-  margin-top: 2em;
-  border-bottom: 1px solid white;
-  font-size: inherit;
+  /* margin-top: 2em; */
+  padding-left: 8px;
+  border-bottom: 1px solid #bebebe;
+  font-size: 14pt;
   font-weight: bold;
+  font-variant: small-caps;
+  color: #bebebe;
 }
