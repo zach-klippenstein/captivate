@@ -20,12 +20,13 @@ import com.zachklipp.captivate.util.Observer;
 import com.zachklipp.captivate.util.StickyIntentService;
 import com.zachklipp.captivate.util.WifiHelper;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.PowerManager;
 
 public class PortalDetectorService extends StickyIntentService
   implements Observer<TransitionEvent>
@@ -33,24 +34,24 @@ public class PortalDetectorService extends StickyIntentService
   private static final String STRING_NAMESPACE = "com.zachklipp.captivate.";
   private static final String INTENT_NAMESPACE = STRING_NAMESPACE + "intent.";
   
-  // For start intent
+  /**
+   * If set to true when starting service, the actual state of any wifi connection isn't checked.
+   */
   static final String EXTRA_ASSUME_WIFI_CONNECTED = INTENT_NAMESPACE + "EXTRA_ASSUME_WIFI_CONNECTED";
   
-  // For broadcast intent
+  /**
+   * Permission required to receive broadcast intents when the portal state changes.
+   */
   public static final String PERMISSION_ACCESS_PORTAL_STATE = STRING_NAMESPACE + "permission.ACCESS_PORTAL_STATE";
+  
+  /**
+   * Action for intents broadcast when portal state changes.
+   */
   public static final String ACTION_PORTAL_STATE_CHANGED = INTENT_NAMESPACE + "ACTION_PORTAL_STATE_CHANGED";
+  
   public static final String EXTRA_PORTAL_STATE = INTENT_NAMESPACE + "EXTRA_PORTAL_STATE";
   public static final String EXTRA_PORTAL_URL = INTENT_NAMESPACE + "EXTRA_PORTAL_URL";
   public static final String EXTRA_FAVICON_URL = INTENT_NAMESPACE + "EXTRA_FAVICON_URL";
-  
-  private static class StartServiceReceiver extends BroadcastReceiver
-  {
-    @Override
-    public void onReceive(Context context, Intent intent)
-    {
-      PortalDetectorService.startService(context);
-    }
-  };
   
   //private static PortalDetector sSeedPortalDetector = HttpResponseContentsDetector.createDetector();
   private static PortalDetector.Factory sPortalDetectorFactory
@@ -106,22 +107,33 @@ public class PortalDetectorService extends StickyIntentService
     return context.startService(intent);
   }
   
-  private static Intent createStartServiceIntent(Context context)
-  {
-    return new Intent(context, PortalDetectorService.class);
-  }
-  
   private Preferences mPreferences;
   private PortalDetector mPortalDetector;
   private PortalStateMachine mStateMachine;
-  private BroadcastReceiver mScreenOnReceiver;
+  private AlarmManager mAlarmManager;
+  private boolean mSessionTimeoutCheckEnabled = false;
+  private PendingIntent mSessionTimeoutCheckPendingIntent;
   
-  private final Runnable mStartServiceRunnable = new Runnable()
+  private final BroadcastReceiver mScreenOnReceiver = new BroadcastReceiver()
+  {
+    @Override
+    public void onReceive(Context context, Intent intent)
+    {
+        context.startService(createStartServiceIntent(context));
+    }
+  };
+  
+  /**
+   * @see Preferences.SIGNIN_CHECK_SECONDS_DEFAULT
+   */
+  private final Runnable mSigninCheckRunnable = new Runnable()
   {
     @Override
     public void run()
     {
-      startService(PortalDetectorService.this);
+      // Called from a handler on this service's worker thread, so we don't
+      // need to call startService().
+      onHandleIntent(createStartServiceIntent(PortalDetectorService.this));
     }
   };
 
@@ -146,6 +158,11 @@ public class PortalDetectorService extends StickyIntentService
     
     mStateMachine.addObserver(this);
     
+    mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    mSessionTimeoutCheckPendingIntent = PendingIntent.getService(
+        this, 0, createStartServiceIntent(this), PendingIntent.FLAG_CANCEL_CURRENT);
+    
+    // Called at end so thread doesn't get started before we're initialized
     super.onCreate();
   }
   
@@ -185,7 +202,7 @@ public class PortalDetectorService extends StickyIntentService
       
       mPortalDetector.checkForPortal();
       
-      scheduleTimedRefreshIfBlocked();
+      scheduleSigninCheckIfBlocked();
     }
     else
     {
@@ -193,8 +210,11 @@ public class PortalDetectorService extends StickyIntentService
       mStateMachine.onNoWifi();
     }
     
+    // If there's no portal, we aren't checking anything periodically so
+    // we can shutdown.
     if (!mStateMachine.getCurrentPortalState().isBehindPortal())
     {
+      Log.d("Not behind a portal, stopping detector service");
       stopSelf();
     }
   }
@@ -217,23 +237,23 @@ public class PortalDetectorService extends StickyIntentService
   {
     if (mStateMachine.getCurrentPortalState().isBehindPortal())
     {
-      registerScreenOnReceiver();
+      registerSessionTimeoutCheckReceiver();
     }
     else
     {
-      unregisterScreenOnReceiver();
+      unregisterSessionTimeoutCheckReceiver();
     }
   }
   
-  private void scheduleTimedRefreshIfBlocked()
+  private void scheduleSigninCheckIfBlocked()
   {
-    int refreshInterval = mPreferences.getStateRefreshIntervalSeconds();
+    int refreshInterval = mPreferences.getSigninCheckSeconds();
     
-    if (isScreenOn() && mStateMachine.getCurrentPortalState().isBlocked())
+    if (mStateMachine.getCurrentPortalState().isBlocked())
     {
       Log.i("Scheduling state refresh in %d seconds", refreshInterval);
       
-      getHandler().postDelayed(mStartServiceRunnable, refreshInterval * 1000);
+      getHandler().postDelayed(mSigninCheckRunnable, refreshInterval * 1000);
     }
   }
   
@@ -242,7 +262,14 @@ public class PortalDetectorService extends StickyIntentService
   {
     super.onDestroy();
     
-    unregisterScreenOnReceiver();
+    unregisterSessionTimeoutCheckReceiver();
+    
+    Log.d("PortalDetectorService destroyed.");
+  }
+  
+  private static Intent createStartServiceIntent(Context context)
+  {
+    return new Intent(context, PortalDetectorService.class);
   }
   
   private void updateNotification()
@@ -283,27 +310,52 @@ public class PortalDetectorService extends StickyIntentService
     return intent;
   }
   
-  private void registerScreenOnReceiver()
+  private void registerSessionTimeoutCheckReceiver()
   {
-    if (mScreenOnReceiver == null)
+    if (!mSessionTimeoutCheckEnabled)
     {
-      mScreenOnReceiver = new StartServiceReceiver();
-      registerReceiver(mScreenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+      mSessionTimeoutCheckEnabled = true;
+
+      IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+      registerReceiver(mScreenOnReceiver, filter);
+  
+      int intervalSeconds = mPreferences.getSessionTimeoutCheckMinutes();
+      long intervalMillis = intervalSeconds * 1000;
+      
+      mAlarmManager.setRepeating(
+          AlarmManager.ELAPSED_REALTIME, intervalMillis, intervalMillis,
+          mSessionTimeoutCheckPendingIntent);
+      
+      Log.d("Checking for session timeout whenever screen is turned on and every %d seconds",
+          intervalSeconds);
     }
   }
   
-  private void unregisterScreenOnReceiver()
+  private void unregisterSessionTimeoutCheckReceiver()
   {
-    if (mScreenOnReceiver != null)
+    if (mSessionTimeoutCheckEnabled)
     {
-      unregisterReceiver(mScreenOnReceiver);
-      mScreenOnReceiver = null;
+      try
+      {
+        unregisterReceiver(mScreenOnReceiver);
+      }
+      catch (Exception e)
+      {
+        Log.w("Error unregistering for screen on broadcast", e);
+      }
+      
+      try
+      {
+        mAlarmManager.cancel(mSessionTimeoutCheckPendingIntent);
+      }
+      catch (Exception e)
+      {
+        Log.w("Error cancelling session timeout check alarm", e);
+      }
+      
+      mSessionTimeoutCheckEnabled = false;
+      
+      Log.d("No longer periodically checking for session timeout");
     }
-  }
-  
-  private boolean isScreenOn()
-  {
-    PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-    return powerManager.isScreenOn();
   }
 }

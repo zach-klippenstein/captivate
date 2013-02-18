@@ -9,6 +9,7 @@ import com.zachklipp.captivate.captive_portal.PortalInfo;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.state_machine.PortalStateMachine.State;
 import com.zachklipp.captivate.util.ActivityHelper;
+import com.zachklipp.captivate.util.CheckedControl;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.SafeIntentSender;
 import com.zachklipp.captivate.util.SafeIntentSender.OnNoReceiverListener;
@@ -31,6 +32,8 @@ import android.view.View;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.CheckBox;
+import android.widget.Spinner;
 
 public class PortalSigninActivity extends SherlockFragmentActivity
 {
@@ -51,6 +54,7 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   
   private PortalInfo mPortalInfo;
   private View mQuicksettingsBar;
+  private CheckedControl<CheckBox, Spinner> mAutoRefreshIntervalController;
   private com.zachklipp.captivate.WebView mWebView;
   private SafeIntentSender mOpenInBrowserSender;
   
@@ -72,6 +76,9 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     setContentView(R.layout.portal_signin_layout);
     
     mQuicksettingsBar = findViewById(R.id.quicksettings_bar);
+    mAutoRefreshIntervalController = new CheckedControl<CheckBox, Spinner>(
+        (CheckBox) findViewById(R.id.timeout_button),
+        (Spinner) findViewById(R.id.timeout_spinner));
     
     mPortalInfo = new PortalInfo(getIntent());
     if (BuildConfig.DEBUG && mPortalInfo.getPortalUrl().length() == 0)

@@ -55,7 +55,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     addPreferencesFromResource(R.xml.preferences);
     
     CheckBoxPreference enabledPref = (CheckBoxPreference)
-        getPreferenceManager().findPreference(Preferences.ENABLED_PREFERENCE_KEY);
+        getPreferenceManager().findPreference(Preferences.ENABLED_KEY);
     enabledPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
     {
       @Override
@@ -112,11 +112,11 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
   
   private void formatStrings()
   {
-    formatPreferenceTitle(Preferences.FEEDBACK_PREFERENCE_KEY, R.string.feedback_email);
-    formatPreferenceTitle(Preferences.ABOUT_PREFERENCE_KEY, R.string.app_name);
+    formatPreferenceTitle(Preferences.FEEDBACK_KEY, R.string.feedback_email);
+    formatPreferenceTitle(Preferences.ABOUT_KEY, R.string.app_name);
     
     CheckBoxPreference enabledPref = (CheckBoxPreference)
-        getPreferenceManager().findPreference(Preferences.ENABLED_PREFERENCE_KEY);
+        getPreferenceManager().findPreference(Preferences.ENABLED_KEY);
     
     enabledPref.setSummaryOn(StringHelper.formatWithResourceStrings(
         this, enabledPref.getSummaryOn(), R.string.app_name));
@@ -128,7 +128,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
   private void initializeFeedbackIntent()
   {
     Preference feedbackPreference = getPreferenceScreen().findPreference(
-        Preferences.FEEDBACK_PREFERENCE_KEY);
+        Preferences.FEEDBACK_KEY);
     Intent primaryIntent = feedbackPreference.getIntent();
     final SafeIntentSender sender = new SafeIntentSender(this);
     
@@ -185,13 +185,9 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     });
     debugCategory.addPreference(mDebugStatePreference);
     
-    CheckBoxPreference overridePref = new CheckBoxPreference(this);
-    overridePref.setKey(Preferences.DEBUG_OVERRIDE_PREFERENCE_KEY);
-    overridePref.setDefaultValue(false);
-    overridePref.setTitle("Override portal");
-    overridePref.setSummaryOn("A fake portal will always be detected.");
-    overridePref.setSummaryOff("The portal detector will look for a portal.");
-    debugCategory.addPreference(overridePref);
+    Preferences preferences = Preferences.getPreferences(this);
+    debugCategory.addPreference(preferences.getSigninCheckSecondsPreference());
+    debugCategory.addPreference(preferences.getDebugOverridePreference());
     
     Preference launchSigninPref = new Preference(this);
     launchSigninPref.setTitle("Launch Signin");
@@ -206,5 +202,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
       }
     });
     debugCategory.addPreference(launchSigninPref);
+    
+    debugCategory.addPreference(preferences.getResetToDefaultsPreference());
   }
 }
