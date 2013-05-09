@@ -9,6 +9,7 @@ import com.zachklipp.captivate.captive_portal.PortalInfo;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.state_machine.PortalStateMachine.State;
 import com.zachklipp.captivate.util.ActivityHelper;
+import com.zachklipp.captivate.util.CheckedControl;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.SafeIntentSender;
 import com.zachklipp.captivate.util.SafeIntentSender.OnNoReceiverListener;
@@ -27,9 +28,12 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.CheckBox;
+import android.widget.Spinner;
 
 public class PortalSigninActivity extends SherlockFragmentActivity
 {
@@ -49,6 +53,8 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   }
   
   private PortalInfo mPortalInfo;
+  private View mQuicksettingsBar;
+  private CheckedControl<CheckBox, Spinner> mAutoRefreshIntervalController;
   private com.zachklipp.captivate.WebView mWebView;
   private SafeIntentSender mOpenInBrowserSender;
   
@@ -68,6 +74,11 @@ public class PortalSigninActivity extends SherlockFragmentActivity
         mPortalStateChangedReceiver.INTENT_FILTER);
     
     setContentView(R.layout.portal_signin_layout);
+    
+    mQuicksettingsBar = findViewById(R.id.quicksettings_bar);
+    mAutoRefreshIntervalController = new CheckedControl<CheckBox, Spinner>(
+        (CheckBox) findViewById(R.id.timeout_button),
+        (Spinner) findViewById(R.id.timeout_spinner));
     
     mPortalInfo = new PortalInfo(getIntent());
     if (BuildConfig.DEBUG && mPortalInfo.getPortalUrl().length() == 0)
@@ -137,13 +148,17 @@ public class PortalSigninActivity extends SherlockFragmentActivity
   {
     switch (item.getItemId())
     {
+      case R.id.menu_quicksettings:
+        toggleQuicksettings();
+        break;
+        
       case R.id.menu_open_browser:
         showPortalInBrowser();
-        return true;
+        break;
         
       case R.id.menu_refresh:
         mWebView.reload();
-        return true;
+        break;
         
       case R.id.menu_settings:
         Preferences.showPreferences(this);
@@ -152,6 +167,8 @@ public class PortalSigninActivity extends SherlockFragmentActivity
       default:
         return super.onOptionsItemSelected(item);
     }
+    
+    return true;
   }
   
   @Override
@@ -211,6 +228,12 @@ public class PortalSigninActivity extends SherlockFragmentActivity
     }
     
     return super.onKeyDown(keyCode, event);
+  }
+  
+  private void toggleQuicksettings()
+  {
+    mQuicksettingsBar.setVisibility(
+        mQuicksettingsBar.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
   }
   
   private void showPortalInBrowser()

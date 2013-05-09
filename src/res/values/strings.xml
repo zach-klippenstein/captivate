@@ -16,6 +16,7 @@
     <string name="close">Close</string>
     
     <string name="portal_signin_activity_label">Loading portal signin&#8230;</string>
+    <string name="timeout_label">Refresh after</string>
     <string name="refresh">Refresh</string>
     <string name="open_browser">Open in browser</string>
     <string name="no_browser_message">You have do not seem to have a browser installed.</string>
@@ -33,6 +34,7 @@
     
     <string name="about_category_title">About</string>
     <string name="about_title">About %s</string>
+    <string name="rate_title">Rate Captivate</string>
     <string name="feedback_title">Send Feedback</string>
     <string name="no_feedback_receiver_message">I\'d love to hear from you! Email me at %s</string>
     

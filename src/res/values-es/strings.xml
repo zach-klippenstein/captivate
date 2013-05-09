@@ -8,6 +8,7 @@
     <string name="close">Cerrar</string>
     
     <string name="portal_signin_activity_label">Cargando portal de signin&#8230;</string>
+    <string name="timeout_label">Actualización después de</string>
     <string name="refresh">Refrescar</string>
     <string name="open_browser">Abre en el navegador</string>
     <string name="no_browser_message">Has no parecen tener un navegador instalado.</string>
@@ -25,6 +26,7 @@
     
     <string name="about_category_title">Sobre</string>
     <string name="about_title">Acerca de %s</string>
+    <string name="rate_title">Tasa de Captivate</string>
     <string name="feedback_title">Envíe sus comentarios</string>
     <string name="no_feedback_receiver_message">Me encantaría saber de usted! Envíeme por correo electrónico en zk.at.sf@gmail.com</string>
 

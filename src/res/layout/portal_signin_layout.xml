@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zachklipp.captivate.WebView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/webview"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" />
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/quicksettings_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/slanted_pinstripe_background_dark"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:visibility="gone" >
+
+        <CheckBox
+            android:id="@+id/timeout_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:text="@string/timeout_label" />
+
+        <Spinner
+            android:id="@+id/timeout_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <com.zachklipp.captivate.WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
+
+</LinearLayout>
