@@ -19,7 +19,7 @@ public class HttpResponseContentsDetector extends PortalDetector
 {
   private static final String USER_AGENT = "CaptiveNetworkSupport/1.0 wispr";
   private static final String URL = "http://www.apple.com/library/test/success.html";
-  private static final Pattern NO_PORTAL_PATTERN = Pattern.compile("<body>\\s*Success\\s*</body>", Pattern.CASE_INSENSITIVE);
+  private static final Pattern NO_PORTAL_PATTERN = Pattern.compile("<TITLE>Success</TITLE></HEAD><BODY>Success</BODY>");
   
   public static PortalDetector createDetector()
   {
