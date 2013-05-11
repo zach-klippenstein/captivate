@@ -221,7 +221,7 @@ public class PortalDetectorService extends StickyIntentService
   @Override
   public void update(Observable<TransitionEvent> observable, TransitionEvent event)
   {
-    scheduleRefreshWhenScreenTurnedOn();
+    scheduleSessionTimeoutCheckIfNecessary();
     updateNotification();
     sendStateChangedBroadcast();
   }
@@ -232,7 +232,7 @@ public class PortalDetectorService extends StickyIntentService
         mPreferences.isDebugOverrideEnabled() ? OverrideMode.ALWAYS_DETECT : OverrideMode.NONE);
   }
   
-  private void scheduleRefreshWhenScreenTurnedOn()
+  private void scheduleSessionTimeoutCheckIfNecessary()
   {
     if (mStateMachine.getCurrentPortalState().isBehindPortal())
     {
