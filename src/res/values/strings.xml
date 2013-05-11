@@ -16,7 +16,6 @@
     <string name="close">Close</string>
     
     <string name="portal_signin_activity_label">Loading portal signin&#8230;</string>
-    <string name="timeout_label">Refresh after</string>
     <string name="refresh">Refresh</string>
     <string name="open_browser">Open in browser</string>
     <string name="no_browser_message">You have do not seem to have a browser installed.</string>
