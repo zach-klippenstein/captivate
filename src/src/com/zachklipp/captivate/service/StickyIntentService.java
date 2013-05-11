@@ -1,4 +1,4 @@
-package com.zachklipp.captivate.util;
+package com.zachklipp.captivate.service;
 
 import android.app.Service;
 import android.content.Intent;

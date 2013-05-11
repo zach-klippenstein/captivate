@@ -1,5 +1,6 @@
-package com.zachklipp.captivate;
+package com.zachklipp.captivate.app;
 
+import com.zachklipp.captivate.R;
 import com.zachklipp.captivate.captive_portal.PortalInfo;
 import com.zachklipp.captivate.util.BitmapHelper.ImageLoadListener;
 

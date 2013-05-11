@@ -1,4 +1,4 @@
-package com.zachklipp.captivate.test.util;
+package com.zachklipp.captivate.test.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
-import com.zachklipp.captivate.util.StickyIntentService;
+import com.zachklipp.captivate.service.StickyIntentService;
 
 public class MockStickyIntentService extends StickyIntentService
 {

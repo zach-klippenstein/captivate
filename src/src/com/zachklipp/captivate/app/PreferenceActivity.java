@@ -1,5 +1,8 @@
-package com.zachklipp.captivate;
+package com.zachklipp.captivate.app;
 
+import com.zachklipp.captivate.BuildConfig;
+import com.zachklipp.captivate.Preferences;
+import com.zachklipp.captivate.R;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.SafeIntentSender;

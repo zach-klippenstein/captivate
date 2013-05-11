@@ -1,5 +1,6 @@
 package com.zachklipp.captivate;
 
+import com.zachklipp.captivate.app.PreferenceActivity;
 import com.zachklipp.captivate.util.StringHelper;
 
 import android.content.Context;

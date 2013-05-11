@@ -1,4 +1,4 @@
-package com.zachklipp.captivate.test.util;
+package com.zachklipp.captivate.test.service;
 
 import android.content.Intent;
 import android.test.ServiceTestCase;

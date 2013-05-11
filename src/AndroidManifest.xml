@@ -22,12 +22,12 @@
         android:protectionLevel="normal" />
 
     <application
-        android:name="Application"
+        android:name=".app.Application"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:allowBackup="true" >
         <activity
-            android:name=".PreferenceActivity"
+            android:name=".app.PreferenceActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Sherlock">
             <intent-filter>
@@ -42,12 +42,12 @@
             </intent-filter>
         </receiver>
         <activity
-            android:name="AboutActivity"
+            android:name=".app.AboutActivity"
             android:label="@string/about_title"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.Sherlock"></activity>
         <activity
-            android:name="PortalSigninActivity"
+            android:name=".app.PortalSigninActivity"
             android:label="@string/portal_signin_activity_label"
             android:theme="@style/Theme.PortalSignin"
             android:configChanges="orientation|screenSize|keyboardHidden"

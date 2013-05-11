@@ -1,5 +1,6 @@
-package com.zachklipp.captivate;
+package com.zachklipp.captivate.app;
 
+import com.zachklipp.captivate.BuildConfig;
 import com.zachklipp.captivate.util.Log;
 
 public class Application extends android.app.Application

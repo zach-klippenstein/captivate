@@ -1,10 +1,13 @@
-package com.zachklipp.captivate;
+package com.zachklipp.captivate.app;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.zachklipp.captivate.BuildConfig;
+import com.zachklipp.captivate.Preferences;
+import com.zachklipp.captivate.R;
 import com.zachklipp.captivate.captive_portal.PortalInfo;
 import com.zachklipp.captivate.service.PortalDetectorService;
 import com.zachklipp.captivate.state_machine.PortalStateMachine.State;

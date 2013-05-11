@@ -1,7 +1,8 @@
-package com.zachklipp.captivate;
+package com.zachklipp.captivate.app;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.zachklipp.captivate.R;
 import com.zachklipp.captivate.util.Log;
 
 import android.content.pm.PackageManager.NameNotFoundException;

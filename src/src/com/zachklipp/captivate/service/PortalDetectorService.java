@@ -1,8 +1,8 @@
 package com.zachklipp.captivate.service;
 
 import com.zachklipp.captivate.BuildConfig;
-import com.zachklipp.captivate.ConnectedNotification;
 import com.zachklipp.captivate.Preferences;
+import com.zachklipp.captivate.app.ConnectedNotification;
 import com.zachklipp.captivate.captive_portal.HttpResponseContentsDetector;
 import com.zachklipp.captivate.captive_portal.PortalDetector;
 import com.zachklipp.captivate.captive_portal.PortalDetector.OverrideMode;
@@ -17,7 +17,6 @@ import com.zachklipp.captivate.state_machine.TransitionEvent;
 import com.zachklipp.captivate.util.Log;
 import com.zachklipp.captivate.util.Observable;
 import com.zachklipp.captivate.util.Observer;
-import com.zachklipp.captivate.util.StickyIntentService;
 import com.zachklipp.captivate.util.WifiHelper;
 
 import android.app.AlarmManager;
