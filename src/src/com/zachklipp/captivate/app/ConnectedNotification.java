@@ -31,7 +31,7 @@ public final class ConnectedNotification
     
     final NotificationManager notificationManager = (NotificationManager)
         context.getSystemService(Context.NOTIFICATION_SERVICE);
-    notificationManager.notify(CONNECTED_NOTIFICATION_ID, builder.build());
+    notificationManager.notify(CONNECTED_NOTIFICATION_ID, builder.getNotification());
     
     portalInfo.getFavicon(new ImageLoadListener()
     {
@@ -40,7 +40,7 @@ public final class ConnectedNotification
         if (favicon != null)
         {
           builder.setLargeIcon(favicon);
-          notificationManager.notify(CONNECTED_NOTIFICATION_ID, builder.build());
+          notificationManager.notify(CONNECTED_NOTIFICATION_ID, builder.getNotification());
         }
       }
     });
