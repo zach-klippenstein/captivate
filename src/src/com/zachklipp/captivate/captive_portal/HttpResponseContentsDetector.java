@@ -17,7 +17,6 @@ import com.zachklipp.captivate.util.Log;
 
 public class HttpResponseContentsDetector extends PortalDetector
 {
-  private static final String USER_AGENT = "CaptiveNetworkSupport/1.0 wispr";
   private static final String URL = "http://www.apple.com/library/test/success.html";
   private static final Pattern NO_PORTAL_PATTERN = Pattern.compile("<TITLE>Success</TITLE></HEAD><BODY>Success</BODY>");
   
@@ -25,20 +24,17 @@ public class HttpResponseContentsDetector extends PortalDetector
   {
     Log.d("Creating HttpResponseContentsDetector");
     
-    return new HttpResponseContentsDetector(USER_AGENT, URL, NO_PORTAL_PATTERN);
+    return new HttpResponseContentsDetector(URL, NO_PORTAL_PATTERN);
   }
   
-  private String mUserAgent;
   private String mUrl;
   private Pattern mNoPortalPattern;
   
-  public HttpResponseContentsDetector(String userAgent, String url, Pattern noPortalPattern)
+  public HttpResponseContentsDetector(String url, Pattern noPortalPattern)
   {
-    assert(userAgent != null && userAgent.length() > 0);
     assert(url != null && url.length() > 0);
     assert(noPortalPattern != null);
     
-    mUserAgent = userAgent;
     mUrl = url;
     mNoPortalPattern = noPortalPattern;
   }
@@ -48,7 +44,6 @@ public class HttpResponseContentsDetector extends PortalDetector
   {
     HttpClient client = new DefaultHttpClient();
     HttpUriRequest request = new HttpGet(mUrl);
-    request.setHeader("User-Agent", mUserAgent);
     
     HttpResponse response = executeRequestOrThrow(client, request);
     

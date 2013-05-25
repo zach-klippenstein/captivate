@@ -315,9 +315,11 @@ public class PortalDetectorService extends StickyIntentService
     {
       mSessionTimeoutCheckEnabled = true;
 
+      // Check for timeout whenever screen is turned on.
       IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
       registerReceiver(mScreenOnReceiver, filter);
-  
+
+      // Check for timeout periodically.
       int intervalSeconds = mPreferences.getSessionTimeoutCheckMinutes();
       long intervalMillis = intervalSeconds * 1000;
       
