@@ -7,7 +7,6 @@
     <style name="Theme.ActionBarDialog" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
