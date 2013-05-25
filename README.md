@@ -4,9 +4,18 @@ Captivate is an Android app that does one very simple thing: whenever you connec
 
 It automates the process of opening a browser, trying to visit a webpage, getting redirected to the portal's login, then having to re-type the URL, or worse, go back to the app that opened the browser and re-share.
 
+**Test new features!** Join the [Captivate Testers Google+ Community](https://plus.google.com/communities/114076128180764428170) to get access to beta versions of Captivate before they're released.
+
 *For developers:* Captivate sends a broadcast intent whenever the portal state changes. See more [below](#developers).
 
 ## What's New
+
+### 1.4.0
+
+*   When signed in to a portal, session timeouts are automatically detected (check interval is currently fixed, will be configurable in a future update).
+*   Added a link to rate the app in the settings screen.
+*   Fixed Starbucks portals not being detected.
+*   Updated ActionBarSherlock to version 4.3.1.
 
 ### 1.3.1
 
