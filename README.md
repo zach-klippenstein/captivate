@@ -10,19 +10,19 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
 
 ### 1.3.1
 
-*   Hopefully fixed the crash when signin activity finished
+*   Hopefully fixed the crash when signin activity finished.
 
 ### 1.3.0
 
-*   Better tablet experience (sign-in appears as dialog on screens 7" and up)
-*   UI changes (dark ActionBar)
-*   Updated ActionBarSherlock to 4.2.0
-*   Fixed recent false portal notifications
-*   Removed French and Turkish translations (too few installs to warrant maintaining)
+*   Better tablet experience (sign-in appears as dialog on screens 7" and up).
+*   UI changes (dark ActionBar).
+*   Updated ActionBarSherlock to 4.2.0.
+*   Fixed recent false portal notifications.
+*   Removed French and Turkish translations (too few installs to warrant maintaining).
 
 ### 1.2.1
 
-*   Portal notification shows the favicon from the sign-in page
+*   Portal notification shows the favicon from the sign-in page.
 
 ### 1.2.0
 
@@ -31,7 +31,7 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
 
 ### 1.1.1
 
-*   Fixed some portal detection bugs
+*   Fixed some portal detection bugs.
 
 ### 1.1.0
 
@@ -74,3 +74,4 @@ Whenever Captivate detects a portal, or a portal signin, or timeout, or anything
     A string URL that will take the user to the login page. As of v1.1.0, it only contains the URL used to check for redirects, so it's not the actual URL of the portal sign-in page. This is planned for the future (see issue [#9](https://github.com/zach-klippenstein/captivate/issues/9)).
 
 To receive the intent, you must request permission `com.zachklipp.captivate.permission.ACCESS_PORTAL_STATE`.
+
