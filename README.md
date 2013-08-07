@@ -58,10 +58,6 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
   <img alt="Get it on Google Play"
        src="http://www.android.com/images/brand/get_it_on_play_logo_large.png" />
 </a>
-<a href="https://github.com/zach-klippenstein/captivate/downloads">
-    <img alt="Get it on GitHub" height="60px"
-         src="https://assets.github.com/images/modules/header/logo.png" />
-</a>
 
 <div style="text-align: center;">
     <img src="https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=https://github.com/zach-klippenstein/captivate%23download" />
