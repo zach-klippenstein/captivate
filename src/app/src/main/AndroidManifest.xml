@@ -5,8 +5,8 @@
     android:versionName="1.4.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
+        android:minSdkVersion="15"
+        android:targetSdkVersion="21" />
     
     <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
     
@@ -30,7 +30,7 @@
         <activity
             android:name=".app.PreferenceActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Sherlock">
+            android:theme="@android:style/Theme.DeviceDefault">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -48,7 +48,7 @@
             android:name=".app.AboutActivity"
             android:label="@string/about_title"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@style/Theme.Sherlock"/>
+            android:theme="@android:style/Theme.DeviceDefault"/>
 
         <service android:name=".service.PortalDetectorService"/>
     </application>

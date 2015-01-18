@@ -1,5 +1,7 @@
 # Captivate
 
+![Captivate logo](https://raw.githubusercontent.com/zach-klippenstein/captivate/master/graphics/launcher%20icon%2096.png)
+
 Captivate is an Android app that does one very simple thing: whenever you connect to a wifi hotspot, it tries to determine if you are behind a [captive portal](http://en.wikipedia.org/wiki/Captive_portal). If you are, it shows a notification to let you quickly open the portal login page. If your session times out, Captivate will re-show the notification when you next turn on your screen.
 
 It automates the process of opening a browser, trying to visit a webpage, getting redirected to the portal's login, then having to re-type the URL, or worse, go back to the app that opened the browser and re-share.
@@ -9,6 +11,14 @@ It automates the process of opening a browser, trying to visit a webpage, gettin
 *For developers:* Captivate sends a broadcast intent whenever the portal state changes. See more [below](#developers).
 
 ## What's New
+
+### 1.5.0
+
+* Removed built-in browser. Notification now launches default browser instead.
+* Support for Material theme.
+* Updated icon to look more like Material design.
+* Bumped minimum API level to 15 (ICS).
+* Removed ActionBarSherlock.
 
 ### 1.4.0
 

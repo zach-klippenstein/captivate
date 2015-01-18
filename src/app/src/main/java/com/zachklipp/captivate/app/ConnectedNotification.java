@@ -22,13 +22,15 @@ public final class ConnectedNotification
   {
     Intent showPortalIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(portalInfo.getPortalUrl()));
     PendingIntent contentIntent = PendingIntent.getActivity(context, 0, showPortalIntent, 0);
-    
+
     final Builder builder = new NotificationCompat.Builder(context)
-      .setSmallIcon(R.drawable.notification_icon)
-      .setTicker(context.getString(R.string.ticker_text))
-      .setContentTitle(context.getString(R.string.notification_title))
-      .setContentText(context.getString(R.string.notification_text))
-      .setContentIntent(contentIntent);
+        .setSmallIcon(R.drawable.notification_icon)
+        .setTicker(context.getString(R.string.ticker_text))
+        .setContentTitle(context.getString(R.string.notification_title))
+        .setContentText(context.getString(R.string.notification_text))
+        .setContentIntent(contentIntent)
+        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // Show on lock screen.
+    ;
 
     final NotificationManager notificationManager = (NotificationManager)
         context.getSystemService(Context.NOTIFICATION_SERVICE);

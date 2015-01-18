@@ -4,7 +4,7 @@
     
     <string name="app_name" tools:ignore="MissingTranslation" >Captivate</string>
     <string name="version_name_format" tools:ignore="MissingTranslation" >v%s</string>
-    <string name="feedback_email" tools:ignore="MissingTranslation" >zk.at.sf@gmail.com</string>
+    <string name="feedback_email" tools:ignore="MissingTranslation" >zach.klippenstein+captivate@gmail.com</string>
     <string name="feedback_subject" tools:ignore="MissingTranslation" >[%s] User Feedback</string>
     
     <!-- Localizable strings -->
