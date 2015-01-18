@@ -1,10 +1,6 @@
 package com.zachklipp.captivate.captive_portal;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.regex.Pattern;
+import com.zachklipp.captivate.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -13,12 +9,17 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.zachklipp.captivate.util.Log;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.regex.Pattern;
 
 public class HttpResponseContentsDetector extends PortalDetector
 {
   private static final String URL = "http://www.apple.com/library/test/success.html";
-  private static final Pattern NO_PORTAL_PATTERN = Pattern.compile("<TITLE>Success</TITLE></HEAD><BODY>Success</BODY>");
+  private static final Pattern NO_PORTAL_PATTERN = Pattern.compile(
+      "<TITLE>Success</TITLE></HEAD><BODY>Success</BODY>");
   
   public static PortalDetector createDetector()
   {

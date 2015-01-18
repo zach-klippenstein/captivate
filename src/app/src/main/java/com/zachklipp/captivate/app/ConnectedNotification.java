@@ -1,17 +1,18 @@
 package com.zachklipp.captivate.app;
 
-import com.zachklipp.captivate.R;
-import com.zachklipp.captivate.captive_portal.PortalInfo;
-import com.zachklipp.captivate.util.BitmapHelper.ImageLoadListener;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.widget.Toast;
+
+import com.zachklipp.captivate.R;
+import com.zachklipp.captivate.captive_portal.PortalInfo;
+import com.zachklipp.captivate.util.BitmapHelper.ImageLoadListener;
 
 public final class ConnectedNotification
 {
@@ -19,7 +20,7 @@ public final class ConnectedNotification
 
   public static void showNotification(final Context context, final PortalInfo portalInfo)
   {
-    Intent showPortalIntent = PortalSigninActivity.getStartIntent(context, portalInfo);
+    Intent showPortalIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(portalInfo.getPortalUrl()));
     PendingIntent contentIntent = PendingIntent.getActivity(context, 0, showPortalIntent, 0);
     
     final Builder builder = new NotificationCompat.Builder(context)
@@ -28,7 +29,7 @@ public final class ConnectedNotification
       .setContentTitle(context.getString(R.string.notification_title))
       .setContentText(context.getString(R.string.notification_text))
       .setContentIntent(contentIntent);
-    
+
     final NotificationManager notificationManager = (NotificationManager)
         context.getSystemService(Context.NOTIFICATION_SERVICE);
     notificationManager.notify(CONNECTED_NOTIFICATION_ID, builder.getNotification());

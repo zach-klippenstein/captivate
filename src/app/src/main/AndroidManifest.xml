@@ -26,6 +26,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:allowBackup="true" >
+
         <activity
             android:name=".app.PreferenceActivity"
             android:label="@string/app_name"
@@ -35,25 +36,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver android:name=".service.WifiStateChangedReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.STATE_CHANGE"/>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".app.AboutActivity"
             android:label="@string/about_title"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@style/Theme.Sherlock"></activity>
-        <activity
-            android:name=".app.PortalSigninActivity"
-            android:label="@string/portal_signin_activity_label"
-            android:theme="@style/Theme.PortalSignin"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:excludeFromRecents="true" ></activity>
-        <service android:name=".service.PortalDetectorService">
-        </service>
+            android:theme="@style/Theme.Sherlock"/>
+
+        <service android:name=".service.PortalDetectorService"/>
     </application>
 
 </manifest>

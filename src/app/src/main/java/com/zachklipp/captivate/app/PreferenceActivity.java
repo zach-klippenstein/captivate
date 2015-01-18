@@ -1,13 +1,5 @@
 package com.zachklipp.captivate.app;
 
-import com.zachklipp.captivate.BuildConfig;
-import com.zachklipp.captivate.Preferences;
-import com.zachklipp.captivate.R;
-import com.zachklipp.captivate.service.PortalDetectorService;
-import com.zachklipp.captivate.util.Log;
-import com.zachklipp.captivate.util.SafeIntentSender;
-import com.zachklipp.captivate.util.StringHelper;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -21,6 +13,14 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
+
+import com.zachklipp.captivate.BuildConfig;
+import com.zachklipp.captivate.Preferences;
+import com.zachklipp.captivate.R;
+import com.zachklipp.captivate.service.PortalDetectorService;
+import com.zachklipp.captivate.util.Log;
+import com.zachklipp.captivate.util.SafeIntentSender;
+import com.zachklipp.captivate.util.StringHelper;
 
 @SuppressWarnings("deprecation")
 public class PreferenceActivity extends android.preference.PreferenceActivity
@@ -191,21 +191,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity
     Preferences preferences = Preferences.getPreferences(this);
     debugCategory.addPreference(preferences.getSigninCheckSecondsPreference());
     debugCategory.addPreference(preferences.getDebugOverridePreference());
-    
-    Preference launchSigninPref = new Preference(this);
-    launchSigninPref.setTitle("Launch Signin");
-    launchSigninPref.setOnPreferenceClickListener(new OnPreferenceClickListener()
-    {
-      @Override
-      public boolean onPreferenceClick(Preference preference)
-      {
-        PreferenceActivity.this.startActivity(
-            new Intent(PreferenceActivity.this, PortalSigninActivity.class));
-        return true;
-      }
-    });
-    debugCategory.addPreference(launchSigninPref);
-    
+
     debugCategory.addPreference(preferences.getResetToDefaultsPreference());
   }
 }
