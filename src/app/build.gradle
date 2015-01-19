@@ -8,13 +8,24 @@ android {
         applicationId "com.zachklipp.captivate"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 7
-        versionName "1.4.0"
+        versionCode 8
+        versionName "1.5.0"
     }
+
+    signingConfigs {
+        release {
+            storeFile file(System.console().readLine("\nEnter path to signing keystore: "))
+            storePassword new String(System.console().readPassword("\nEnter keystore password: "))
+            keyAlias System.console().readLine("\nEnter alias of signing key: ")
+            keyPassword new String(System.console().readPassword("\nEnter key password: "))
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
